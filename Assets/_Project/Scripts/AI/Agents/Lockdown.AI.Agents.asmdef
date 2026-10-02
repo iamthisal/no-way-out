@@ -1,0 +1,18 @@
+{
+  "name": "Lockdown.AI.Agents",
+  "rootNamespace": "Lockdown.AI.Agents",
+  "references": [
+    "Lockdown.AI.Core",
+    "Lockdown.Interfaces",
+    "Lockdown.Runtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

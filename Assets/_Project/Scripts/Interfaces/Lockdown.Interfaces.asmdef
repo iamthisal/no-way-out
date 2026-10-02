@@ -1,0 +1,14 @@
+{
+  "name": "Lockdown.Interfaces",
+  "rootNamespace": "Lockdown.Interfaces",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

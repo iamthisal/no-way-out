@@ -1,0 +1,18 @@
+{
+  "name": "Lockdown.Tests.EditMode",
+  "rootNamespace": "Lockdown.Tests.EditMode",
+  "references": [
+    "Lockdown.AI.Core"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
