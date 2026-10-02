@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warehouse Lockdown</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game" tabindex="0" aria-label="Warehouse Lockdown game"></canvas>
+      <div id="hud">
+        <div class="hud-row">
+          <span>Health</span>
+          <div class="meter"><i id="healthFill"></i></div>
+          <strong id="healthText">100</strong>
+        </div>
+        <div class="hud-row">
+          <span>Stamina</span>
+          <div class="meter stamina"><i id="staminaFill"></i></div>
+          <strong id="staminaText">100</strong>
+        </div>
+        <div class="hud-row">
+          <span>Alarm</span>
+          <div class="meter alarm"><i id="alarmFill"></i></div>
+          <strong id="alarmText">0</strong>
+        </div>
+        <div class="hud-mini">
+          <span id="terminalText">Start room</span>
+          <span id="rexText">Rex ready</span>
+          <span id="recoveryText" hidden></span>
+        </div>
+      </div>
+      <div id="roomDebug"></div>
+      <div id="crosshair"></div>
+      <div id="prompt"></div>
+      <div id="damageVignette"></div>
+      <div id="centerPanel" class="panel show">
+        <h1>Warehouse Lockdown</h1>
+        <p>Clear the security waves, open each room, and lift the lockdown.</p>
+        <button id="startButton">Start</button>
+        <div class="keys">WASD move · Mouse look · Shift sprint · C crouch · E interact · Q Rex distraction · Esc pause</div>
+      </div>
+      <div id="pausePanel" class="panel">
+        <h2>Paused</h2>
+        <label class="sound-line">
+          <span>Sound</span>
+          <input id="soundToggle" type="checkbox" checked />
+        </label>
+        <button id="resumeButton">Resume</button>
+        <button id="restartButton">Restart</button>
+      </div>
+      <div id="endPanel" class="panel">
+        <h2 id="endTitle">Victory</h2>
+        <p id="endCopy"></p>
+        <button id="playAgainButton">Restart</button>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

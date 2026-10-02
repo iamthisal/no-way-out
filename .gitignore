@@ -11,6 +11,8 @@
 
 *.csproj
 *.sln
+*.slnx
+.vsconfig
 *.suo
 *.user
 *.userprefs
@@ -27,3 +29,8 @@
 *.unitypackage
 
 Assets/AssetStoreTools*
+
+# HTML prototype local dependencies, build output, and browser profile
+/game_html/node_modules/
+/game_html/dist/
+/game_html/.edge-test/
