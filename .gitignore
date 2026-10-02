@@ -11,6 +11,8 @@
 
 *.csproj
 *.sln
+*.slnx
+.vsconfig
 *.suo
 *.user
 *.userprefs
