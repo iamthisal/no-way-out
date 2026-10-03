@@ -39,3 +39,8 @@ Thumbs.db
 Desktop.ini
 
 *.slnx
+
+# HTML prototype generated files
+/game_html/node_modules/
+/game_html/dist/
+/game_html/.edge-test/
