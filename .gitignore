@@ -1,19 +1,22 @@
-/.vs/
-/Library/
-/Temp/
-/Obj/
-/Build/
-/Builds/
-/Logs/
-/UserSettings/
-/MemoryCaptures/
-/Recordings/
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
 
+# Visual Studio / IDE generated files
+.vs/
+.idea/
+.gradle/
+
+# Generated project files
 *.csproj
 *.sln
-*.slnx
-.vsconfig
 *.suo
+*.tmp
 *.user
 *.userprefs
 *.pidb
@@ -24,13 +27,20 @@
 *.opendb
 *.VC.db
 
-*.apk
-*.aab
-*.unitypackage
+# Unity crash reports
+sysinfo.txt
 
-Assets/AssetStoreTools*
+# Unity generated memory captures
+[Mm]emoryCaptures/
 
-# HTML prototype local dependencies, build output, and browser profile
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+*.slnx
+
+# HTML prototype generated files
 /game_html/node_modules/
 /game_html/dist/
 /game_html/.edge-test/
