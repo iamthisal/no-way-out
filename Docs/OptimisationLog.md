@@ -1,6 +1,6 @@
 # Museum world optimization log
 
-Current target: [museum v3](WorldBuilder/README.md), fifteen spaces and 916 m² nominal floor area. The five-room extension adds 280 m²; it does not establish acceptable performance. No runtime measurements have been recorded by this documentation update.
+Current target: [museum v3.1](WorldBuilder/README.md), fifteen spaces and 916 m² nominal floor area. The five-room extension adds 280 m²; it does not establish acceptable performance. No runtime measurements have been recorded by this documentation update.
 
 ## Planned checks — Student 1
 
@@ -17,6 +17,6 @@ Fill this table only after testing. Keep comparable before/after conditions and 
 
 | Date / commit | Scene and test conditions | Change | Before | After | Decision / evidence |
 |---|---|---|---|---|---|
-| Not tested | Museum_Main / v3 extension pending | No measurement yet | — | — | Complete extension and establish baseline |
+| Not tested | Museum_Main / v3.1 extension pending | No measurement yet | — | — | Complete extension and establish baseline |
 
 Coordinate validation in WorldBuilder/Plan_Validation.json is a mathematical planning check, not an FPS, physics or Unity NavMesh result.

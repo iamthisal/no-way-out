@@ -1,8 +1,8 @@
 # Abandoned Museum — Student 1 World Builder manual
 
-**Plan v3 · 6 October 2026 · 15 named spaces · Current stage: extend the existing greybox**
+**Plan v3.1 · 6 October 2026 · 15 named spaces · Current stage: extend the existing greybox**
 
-**Approved five-gallery loop extension.** Keep the ten-space v2 skeleton. Add five northern galleries and replace only the Exhibition north-wall assembly to turn W01/W03 into D13/D18. W02 remains. Start with [Extension_Build_Steps.md](Extension_Build_Steps.md); the full appendices below also support a fresh build. The Unity scene has not been changed by this documentation update.
+**Approved five-gallery loop extension.** Keep the ten-space v2 skeleton. Add five northern galleries and replace the Exhibition north-wall and Exit north-wall assemblies to turn W01/W03 into D13/D18. W02 becomes the locked glass door D19; W09 becomes the closed exit door D20. Start with [Extension_Build_Steps.md](Extension_Build_Steps.md); the full appendices below also support a fresh build. The Unity scene has not been changed by this documentation update.
 
 This is a complete reference for rebuilding the proposed World Builder environment. Read Phase 1 now; use later phases when we reach them together. Coordinates are an original, dimensioned proposal based on your supplied blueprint's connections, not measurements recovered from its pixels. Geometry is specified exactly; lighting, movement and performance settings are starting points that require testing in the team's actual Unity project.
 
@@ -11,10 +11,10 @@ The user has already built the original greybox skeleton in Unity. This document
 ## Sources, scope and decisions
 
 - Assignment source: `D:/Year 3 Sem 1/GV/Assignment/Assignmnet_GV.pdf`, pages 1–3. Source code and a 3-minute demo video are required. The stated deadline is 21 October 2026; confirm any subsequent lecturer announcements separately.
-- Original blueprint: `D:/Year 3 Sem 1/GV/Assignment/Abandoned Museum Skeleton Blueprint.png`. Red means doors; blue means windows. The current approved v3 construction drawing and tables supersede the original sketch and the earlier straight-row extension preview.
+- Original blueprint: `D:/Year 3 Sem 1/GV/Assignment/Abandoned Museum Skeleton Blueprint.png`. Red means doors; blue means windows. The current approved v3.1 construction drawing and tables supersede the original sketch and the earlier straight-row extension preview.
 - Exception: the blue opening labelled Main Entrance is treated as a glazed entrance door, not an ordinary window. Its collision remains closed for the initial indoor prototype. The player starts inside.
 - The image's `(0, -50)` is not a calibrated scale. This plan deliberately replaces it with a compact metre-based coordinate system. Do not mix the two systems.
-- The Emergency Exit Vestibule is an indoor destination. An escape trigger or victory condition belongs to the gameplay team. The north window is not a playable exit; arrival in this room can represent reaching safety if the team chooses. No outdoor environment, basement, stairs or second floor is required.
+- The Emergency Exit Vestibule is an indoor destination. An escape trigger or victory condition belongs to the gameplay team. D20 is the closed north exit door; arrival in this room can represent reaching safety if the team chooses. No outdoor environment, basement, stairs or second floor is required.
 - Existing root README and `Docs/DesignDoc.md` describe an older warehouse concept and some different ownership rules. This document records the museum proposal and your requested roles. Reconcile the shared documents with teammates before integration; do not silently treat old warehouse features as museum requirements.
 - Local files confirm Unity **6000.6.3f1**, URP **17.6.0**, and AI Navigation **2.0.14**. Keep these versions consistent across the team; no upgrade is part of this extension.
 
@@ -54,7 +54,7 @@ The rubric assigns Visual Cohesion 15, Build Stability 15, Role-Specific Quality
 
 ## Phase 1 — Approved fifteen-space loop plan
 
-**Owner: Student 1. Plan v3, approved 6 October 2026.** The current drawing is `Museum_FloorPlan.png`. The previous ten-room Unity skeleton is retained. Read `Extension_Build_Steps.md` before extending it; do not rebuild the whole museum.
+**Owner: Student 1. Plan v3.1, approved 6 October 2026.** The current drawing is `Museum_FloorPlan.png`. The previous ten-room Unity skeleton is retained. Read `Extension_Build_Steps.md` before extending it; do not rebuild the whole museum.
 
 ### Layout and circulation
 
@@ -74,9 +74,9 @@ Add five rooms, each 7 × 8 m between wall centres:
 
 **Existing public loop:** Central → Exhibition → Temporary → Art → Central. **Existing staff loop:** Lobby → Security → Staff Corridor → Storage → Central → Lobby. Toilet remains a side room; Exit Vestibule remains an indoor endpoint, not an outdoor escape route.
 
-Replace north-wall windows **W01 and W03** and their surrounding wall sections with D13 and D18. W02 remains at X=-1 to 1, Z=14. The open-air gap X=-3.5 to 3.5, Z=14 to 22 has no playable floor, ceiling, entrance or NavMesh. It is not a sixteenth room. Keep W02 collidable. Any later outdoor scenery is optional visual detail.
+Replace north-wall windows **W01 and W03** and their surrounding wall sections with D13 and D18. D19 replaces W02 at X=-1 to 1, Z=14; D20 replaces W09 at X=14.5 to 16.5, Z=12. The open-air gap X=-3.5 to 3.5, Z=14 to 22 has visual-only ground but no playable floor, roof or NavMesh; D19 stays locked. It is not a sixteenth room. Keep the D19 glass door collidable. Any later outdoor scenery is optional visual detail.
 
-Total nominal floor area: **916 m² = 636 existing + 280 new**, approximately 44% larger. There are **15 named spaces, 16 slabs, 18 interior openings, 7 fixed windows and one closed glazed main entrance**. Wall-centre envelope: X=-16 to 17, Z=-11 to 30 (33 × 41 m); this envelope includes outdoor gaps. Clear room dimensions are approximately 6.8 × 7.8 m in the new galleries.
+Total nominal floor area: **916 m² = 636 existing + 280 new**, approximately 44% larger. There are **15 named spaces, 16 slabs, 18 interior openings, 5 fixed windows and three closed boundary doors (D00, D19, D20)**. Wall-centre envelope: X=-16 to 17, Z=-11 to 30 (33 × 41 m); this envelope includes outdoor gaps. Clear room dimensions are approximately 6.8 × 7.8 m in the new galleries.
 
 ### Construction and scope
 
@@ -123,7 +123,7 @@ World_Museum
 
 ## Phase 3 — Greybox the complete museum
 
-**Owner: Student 1. Build all rooms before art.** Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build.
+**Owner: Student 1. Build all rooms before art.** Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build.
 
 ### Exactly how to create one table entry
 
@@ -339,7 +339,7 @@ Open **File > Build Profiles** in Unity 6 (older editors use Build Settings). Us
 
 Save the scene and assets. Review changes in your chosen Git client; stage only your intentional work and its necessary dependencies. Write the relevant milestone message above, commit, and push your work branch according to team policy. Record the resulting hash beside the evidence. Do not make empty commits merely to satisfy a count, commit `Library`, or include unrelated teammate changes.
 
-The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. For this documentation-only milestone, a terminal alternative from the repository root is:
+The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. For this documentation-only milestone, a terminal alternative from the repository root is:
 
 ```sh
 git diff -- Docs/WorldBuilder
@@ -359,6 +359,9 @@ git commit -m "docs(world): plan five-gallery museum loop extension"
 | Why a central hall? | It gives an identifiable hub; the public gallery loop reduces forced backtracking while security and storage connect a separate staff route |
 | Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
 | Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
+| Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
+| Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
+| Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
 | Why greybox first? | You test scale, openings and cover before spending time on art that might need moving |
 | Why this coordinate convention? | Ground at Y=0 and identity parents make dimensions predictable and allow teammates to align scenes |
 | Why broad door openings? | Bodies need collider and navigation clearance; visual width alone is insufficient |
@@ -370,12 +373,57 @@ git commit -m "docs(world): plan five-gallery museum loop extension"
 
 ## Build appendices
 
-The following coordinate tables and the accompanying PNG are generated from the same geometry specification. `Museum_Geometry.csv` provides the same physical cube rows for filtering or manual checking; it is not a Unity importer. The original blueprint has been revised into the approved fifteen-space v3 loop layout on a metre grid. All geometry values below are intentional design values, not values mandated by the assignment.
+The following coordinate tables and the accompanying PNG are generated from the same geometry specification. `Museum_Geometry.csv` provides the same physical cube rows for filtering or manual checking; it is not a Unity importer. The original blueprint has been revised into the approved fifteen-space v3.1 loop layout on a metre grid. All geometry values below are intentional design values, not values mandated by the assignment.
 
 
-## Appendix A — Exact v3 shell geometry
+## Revision 3.1 — Convert W02 and W09 into doors
 
-**Use these v3 values for the completed extension. Existing v2 builders must follow Extension_Build_Steps.md to preserve their work.** Positions are object centres. Cube Scale is full size, not half size. All physical rows use Rotation `(0,0,0)`, enabled non-trigger Box Colliders and no Rigidbody. All organiser parents must be Position `(0,0,0)`, Rotation `(0,0,0)`, Scale `(1,1,1)` so the listed local positions equal world positions. Ceilings use Default layer and are initially inactive through their parent; all other construction cubes use WorldSolid.
+These instructions apply to the already-built v3 shell, not the v2 rebuild procedure. Work only under the active Museum root; keep Museum_Test disabled. Stop Play mode and save before editing. Rotation is (0,0,0) for every listed object. Position is the cube centre; Scale is its full size. Keep existing Walls/Windows parents at identity transforms. Retain enabled, non-trigger Box Colliders on walls and closed doors, WorldSolid layer, no Rigidbody.
+
+### A. Locked courtyard glass door D19 (formerly W02)
+
+1. Under Museum > Walls, delete Wall_42_W02_Sill. This removes the low wall beneath the old window.
+2. Rename Wall_42_Before_W02 to Wall_42_Before_D19; its Transform stays unchanged.
+3. Rename Wall_42_W02_Header to Wall_42_D19_Header and enter the values below.
+4. Under Museum > Windows, rename Wall_42_W02_Pane to Courtyard_LockedGlassDoor and enter the values below. Keep its Box Collider so the player cannot pass through.
+5. Leave Wall_42_End unchanged. The Walls/Windows organiser names are retained to minimize hierarchy changes; the new panel is a door, not a window.
+
+| Object | Parent | Position X,Y,Z | Scale X,Y,Z |
+|---|---|---|---|
+| Wall_42_Before_D19 | Walls | (-2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
+| Wall_42_D19_Header | Walls | (0, 3, 14) | (2, 1, 0.2) |
+| Wall_42_End | Walls | (2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
+| Courtyard_LockedGlassDoor | Windows | (0, 1.25, 14) | (2, 2.5, 0.1) |
+
+In Assets/_Project/Materials/World, create a Material named M_CourtyardGlass. Choose Universal Render Pipeline/Lit, Surface Type Transparent, and a pale grey Base Map colour with alpha about 0.2 (about 51 on a 0–255 alpha slider). Start with Metallic 0 and Smoothness 0.7. Apply it to Courtyard_LockedGlassDoor. Material transparency controls visibility; it does not disable the Box Collider. This is a simple glass-door placeholder; decorative frame/handle art can be added later without narrowing the opening.
+
+### B. Closed exit door D20 (formerly W09)
+
+Delete Wall_18_W09_Sill under Walls. Rename and resize the other four objects using the table. The opening widens from 1.6 m to 2 m. Wall_59 is the documented replacement name for this boundary; it is not an additional overlapping wall.
+
+| Existing object | New name | Position X,Y,Z | Scale X,Y,Z |
+|---|---|---|---|
+| Wall_18_Before_W09 | Wall_59_Before_D20 | (14.25, 1.75, 12) | (0.5, 3.5, 0.2) |
+| Wall_18_W09_Header | Wall_59_D20_Header | (15.5, 3, 12) | (2, 1, 0.2) |
+| Wall_18_End | Wall_59_End | (16.75, 1.75, 12) | (0.5, 3.5, 0.2) |
+| Wall_18_W09_Pane | Exit_ClosedDoorPlaceholder | (15.5, 1.25, 12) | (2, 2.5, 0.1) |
+
+Keep the first three under Walls and the panel under Windows. Apply an opaque grey/metal material to the exit panel. It remains closed and collidable for now. Student 2 owns future interaction; the team defines level completion. Do not remove its collision or let the player walk out until an exterior landing or a transition is implemented and tested. No outdoor gameplay area is specified here.
+
+### C. Visual courtyard ground and navigation
+
+Under Museum > Decoration, create a Cube named Courtyard_VisualGround: Position (0,-0.1,18), Rotation (0,0,0), Scale (7,0.2,8). Remove its Box Collider using the component menu > Remove Component. Set Layer to Default, use an opaque concrete material, and do not add a Rigidbody. It covers the gap visually, including a small intentional overlap beneath surrounding walls. It is scenery, not a seventeenth playable floor slab, and is recorded in Appendix D rather than the physical-collision CSV.
+
+For the planned NavMesh Surface, collect WorldSolid using Physics Colliders; exclude Default scenery. If the team uses render-mesh collection instead, explicitly exclude this ground or add an Ignore From Build NavMesh Modifier. Verify no blue NavMesh appears in the courtyard. Do not add a roof or Off-Mesh Link into it. Keep D19 locked permanently for this version.
+
+Optional empty door markers: D19 at (0,0,14), D20 at (15.5,0,12), both Rotation (0,0,0), Scale (1,1,1), no renderer/collider. These do not open the doors.
+
+Save with Ctrl+S. Take one eye-level screenshot of each door. With the actual controller, confirm the glass is see-through but blocks movement, the exit blocks movement, and all D01–D18 interior passages still work. Re-bake navigation/lighting after the changes when those stages are reached. Suggested scene commit after verification: feat(world): add exit and locked courtyard doors. Student 1 owns this geometry/material work; no interaction code is required here.
+
+
+## Appendix A — Exact v3.1 shell geometry
+
+**Use these v3.1 values for the completed extension. Existing v2 builders must follow Extension_Build_Steps.md to preserve their work.** Positions are object centres. Cube Scale is full size, not half size. All physical rows use Rotation `(0,0,0)`, enabled non-trigger Box Colliders and no Rigidbody. All organiser parents must be Position `(0,0,0)`, Rotation `(0,0,0)`, Scale `(1,1,1)` so the listed local positions equal world positions. Ceilings use Default layer and are initially inactive through their parent; all other construction cubes use WorldSolid.
 
 ### Room/slab bounds
 
@@ -482,17 +530,15 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_16_D12_Header | (15.5, 3, 8) | (2, 1, 0.2) |
 | Wall_16_End | (16.75, 1.75, 8) | (0.5, 3.5, 0.2) |
 | Wall_17_Solid | (-11.5, 1.75, 11) | (9, 3.5, 0.2) |
-| Wall_18_Before_W09 | (14.35, 1.75, 12) | (0.7, 3.5, 0.2) |
-| Wall_18_W09_Sill | (15.5, 0.6, 12) | (1.6, 1.2, 0.2) |
-| Wall_18_W09_Header | (15.5, 3.1, 12) | (1.6, 0.8, 0.2) |
-| Wall_18_End | (16.65, 1.75, 12) | (0.7, 3.5, 0.2) |
+| Wall_59_Before_D20 | (14.25, 1.75, 12) | (0.5, 3.5, 0.2) |
+| Wall_59_D20_Header | (15.5, 3, 12) | (2, 1, 0.2) |
+| Wall_59_End | (16.75, 1.75, 12) | (0.5, 3.5, 0.2) |
 | Wall_40_Solid | (-8.75, 1.75, 14) | (3.5, 3.5, 0.2) |
 | Wall_41_Before_D13 | (-6.75, 1.75, 14) | (0.5, 3.5, 0.2) |
 | Wall_41_D13_Header | (-5.1, 3, 14) | (2.8, 1, 0.2) |
 | Wall_41_End | (-3.6, 1.75, 14) | (0.2, 3.5, 0.2) |
-| Wall_42_Before_W02 | (-2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
-| Wall_42_W02_Sill | (0, 0.6, 14) | (2, 1.2, 0.2) |
-| Wall_42_W02_Header | (0, 3.1, 14) | (2, 0.8, 0.2) |
+| Wall_42_Before_D19 | (-2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
+| Wall_42_D19_Header | (0, 3, 14) | (2, 1, 0.2) |
 | Wall_42_End | (2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
 | Wall_43_Before_D18 | (3.6, 1.75, 14) | (0.2, 3.5, 0.2) |
 | Wall_43_D18_Header | (5.1, 3, 14) | (2.8, 1, 0.2) |
@@ -564,22 +610,22 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 
 ### Window and main-entrance collision panes
 
-Create these cubes under Windows. Initially use opaque M_WindowGreybox; later use glass where appropriate. Keep collision. W08 is frosted, with a higher sill of 1.8 m; other windows start at 1.2 m. All window heads are 2.7 m. Entrance_ClosedGlassPlaceholder represents D00 and stays closed for the indoor prototype. Never add this blocker to any interior door.
+Create these cubes under Windows. Initially use opaque M_WindowGreybox; later use glass where appropriate. Keep collision. W08 is frosted, with a higher sill of 1.8 m; other windows start at 1.2 m. All window heads are 2.7 m. Entrance_ClosedGlassPlaceholder represents D00 and stays closed for the indoor prototype. D19 and D20 also have closed panels in this table. D01–D18 remain open. Windows is the organiser for these boundary panels, even when a panel represents a door.
 
 | Name | Position X,Y,Z | Scale X,Y,Z |
 | --- | --- | --- |
 | Wall_01_W08_Pane | (-7.75, 2.25, -11) | (1.5, 0.9, 0.05) |
 | Wall_03_W07_Pane | (8, 1.95, -11) | (2, 1.5, 0.05) |
-| Wall_18_W09_Pane | (15.5, 1.95, 12) | (1.6, 1.5, 0.05) |
-| Wall_42_W02_Pane | (0, 1.95, 14) | (2, 1.5, 0.05) |
 | Wall_20_W04_Pane | (-16, 1.95, -0.75) | (0.05, 1.5, 1.5) |
 | Wall_20_W05_Pane | (-16, 1.95, 2.75) | (0.05, 1.5, 1.5) |
 | Wall_21_W06_Pane | (-16, 1.95, 8) | (0.05, 1.5, 2) |
 | Entrance_ClosedGlassPlaceholder | (0, 1.25, -11) | (2, 2.5, 0.05) |
+| Courtyard_LockedGlassDoor | (0, 1.25, 14) | (2, 2.5, 0.1) |
+| Exit_ClosedDoorPlaceholder | (15.5, 1.25, 12) | (2, 2.5, 0.1) |
 
 ### Door openings and empty floor markers
 
-Create **empty GameObjects** under Markers for these rows. Scale `(1,1,1)`; no renderer or collider. Do not create solid door cubes. D01–D06 are 2.4 m wide; D13–D18 are 2.8 m wide; D00 and D07–D12 are 2 m wide. All are 2.5 m tall. Marker Y=0 is floor height; working door hinge pivots are Student 2’s separate responsibility. Facing follows the connection arrow, except D00 which faces into Lobby.
+Create **empty GameObjects** under Markers for these rows. Scale `(1,1,1)`; no renderer or collider. Do not create solid door cubes. D01–D06 are 2.4 m wide; D13–D18 are 2.8 m wide; D00, D07–D12, D19 and D20 are 2 m wide. All are 2.5 m tall. Marker Y=0 is floor height; working door hinge pivots are Student 2’s separate responsibility. Facing follows the connection arrow, except D00 which faces into Lobby.
 
 | Marker | Position X,Y,Z | Rotation X,Y,Z | Width | Connection |
 | --- | --- | --- | --- | --- |
@@ -602,6 +648,8 @@ Create **empty GameObjects** under Markers for these rows. Scale `(1,1,1)`; no r
 | D16 | (3.5, 0, 26) | (0, 90, 0) | 2.8 | GreeceRome → AsianHeritage |
 | D17 | (7, 0, 22) | (0, 180, 0) | 2.8 | AsianHeritage → NaturalHistory |
 | D18 | (5.1, 0, 14) | (0, 180, 0) | 2.8 | NaturalHistory → Exhibition |
+| D19 | (0, 0, 14) | (0, 0, 0) | 2 | Exhibition → CourtyardClosed |
+| D20 | (15.5, 0, 12) | (0, 0, 0) | 2 | Exit → OutsideClosed |
 
 ### Route markers
 
@@ -696,6 +744,7 @@ Add these Cube proxies/prefabs in Phase 13 under Decoration, **without colliders
 | Monitor_Security | (9.4, 1.45, -10) | (0.7, 0.5, 0.1) | (0, 0, 0) | M_Metal; on desk; visual only |
 | Mirror_Toilet | (-6.5, 1.8, -6.16) | (0.9, 0.8, 0.04) | (0, 0, 0) | Dull glass-like material, not a real-time mirror |
 | Sign_Exit | (15.5, 2.9, 7.84) | (0.8, 0.25, 0.04) | (0, 0, 0) | Green sign; face toward -Z in corridor |
+| Courtyard_VisualGround | (0, -0.1, 18) | (7, 0.2, 8) | (0, 0, 0) | M_Concrete; visual only; remove Box Collider; Default layer; exclude from NavMesh; no roof |
 
 ## Appendix E — Evidence log
 
@@ -703,11 +752,11 @@ Copy a row for each real milestone. Record actual results rather than marking pl
 
 | Date | Phase/change | Screenshot/clip | Actual result | Decision/why | Commit hash |
 | --- | --- | --- | --- | --- | --- |
-| YYYY-MM-DD | v3 extension plan / later milestone | Evidence/01-plan-v3.png | Plan check only; Unity pending | Gallery loop and support rooms | After committing |
+| YYYY-MM-DD | v3.1 extension plan / later milestone | Evidence/01-plan-v3.1.png | Plan check only; Unity pending | Gallery loop and support rooms | After committing |
 
 ## Plan validation and outstanding work
 
-`Plan_Validation.json` records document-generation checks. The plan has fifteen named spaces, sixteen non-overlapping floor slabs, eighteen interior doorways, one closed main entrance and seven fixed windows. A conservative 2D model checks positive sizes, unique cube names, door ownership between the correct adjacent rooms, reachable route markers, direct routes restricted to each door's two adjacent rooms, and alternate routes with each of the four original public-loop doors and six new gallery-loop doors blocked individually. It uses a 0.25 m grid and 0.35 m body radius with fixed cover included.
+`Plan_Validation.json` records document-generation checks. The plan has fifteen named spaces, sixteen non-overlapping floor slabs, eighteen interior doorways, three closed boundary doors and five fixed windows. A conservative 2D model checks positive sizes, unique cube names, door ownership between the correct adjacent rooms, reachable route markers, direct routes restricted to each door's two adjacent rooms, and alternate routes with each of the four original public-loop doors and six new gallery-loop doors blocked individually. It uses a 0.25 m grid and 0.35 m body radius with fixed cover included.
 
 This is **not** a Unity NavMesh/physics test. Actual agent dimensions, voxelization, controller skin width, dynamic doors, animation, shooting, lighting, visibility and build performance still need in-engine validation. The simplified model does not establish accessibility/building-code compliance or guarantee tactical AI behaviour.
 

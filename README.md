@@ -1,6 +1,6 @@
 # No Way Out
 
-> **Current World Builder plan: abandoned museum v3 (15 spaces).** Use [the build manual](Docs/WorldBuilder/README.md), [extension-only steps](Docs/WorldBuilder/Extension_Build_Steps.md) and [floor plan](Docs/WorldBuilder/Museum_FloorPlan.png). Five northern themed galleries form a loop back to the Exhibition Hall. Existing room footprints stay; W01/W03 become wider connecting doorways and W02 remains. Current scene: `Assets/_Project/Scenes/Museum/Museum_Main.unity`. This is an approved documentation plan; the extension is not yet built by this update. The warehouse concept and architecture below remain legacy proposals, not current museum construction instructions.
+> **Current World Builder plan: abandoned museum v3.1 (15 spaces).** Use [the build manual](Docs/WorldBuilder/README.md), [extension-only steps](Docs/WorldBuilder/Extension_Build_Steps.md) and [floor plan](Docs/WorldBuilder/Museum_FloorPlan.png). Five northern themed galleries form a loop back to the Exhibition Hall. Existing room footprints stay; W01/W03 become wider connecting doorways W02 becomes locked courtyard door D19; W09 becomes exit door D20. Current scene: `Assets/_Project/Scenes/Museum/Museum_Main.unity`. This is an approved documentation plan; this update changes documents only; confirm current scene progress separately. The warehouse concept and architecture below remain legacy proposals, not current museum construction instructions.
 
 > A 3D stealth-action game set inside a rogue automated warehouse. Escape before the blast doors seal — if the AI lets you.
 

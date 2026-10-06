@@ -1,4 +1,4 @@
-# Abandoned museum — world art guide (plan v3)
+# Abandoned museum — world art guide (plan v3.1)
 
 Use [the current World Builder manual](WorldBuilder/README.md) and [floor plan](WorldBuilder/Museum_FloorPlan.png). This is an art direction target, not a statement that assets or lighting have been completed.
 
@@ -20,6 +20,6 @@ Each new room is 7 × 8 m between wall centres. Keep theme differences in displa
 
 ## Lighting and movement
 
-Use the manual's provisional lights, then evaluate with ceilings active. All five galleries share the public material palette and warm lighting family. Darker mood must still allow players to read enemies and openings. The central open-air gap stays inaccessible behind W02; no playable courtyard is required.
+Use the manual's provisional lights, then evaluate with ceilings active. All five galleries share the public material palette and warm lighting family. Darker mood must still allow players to read enemies and openings. The central open-air gap stays inaccessible behind the locked glass door D19, with visual-only ground and no courtyard NavMesh; no playable courtyard is required.
 
 D13–D18 are 2.8 m wide × 2.5 m high. Preserve their approach space and primary routes when replacing greybox props. Re-test player and enemy movement after art/collider changes. Student 1 handles materials, lighting and static props; working doors and movable objects belong to Student 2.
