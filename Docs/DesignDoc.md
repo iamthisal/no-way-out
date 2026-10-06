@@ -1,5 +1,7 @@
 # System Architecture & Technical Design Document
 
+> **Current environment specification: museum v3, 15 spaces.** [WorldBuilder/README.md](WorldBuilder/README.md) contains the complete coordinate tables; [Extension_Build_Steps.md](WorldBuilder/Extension_Build_Steps.md) preserves the existing skeleton while adding the five-gallery loop. Use `Museum_Main.unity` under `Assets/_Project/Scenes/Museum`. D13–D18 are 2.8 m wide and 2.5 m high. W01/W03 become connections; W02 stays. Student 1 supplies static geometry and initial NavMesh, Student 2 supplies player/interactive physics, Student 3 original models, and Student 4 enemy movement/animation. Rebuild and test navigation after the extension. The legacy warehouse architecture below is not evidence of implemented systems or an instruction to replace the museum scene.
+
 ## Overview
 **Warehouse Lockdown** is structured around strict separation of concerns using Unity Assembly Definitions (`.asmdef`). This architecture guarantees rapid compilation cycles, prevents circular dependencies, and establishes explicit domain boundaries between team roles.
 

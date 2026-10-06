@@ -1,22 +1,22 @@
 # Abandoned Museum — Student 1 World Builder manual
 
-**Plan v2 · 2 October 2026 · 10 named spaces · Current teaching stage: restart at Phase 1**
+**Plan v3 · 6 October 2026 · 15 named spaces · Current stage: extend the existing greybox**
 
-**Use v2 only.** This replaces the earlier eight-space coordinate plan. The gallery loop, security office, public toilet and L-shaped staff corridor are now included. The entry passage is absorbed into the lobby. Existing filenames are retained so this README, the PNG and CSV remain the current reference. If you already built any v1 geometry, save a backup scene and rebuild/reposition it from the v2 tables; do not combine v1 walls with v2 floors. Central Hall and Main Exhibition retain their original bounds, but other areas and connections have changed.
+**Approved five-gallery loop extension.** Keep the ten-space v2 skeleton. Add five northern galleries and replace only the Exhibition north-wall assembly to turn W01/W03 into D13/D18. W02 remains. Start with [Extension_Build_Steps.md](Extension_Build_Steps.md); the full appendices below also support a fresh build. The Unity scene has not been changed by this documentation update.
 
 This is a complete reference for rebuilding the proposed World Builder environment. Read Phase 1 now; use later phases when we reach them together. Coordinates are an original, dimensioned proposal based on your supplied blueprint's connections, not measurements recovered from its pixels. Geometry is specified exactly; lighting, movement and performance settings are starting points that require testing in the team's actual Unity project.
 
-No Unity scene has been built or tested as part of writing this manual. A checked coordinate plan is not proof of successful player movement, a connected baked NavMesh, or good frame rate.
+The user has already built the original greybox skeleton in Unity. This documentation update does not build the extension or perform runtime tests. A checked coordinate plan is not proof of successful player movement, a connected baked NavMesh, or good frame rate.
 
 ## Sources, scope and decisions
 
 - Assignment source: `D:/Year 3 Sem 1/GV/Assignment/Assignmnet_GV.pdf`, pages 1–3. Source code and a 3-minute demo video are required. The stated deadline is 21 October 2026; confirm any subsequent lecturer announcements separately.
-- Visual source: `D:/Year 3 Sem 1/GV/Assignment/Abandoned Museum Skeleton Blueprint.png`. Red denotes doors; blue denotes windows. V2 preserves the museum idea and central hub, but deliberately revises adjacency and proportions to implement the user's approved ten-space expansion. The attached original is inspiration, not the construction drawing for v2.
+- Original blueprint: `D:/Year 3 Sem 1/GV/Assignment/Abandoned Museum Skeleton Blueprint.png`. Red means doors; blue means windows. The current approved v3 construction drawing and tables supersede the original sketch and the earlier straight-row extension preview.
 - Exception: the blue opening labelled Main Entrance is treated as a glazed entrance door, not an ordinary window. Its collision remains closed for the initial indoor prototype. The player starts inside.
 - The image's `(0, -50)` is not a calibrated scale. This plan deliberately replaces it with a compact metre-based coordinate system. Do not mix the two systems.
 - The Emergency Exit Vestibule is an indoor destination. An escape trigger or victory condition belongs to the gameplay team. The north window is not a playable exit; arrival in this room can represent reaching safety if the team chooses. No outdoor environment, basement, stairs or second floor is required.
 - Existing root README and `Docs/DesignDoc.md` describe an older warehouse concept and some different ownership rules. This document records the museum proposal and your requested roles. Reconcile the shared documents with teammates before integration; do not silently treat old warehouse features as museum requirements.
-- The inspected repository contains an `Assets` scaffold, but no `ProjectSettings/ProjectVersion.txt` or `Packages/manifest.json`. Therefore the installed Unity version and render pipeline are not verified. This manual assumes **Unity 6 with Universal Render Pipeline (URP)**, using the team's identical editor patch version. URP is the system that draws the game. Confirm the version before Phase 2; do not upgrade a teammate's project just to match a tutorial.
+- Local files confirm Unity **6000.6.3f1**, URP **17.6.0**, and AI Navigation **2.0.14**. Keep these versions consistent across the team; no upgrade is part of this extension.
 
 ## Ownership and marking
 
@@ -52,58 +52,43 @@ The rubric assigns Visual Cohesion 15, Build Stability 15, Role-Specific Quality
 - **Light probe:** a sample of lighting used to illuminate moving objects. A reflection probe captures surrounding reflections for materials.
 - **Git commit:** a named snapshot of your changes; take small, honest snapshots after working milestones.
 
-## Phase 1 — Plan the ten-space museum (restart here)
+## Phase 1 — Approved fifteen-space loop plan
 
-**Owner: Student 1. Do not open Unity for this stage.**
+**Owner: Student 1. Plan v3, approved 6 October 2026.** The current drawing is `Museum_FloorPlan.png`. The previous ten-room Unity skeleton is retained. Read `Extension_Build_Steps.md` before extending it; do not rebuild the whole museum.
 
-Open `Museum_FloorPlan.png` beside this README. It is the current v2 construction plan. North is +Z, east is +X, and Y is height. One Unity unit represents one metre. `(0,0,0)` is on the finished floor in the centre of Central Hall. All organiser objects will retain identity Transforms.
+### Layout and circulation
 
-### The ten spaces
+The existing Lobby, Central Hall, Artifact Exhibition, Art Gallery, Temporary Exhibition, Security, Toilet, Storage, L-shaped Staff Corridor and Exit Vestibule retain their bounds. The corridor remains one named space with two slabs.
 
-| # | Space | Nominal size | Why it is here |
+Add five rooms, each 7 × 8 m between wall centres:
+
+| Room | X bounds | Z bounds | Placement and purpose |
 |---|---|---|---|
-| 1 | Entrance Lobby / Reception | 10 × 6 m | South of the hub; combines the former lobby and entrance passage, with room for a ticket desk |
-| 2 | Central Hall | 10 × 10 m | Familiar orientation point connecting the public rooms and storage |
-| 3 | Artifact Exhibition Hall | 14 × 9 m | North; largest public combat room, preserving the original size |
-| 4 | Painting / Art Gallery | 11 × 8 m | West of the hub; long painting walls and a second door leading north |
-| 5 | Temporary Exhibition | 9 × 6 m | Northwest; joins art to artifacts to complete the gallery loop |
-| 6 | Security Office | 6 × 5 m | East of reception; connects public entrance to the staff route |
-| 7 | Public Toilet | 5 × 5 m | West of reception; one small restroom with a privacy divider, sink and toilet proxy |
-| 8 | Storage / Archive | 9 × 8 m | East of the hub; connects exhibits to the backstage route |
-| 9 | Maintenance / Staff Corridor | L shape: 9 × 3 m + 3 × 14 m | Runs behind security and along storage to the exit; two joined slabs count as ONE space |
-| 10 | Emergency Exit Vestibule | 3 × 4 m | North end of staff corridor; compact indoor endpoint |
+| Ancient Egypt | -10.5 to -3.5 | 14 to 22 | Southwest arm of the new wing; enters from Exhibition through D13 |
+| Stone Age | -10.5 to -3.5 | 22 to 30 | Northwest corner; connects Egypt to Greece/Rome |
+| Greece / Rome | -3.5 to 3.5 | 22 to 30 | Northern middle room; connects the two sides |
+| Asian Heritage | 3.5 to 10.5 | 22 to 30 | Northeast corner; connects Greece/Rome to Natural History |
+| Natural History | 3.5 to 10.5 | 14 to 22 | Southeast arm; returns to Exhibition through D18 |
 
-Sizes use wall centre lines. Rectangular clear interiors are approximately 0.2 m smaller in each enclosed dimension. Corridor legs are about 2.8 m clear wide. The two corridor slabs meet at X=14, Z=-6 to -3 with **no dividing wall**. They do not overlap.
+**New loop:** Exhibition → Egypt → Stone Age → Greece/Rome → Asian Heritage → Natural History → Exhibition. Doors D13–D18 are all **2.8 m wide × 2.5 m high**. The player can travel either direction without forced backtracking. No one-way gameplay gate is specified.
 
-Total nominal floor area is **636 m²**, about **31% larger** than v1's 487 m². Overall wall-centre bounds are X=-16 to +17 and Z=-11 to +14: **33 × 25 m** (about 33.2 × 25.2 m outside the wall faces). More of the footprint is now used, so floor area increases even though the former long entrance approach has been shortened. The toilet divider is furniture/interior detail, not an eleventh room.
+**Existing public loop:** Central → Exhibition → Temporary → Art → Central. **Existing staff loop:** Lobby → Security → Staff Corridor → Storage → Central → Lobby. Toilet remains a side room; Exit Vestibule remains an indoor endpoint, not an outdoor escape route.
 
-### Connections and movement
+Replace north-wall windows **W01 and W03** and their surrounding wall sections with D13 and D18. W02 remains at X=-1 to 1, Z=14. The open-air gap X=-3.5 to 3.5, Z=14 to 22 has no playable floor, ceiling, entrance or NavMesh. It is not a sixteenth room. Keep W02 collidable. Any later outdoor scenery is optional visual detail.
 
-**Public loop:** Central Hall → Artifact Exhibition → Temporary Exhibition → Art Gallery → Central Hall. These are four real door connections, not a route drawn through solid walls. A player can travel either direction and return by a different room.
+Total nominal floor area: **916 m² = 636 existing + 280 new**, approximately 44% larger. There are **15 named spaces, 16 slabs, 18 interior openings, 7 fixed windows and one closed glazed main entrance**. Wall-centre envelope: X=-16 to 17, Z=-11 to 30 (33 × 41 m); this envelope includes outdoor gaps. Clear room dimensions are approximately 6.8 × 7.8 m in the new galleries.
 
-**Staff alternative:** Lobby → Security → Staff Corridor → Storage → Central Hall → Lobby. Storage has one door into the south leg and one into the east leg of the same corridor. This gives a second way around the storage area. A loop permits alternative movement; it does not automatically make AI choose tactical routes.
+### Construction and scope
 
-**Endpoint route:** Storage → east staff corridor → Exit Vestibule. The toilet is deliberately a small side room off the lobby. It is not a required combat arena or an escape route.
+Floor top Y=0; floor thickness 0.2 m; walls 0.2 m thick and 3.5 m tall; ceiling underside Y=3.5. X points east, Z north, Y up; one Unity unit is one metre. Parent Transforms remain identity. Existing D01–D06 stay 2.4 m wide, D07–D12 and entrance D00 stay 2 m wide. All openings are 2.5 m high.
 
-Suggested inspection route: start at `(0,0,-9.5)` → lobby → toilet and back → security → south staff corridor → storage → central → artifacts → temporary → art → central → storage → east staff corridor → exit. Also test both loops in reverse.
+Use one shared public museum material palette. Distinguish themes through signage and a few exhibits, reusing cases, plinths and frames. Do not add five unique gameplay systems. One optional fixed pedestal and one provisional point light per new room are listed in the appendices. Keep primary paths at least 1.5 m clear, targeting 2 m near busy cover; test with real player/enemy bodies. These are gameplay targets, not building-code claims.
 
-### Decisions to understand before building
+Student 1 creates the shell, static cover, surfaces and lighting, then rebakes navigation. Student 2 owns working doors and player physics; Student 3 supplies original models; Student 4 tests enemy paths. Ceilings may stay inactive for editing but must be enabled for final movement/lighting tests.
 
-1. Build one storey with floor top Y=0, ceiling underside Y=3.5 and wall thickness 0.2 m.
-2. Public gallery openings D01–D06 are 2.4 m wide × 2.5 m high. Other doors, including toilet/security/service, are 2 m wide × 2.5 m high. Keep these open in the first greybox; Student 2 implements working leaves later.
-3. Keep primary lanes at least 1.5 m clear, aiming for 2 m around busy cover. Keep door approaches clear for approximately 1.5 m on both sides; evaluate corners with actual bodies. These are game-design targets, not a building-code compliance claim.
-4. The central hall and artifact room remain the main combat spaces. Art and temporary exhibitions are smaller supporting spaces. Toilet/security add believable facilities without needing unique gameplay systems.
-5. Use the original public museum palette: plaster, muted marble/wood, dark timber and dull brass. Use concrete/metal backstage, tile/ceramic in the restroom and restrained office materials in security.
-6. Use a static monitor prop, a dull mirror-like material and a simple toilet asset. Working CCTV, real-time mirrors, plumbing and usable toilets are not required for your role.
-7. D00 resolves the original blue labelled entrance as a glazed door. It stays closed initially; spawn inside. Other blue marks are windows. W08 is a high-sill frosted toilet window for privacy. No windows are navigation openings.
-8. The exit remains an indoor endpoint, with its northern window intact. Gameplay completion is assigned by the team; no outdoor level is required.
-9. Keep ceilings inactive for top-down greybox editing, then enable them for final movement and lighting tests. No additional corridors or rooms are hidden in the count of ten.
+**Evidence:** capture the approved plan, then actual Unity top and eye-level views after construction. A diagram is not evidence of a tested scene.
 
-**Phase 1 completion:** point to all ten spaces, trace the public loop and staff route, identify the player start and endpoint, and explain why we added support rooms rather than enlarging every combat room.
-
-**Evidence:** save this dimensioned PNG and a short decision note as planning evidence. Take a screenshot showing the full v2 drawing if your development log requires screenshots; do not present it as a built Unity level.
-
-**Commit after reviewing:** `docs(world): revise museum to ten-space loop layout`. Include this folder's README, PNG, CSV, validation report and the small regeneration source, plus the current-plan notices in the root README and Docs/DesignDoc.md. No commit is created automatically.
+**Suggested documentation commit:** `docs(world): plan five-gallery museum loop extension`. Stage the reviewed documentation files explicitly; tools and AI_HANDOFF.md remain optional/local according to your existing preference. No automatic commit or push.
 
 ---
 
@@ -113,10 +98,10 @@ Suggested inspection route: start at `(0,0,-9.5)` → lobby → toilet and back 
 
 1. Ask the team for the exact editor version, renderer, target platform and existing project location. In Unity, **Help > About Unity** shows the version. If a valid team project already exists, use it; do not create a competing project.
 2. If starting fresh, in Unity Hub choose **Projects > New project**, choose the agreed Unity 6 editor, and select **Universal 3D** (the URP template; template wording can vary). Name it `NoWayOut`. Create it in a new empty sibling location, not on top of this non-empty repository. Then close Unity and copy its `Assets`, `Packages` and `ProjectSettings` into the repository, merging the existing folder scaffold without overwriting team files. Reopen the repository via **Hub > Add > Add project from disk**. Do not copy `Library`, `Temp`, `Logs` or `UserSettings`.
-3. Before committing Unity-generated content, fix the currently empty `.gitignore`. Use the team-approved Unity ignore list: at minimum ignore root `Library/`, `Temp/`, `Obj/`, `Logs/`, `UserSettings/`, `Build/`, `Builds/` and generated IDE files. Keep `Assets`, `Packages` and `ProjectSettings`, all associated `.meta` files, and intentional source assets. Add `/tmp/` for local scratch outputs. Do not ignore baked assets under `Assets`.
+3. Review the existing `.gitignore`; do not replace it wholesale. Exclude Library, Temp, Obj, Logs, UserSettings and build/IDE outputs. Track Assets with their .meta files, Packages and ProjectSettings. Review settings changes before staging.
 4. Open **Edit > Project Settings > Editor**; verify **Asset Serialization: Force Text**. If **Version Control > Mode** is exposed there or in its own settings page, use **Visible Meta Files**. `.meta` files hold stable asset identities; losing them can break references. Move/rename imported assets inside Unity's Project window.
 5. In the **Project** panel use the existing `Assets/_Project` structure. Right-click the appropriate folder > **Create > Folder** to add `Materials/World`, `Textures/World`, `Models/Environment`, `Lighting/Museum`, `Navigation`, and `Prefabs/Environment/Museum`. Retain `Scenes`. Third-party packages stay under `Assets/_ThirdParty` where practical; do not move packages that rely on fixed paths.
-6. Use **File > New Scene**, choose a basic URP scene, then **File > Save As** to save `Assets/_Project/Scenes/Env.unity`. If `Env.unity` already exists, open and coordinate it instead of overwriting it. You own this environment scene. Do not also make a second museum geometry scene that will load on top of it.
+6. Open the existing `Assets/_Project/Scenes/Museum/Museum_Main.unity` scene. Save it before extending. For a fresh rebuild only, create a basic URP scene and save to that path; never overwrite an existing scene without a backup. This is the current museum scene, not the legacy Env.unity placeholder.
 7. In the **Hierarchy** right-click > **Create Empty**, name it `World_Museum`; use the Transform component's menu > **Reset**. Repeat for the children listed below. Keep every organiser at identity Transform.
 
 ```text
@@ -138,7 +123,7 @@ World_Museum
 
 ## Phase 3 — Greybox the complete museum
 
-**Owner: Student 1. Build all rooms before art.**
+**Owner: Student 1. Build all rooms before art.** Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build.
 
 ### Exactly how to create one table entry
 
@@ -203,9 +188,9 @@ The 2 m service openings leave a theoretical 1.3 m agent-centre width after a 0.
 
 **Owner: Student 1 validates space with Student 4; Student 4 implements motion/path following.**
 
-Supply the exact floor-level route markers from Appendix A to Student 4. They now cover all ten spaces, both corridor legs and the gallery loop. Empty markers have no renderer or collider; they are not enemy spawn scripts.
+Supply the exact floor-level route markers from Appendix A to Student 4. They now cover all fifteen spaces, both corridor legs and the gallery loop. Empty markers have no renderer or collider; they are not enemy spawn scripts.
 
-Request tests across every interior opening D01–D12 in both directions. Traverse the full gallery loop clockwise and counterclockwise, the lobby/security/corridor/storage/hall loop, both storage service doors and the endpoint route. With one gallery connection temporarily unavailable, verify that the remaining route works under the team’s actual path/door-state system. Check complete paths, doorway clearance, obstacle avoidance, facing and animation with the real enemy body. Two agents meeting in a doorway can still congest even if one agent passes; test this together. A NavMesh Agent alone will not start moving without code supplying a destination. Student 4 may provide a temporary NavMeshAgent diagnostic, but it must not replace the required custom IS path/animation work.
+Request tests across every interior opening D01–D18 in both directions. Traverse both the original gallery loop and the new D13–D18 loop clockwise and counterclockwise, the lobby/security/corridor/storage/hall loop, both storage service doors and the endpoint route. With one gallery connection temporarily unavailable, verify that the remaining route works under the team’s actual path/door-state system. Check complete paths, doorway clearance, obstacle avoidance, facing and animation with the real enemy body. Two agents meeting in a doorway can still congest even if one agent passes; test this together. A NavMesh Agent alone will not start moving without code supplying a destination. Student 4 may provide a temporary NavMeshAgent diagnostic, but it must not replace the required custom IS path/animation work.
 
 Record route, agent dimensions/type, result and any fix. Re-bake after geometry changes. **Evidence:** short navigation clip and route log. **Commit when environment fixes are made:** `fix(world): resolve museum navigation clearance`.
 
@@ -275,7 +260,7 @@ Check the actual Game view with the player camera: enemies, door edges and cover
 
 **Owner: Student 1; verify moving characters with Students 2 and 4.**
 
-1. Save `Env.unity`. Enable ceilings and final fixed geometry. On fixed floor/wall/ceiling/cover renderers enable **Contribute Global Illumination** through the Static flags or Renderer settings, and **Receive Global Illumination: Lightmaps** where available. Do not mark players, enemies, opening doors or movable crates as lighting-static.
+1. Save `Museum_Main.unity`. Enable ceilings and final fixed geometry. On fixed floor/wall/ceiling/cover renderers enable **Contribute Global Illumination** through the Static flags or Renderer settings, and **Receive Global Illumination: Lightmaps** where available. Do not mark players, enemies, opening doors or movable crates as lighting-static.
 2. For imported static meshes needing it: select FBX > **Model > Generate Lightmap UVs > Apply**. This does not fix all bad topology or overlapping custom UV layouts; inspect warnings and coordinate with Student 3.
 3. Select the fixed point lights, set **Mode: Baked**. Open **Window > Rendering > Lighting**. Create/assign a Lighting Settings asset if the scene has none. Enable Baked Global Illumination. Choose a supported Progressive lightmapper; CPU is a practical fallback when the GPU backend is unavailable. Start at Lightmap Resolution `10` texels/unit and Max Lightmap Size `1024` for iteration. Raise resolution only where the visible result warrants it; settings vary by editor version.
 4. Use the probe system configured by the team's URP version. If using classic Light Probe Groups, create **GameObject > Light > Light Probe Group**, enter Edit Light Probes, and duplicate/move probes around walkable room centres, door approaches and lanes at roughly Y=0.5 and Y=1.8. Keep probes in open space and on both sides of doors, not inside walls or cover. Use the room/door coordinates in Appendix A as horizontal anchors. This is a coverage starting pattern, not an exact final probe solution. If the URP project already uses Adaptive Probe Volumes, retain and configure that system with the team instead of assuming the classic group applies.
@@ -321,7 +306,7 @@ Open **Window > Analysis > Profiler** for timing and use Game view **Stats** for
 **Owner: Student 1's environment plus each teammate's own component.**
 
 1. Agree the museum concept, scene ownership and version changes in the shared project docs. The older repository assigns some interactables to S3; this assignment/request places interaction physics with S2 and original modelling with S3. Make this explicit together.
-2. Supply `Env.unity`, its referenced prefabs/materials/textures, NavMesh and lighting data, markers and this guide. Every additive scene must share the same origin and metre scale. Do not move `World_Museum` to make a teammate's offset scene appear aligned.
+2. Supply `Museum_Main.unity`, its referenced prefabs/materials/textures, NavMesh and lighting data, markers and this guide. Every additive scene must share the same origin and metre scale. Do not move `World_Museum` to make a teammate's offset scene appear aligned.
 3. Student 2 places doors and the player; Student 4 places agents; Student 3 supplies custom models. If the existing multi-scene workflow is retained, ensure Bootstrap actually loads the required scenes. Opening Env alone does not prove integrated gameplay works.
 4. Match door-leaf size/pivot to each opening; allow space for swing. Keep moving doors out of the static navigation bake. The team must decide how closed doors block navigation (for example coordinated obstacle carving/state logic) and how agents wait/open/replan. Do not call a closed physical door traversable just because the static mesh connects through it.
 5. Re-test nav after model/collider changes, light bake after fixed art changes, and camera/listener count after scene loading. Keep a single enabled environment NavMesh surface/data set for this initial layout.
@@ -336,7 +321,7 @@ Open **Window > Analysis > Profiler** for timing and use Game view **Stats** for
 Open **File > Build Profiles** in Unity 6 (older editors use Build Settings). Use the agreed target platform and verify the entry/Bootstrap scene is included. Add environment scenes if loaded at runtime by the team's approach. Build to an ignored `Builds` location, run the executable and test the complete game; editor-only play is insufficient.
 
 - [ ] Start point is safe and the camera does not spawn inside a floor/prop.
-- [ ] All ten spaces and D01–D12 work in both directions with ceilings active; both corridor legs join without a hidden dividing wall.
+- [ ] All fifteen spaces and D01–D18 work in both directions with ceilings active; both corridor legs join without a hidden dividing wall.
 - [ ] Both loops work in the integrated game; door-state/path logic handles unavailable connections.
 - [ ] Windows and boundaries stop unintended escape; no falling through floor seams.
 - [ ] Real player, enemy and interactive door collisions work together.
@@ -354,14 +339,15 @@ Open **File > Build Profiles** in Unity 6 (older editors use Build Settings). Us
 
 Save the scene and assets. Review changes in your chosen Git client; stage only your intentional work and its necessary dependencies. Write the relevant milestone message above, commit, and push your work branch according to team policy. Record the resulting hash beside the evidence. Do not make empty commits merely to satisfy a count, commit `Library`, or include unrelated teammate changes.
 
-For this documentation-only milestone, a terminal alternative from the repository root is:
+The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. For this documentation-only milestone, a terminal alternative from the repository root is:
 
 ```sh
 git diff -- Docs/WorldBuilder
 git status --short
-git add Docs/WorldBuilder README.md Docs/DesignDoc.md
+git add Docs/WorldBuilder/README.md Docs/WorldBuilder/Extension_Build_Steps.md Docs/WorldBuilder/Museum_FloorPlan.png Docs/WorldBuilder/Museum_Extension_Preview.png Docs/WorldBuilder/Museum_Geometry.csv Docs/WorldBuilder/Plan_Validation.json
+git add README.md Docs/DesignDoc.md Docs/ArtBible.md Docs/OptimisationLog.md
 git diff --cached --stat
-git commit -m "docs(world): revise museum to ten-space loop layout"
+git commit -m "docs(world): plan five-gallery museum loop extension"
 ```
 
 `git diff` does not show untracked file contents; open those files directly before staging. Check that the staged list contains only the intended documentation. Pushing depends on your existing branch and remote arrangement; don't push to main by assumption.
@@ -371,7 +357,8 @@ git commit -m "docs(world): revise museum to ten-space loop layout"
 | Prompt | What to demonstrate |
 |---|---|
 | Why a central hall? | It gives an identifiable hub; the public gallery loop reduces forced backtracking while security and storage connect a separate staff route |
-| Why ten spaces? | Three small additions make the building believable; gallery connections improve movement; one L-shaped corridor counts as one space |
+| Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
+| Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
 | Why greybox first? | You test scale, openings and cover before spending time on art that might need moving |
 | Why this coordinate convention? | Ground at Y=0 and identity parents make dimensions predictable and allow teammates to align scenes |
 | Why broad door openings? | Bodies need collider and navigation clearance; visual width alone is insufficient |
@@ -383,12 +370,12 @@ git commit -m "docs(world): revise museum to ten-space loop layout"
 
 ## Build appendices
 
-The following coordinate tables and the accompanying PNG are generated from the same geometry specification. `Museum_Geometry.csv` provides the same physical cube rows for filtering or manual checking; it is not a Unity importer. The original blueprint has been revised into the approved ten-space v2 layout on a metre grid. All geometry values below are intentional design values, not values mandated by the assignment.
+The following coordinate tables and the accompanying PNG are generated from the same geometry specification. `Museum_Geometry.csv` provides the same physical cube rows for filtering or manual checking; it is not a Unity importer. The original blueprint has been revised into the approved fifteen-space v3 loop layout on a metre grid. All geometry values below are intentional design values, not values mandated by the assignment.
 
 
-## Appendix A — Exact v2 shell geometry
+## Appendix A — Exact v3 shell geometry
 
-**Use these v2 values instead of every earlier table.** Positions are object centres. Cube Scale is full size, not half size. All physical rows use Rotation `(0,0,0)`, enabled non-trigger Box Colliders and no Rigidbody. All organiser parents must be Position `(0,0,0)`, Rotation `(0,0,0)`, Scale `(1,1,1)` so the listed local positions equal world positions. Ceilings use Default layer and are initially inactive through their parent; all other construction cubes use WorldSolid.
+**Use these v3 values for the completed extension. Existing v2 builders must follow Extension_Build_Steps.md to preserve their work.** Positions are object centres. Cube Scale is full size, not half size. All physical rows use Rotation `(0,0,0)`, enabled non-trigger Box Colliders and no Rigidbody. All organiser parents must be Position `(0,0,0)`, Rotation `(0,0,0)`, Scale `(1,1,1)` so the listed local positions equal world positions. Ceilings use Default layer and are initially inactive through their parent; all other construction cubes use WorldSolid.
 
 ### Room/slab bounds
 
@@ -407,6 +394,11 @@ Each range is a wall-centre coordinate range. The two Maintenance rows form one 
 | MaintenanceSouth | Maintenance / Staff Corridor | 5 to 14 | -6 to -3 | 9 × 3 |
 | MaintenanceEast | Maintenance / Staff Corridor | 14 to 17 | -6 to 8 | 3 × 14 |
 | Exit | Emergency Exit Vestibule | 14 to 17 | 8 to 12 | 3 × 4 |
+| Egypt | Ancient Egypt | -10.5 to -3.5 | 14 to 22 | 7 × 8 |
+| StoneAge | Stone Age | -10.5 to -3.5 | 22 to 30 | 7 × 8 |
+| GreeceRome | Greece / Rome | -3.5 to 3.5 | 22 to 30 | 7 × 8 |
+| AsianHeritage | Asian Heritage | 3.5 to 10.5 | 22 to 30 | 7 × 8 |
+| NaturalHistory | Natural History | 3.5 to 10.5 | 14 to 22 | 7 × 8 |
 
 ### Floors and ceilings
 
@@ -436,6 +428,16 @@ Floors: top Y=0, bottom Y=-0.2. Ceilings: underside Y=3.5, top Y=3.7. Floor slab
 | Ceiling_MaintenanceEast | Ceilings | (15.5, 3.6, 1) | (3, 0.2, 14) |
 | Floor_Exit | Floors | (15.5, -0.1, 10) | (3, 0.2, 4) |
 | Ceiling_Exit | Ceilings | (15.5, 3.6, 10) | (3, 0.2, 4) |
+| Floor_Egypt | Floors | (-7, -0.1, 18) | (7, 0.2, 8) |
+| Ceiling_Egypt | Ceilings | (-7, 3.6, 18) | (7, 0.2, 8) |
+| Floor_StoneAge | Floors | (-7, -0.1, 26) | (7, 0.2, 8) |
+| Ceiling_StoneAge | Ceilings | (-7, 3.6, 26) | (7, 0.2, 8) |
+| Floor_GreeceRome | Floors | (0, -0.1, 26) | (7, 0.2, 8) |
+| Ceiling_GreeceRome | Ceilings | (0, 3.6, 26) | (7, 0.2, 8) |
+| Floor_AsianHeritage | Floors | (7, -0.1, 26) | (7, 0.2, 8) |
+| Ceiling_AsianHeritage | Ceilings | (7, 3.6, 26) | (7, 0.2, 8) |
+| Floor_NaturalHistory | Floors | (7, -0.1, 18) | (7, 0.2, 8) |
+| Ceiling_NaturalHistory | Ceilings | (7, 3.6, 18) | (7, 0.2, 8) |
 
 ### Wall pieces, headers and sills
 
@@ -484,16 +486,28 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_18_W09_Sill | (15.5, 0.6, 12) | (1.6, 1.2, 0.2) |
 | Wall_18_W09_Header | (15.5, 3.1, 12) | (1.6, 0.8, 0.2) |
 | Wall_18_End | (16.65, 1.75, 12) | (0.7, 3.5, 0.2) |
-| Wall_19_Before_W01 | (-6.25, 1.75, 14) | (1.5, 3.5, 0.2) |
-| Wall_19_W01_Sill | (-4.5, 0.6, 14) | (2, 1.2, 0.2) |
-| Wall_19_W01_Header | (-4.5, 3.1, 14) | (2, 0.8, 0.2) |
-| Wall_19_Before_W02 | (-2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
-| Wall_19_W02_Sill | (0, 0.6, 14) | (2, 1.2, 0.2) |
-| Wall_19_W02_Header | (0, 3.1, 14) | (2, 0.8, 0.2) |
-| Wall_19_Before_W03 | (2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
-| Wall_19_W03_Sill | (4.5, 0.6, 14) | (2, 1.2, 0.2) |
-| Wall_19_W03_Header | (4.5, 3.1, 14) | (2, 0.8, 0.2) |
-| Wall_19_End | (6.25, 1.75, 14) | (1.5, 3.5, 0.2) |
+| Wall_40_Solid | (-8.75, 1.75, 14) | (3.5, 3.5, 0.2) |
+| Wall_41_Before_D13 | (-6.75, 1.75, 14) | (0.5, 3.5, 0.2) |
+| Wall_41_D13_Header | (-5.1, 3, 14) | (2.8, 1, 0.2) |
+| Wall_41_End | (-3.6, 1.75, 14) | (0.2, 3.5, 0.2) |
+| Wall_42_Before_W02 | (-2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
+| Wall_42_W02_Sill | (0, 0.6, 14) | (2, 1.2, 0.2) |
+| Wall_42_W02_Header | (0, 3.1, 14) | (2, 0.8, 0.2) |
+| Wall_42_End | (2.25, 1.75, 14) | (2.5, 3.5, 0.2) |
+| Wall_43_Before_D18 | (3.6, 1.75, 14) | (0.2, 3.5, 0.2) |
+| Wall_43_D18_Header | (5.1, 3, 14) | (2.8, 1, 0.2) |
+| Wall_43_End | (6.75, 1.75, 14) | (0.5, 3.5, 0.2) |
+| Wall_44_Solid | (8.75, 1.75, 14) | (3.5, 3.5, 0.2) |
+| Wall_45_Before_D14 | (-9.45, 1.75, 22) | (2.1, 3.5, 0.2) |
+| Wall_45_D14_Header | (-7, 3, 22) | (2.8, 1, 0.2) |
+| Wall_45_End | (-4.55, 1.75, 22) | (2.1, 3.5, 0.2) |
+| Wall_46_Solid | (0, 1.75, 22) | (7, 3.5, 0.2) |
+| Wall_47_Before_D17 | (4.55, 1.75, 22) | (2.1, 3.5, 0.2) |
+| Wall_47_D17_Header | (7, 3, 22) | (2.8, 1, 0.2) |
+| Wall_47_End | (9.45, 1.75, 22) | (2.1, 3.5, 0.2) |
+| Wall_48_Solid | (-7, 1.75, 30) | (7, 3.5, 0.2) |
+| Wall_49_Solid | (0, 1.75, 30) | (7, 3.5, 0.2) |
+| Wall_50_Solid | (7, 1.75, 30) | (7, 3.5, 0.2) |
 | Wall_20_Before_W04 | (-16, 1.75, -2.25) | (0.2, 3.5, 1.5) |
 | Wall_20_W04_Sill | (-16, 0.6, -0.75) | (0.2, 1.2, 1.5) |
 | Wall_20_W04_Header | (-16, 3.1, -0.75) | (0.2, 0.8, 1.5) |
@@ -505,6 +519,8 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_21_W06_Sill | (-16, 0.6, 8) | (0.2, 1.2, 2) |
 | Wall_21_W06_Header | (-16, 3.1, 8) | (0.2, 0.8, 2) |
 | Wall_21_End | (-16, 1.75, 10) | (0.2, 3.5, 2) |
+| Wall_51_Solid | (-10.5, 1.75, 18) | (0.2, 3.5, 8) |
+| Wall_52_Solid | (-10.5, 1.75, 26) | (0.2, 3.5, 8) |
 | Wall_22_Solid | (-10, 1.75, -8.5) | (0.2, 3.5, 5) |
 | Wall_23_Before_D05 | (-7, 1.75, 5.9) | (0.2, 3.5, 1.8) |
 | Wall_23_D05_Header | (-7, 3, 8) | (0.2, 1, 2.4) |
@@ -518,6 +534,14 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_28_Before_D02 | (-5, 1.75, -2.1) | (0.2, 3.5, 1.8) |
 | Wall_28_D02_Header | (-5, 3, 0) | (0.2, 1, 2.4) |
 | Wall_28_End | (-5, 1.75, 3.1) | (0.2, 3.5, 3.8) |
+| Wall_53_Solid | (-3.5, 1.75, 18) | (0.2, 3.5, 8) |
+| Wall_54_Before_D15 | (-3.5, 1.75, 23.3) | (0.2, 3.5, 2.6) |
+| Wall_54_D15_Header | (-3.5, 3, 26) | (0.2, 1, 2.8) |
+| Wall_54_End | (-3.5, 1.75, 28.7) | (0.2, 3.5, 2.6) |
+| Wall_55_Solid | (3.5, 1.75, 18) | (0.2, 3.5, 8) |
+| Wall_56_Before_D16 | (3.5, 1.75, 23.3) | (0.2, 3.5, 2.6) |
+| Wall_56_D16_Header | (3.5, 3, 26) | (0.2, 1, 2.8) |
+| Wall_56_End | (3.5, 1.75, 28.7) | (0.2, 3.5, 2.6) |
 | Wall_29_Before_D10 | (5, 1.75, -10.25) | (0.2, 3.5, 1.5) |
 | Wall_29_D10_Header | (5, 3, -8.5) | (0.2, 1, 2) |
 | Wall_29_End | (5, 1.75, -6.75) | (0.2, 3.5, 1.5) |
@@ -527,6 +551,8 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_32_D06_Header | (5, 3, 0) | (0.2, 1, 2.4) |
 | Wall_32_End | (5, 1.75, 3.1) | (0.2, 3.5, 3.8) |
 | Wall_33_Solid | (7, 1.75, 9.5) | (0.2, 3.5, 9) |
+| Wall_57_Solid | (10.5, 1.75, 18) | (0.2, 3.5, 8) |
+| Wall_58_Solid | (10.5, 1.75, 26) | (0.2, 3.5, 8) |
 | Wall_34_Solid | (11, 1.75, -8.5) | (0.2, 3.5, 5) |
 | Wall_35_Before_D07 | (14, 1.75, -1.5) | (0.2, 3.5, 3) |
 | Wall_35_D07_Header | (14, 3, 1) | (0.2, 1, 2) |
@@ -545,9 +571,7 @@ Create these cubes under Windows. Initially use opaque M_WindowGreybox; later us
 | Wall_01_W08_Pane | (-7.75, 2.25, -11) | (1.5, 0.9, 0.05) |
 | Wall_03_W07_Pane | (8, 1.95, -11) | (2, 1.5, 0.05) |
 | Wall_18_W09_Pane | (15.5, 1.95, 12) | (1.6, 1.5, 0.05) |
-| Wall_19_W01_Pane | (-4.5, 1.95, 14) | (2, 1.5, 0.05) |
-| Wall_19_W02_Pane | (0, 1.95, 14) | (2, 1.5, 0.05) |
-| Wall_19_W03_Pane | (4.5, 1.95, 14) | (2, 1.5, 0.05) |
+| Wall_42_W02_Pane | (0, 1.95, 14) | (2, 1.5, 0.05) |
 | Wall_20_W04_Pane | (-16, 1.95, -0.75) | (0.05, 1.5, 1.5) |
 | Wall_20_W05_Pane | (-16, 1.95, 2.75) | (0.05, 1.5, 1.5) |
 | Wall_21_W06_Pane | (-16, 1.95, 8) | (0.05, 1.5, 2) |
@@ -555,7 +579,7 @@ Create these cubes under Windows. Initially use opaque M_WindowGreybox; later us
 
 ### Door openings and empty floor markers
 
-Create **empty GameObjects** under Markers for these rows. Scale `(1,1,1)`; no renderer or collider. Do not create solid door cubes. Public openings D01–D06 are 2.4 m wide, others 2 m, all 2.5 m tall. Marker Y=0 is floor height; working door hinge pivots are Student 2’s separate responsibility. Facing follows the connection arrow, except D00 which faces into Lobby.
+Create **empty GameObjects** under Markers for these rows. Scale `(1,1,1)`; no renderer or collider. Do not create solid door cubes. D01–D06 are 2.4 m wide; D13–D18 are 2.8 m wide; D00 and D07–D12 are 2 m wide. All are 2.5 m tall. Marker Y=0 is floor height; working door hinge pivots are Student 2’s separate responsibility. Facing follows the connection arrow, except D00 which faces into Lobby.
 
 | Marker | Position X,Y,Z | Rotation X,Y,Z | Width | Connection |
 | --- | --- | --- | --- | --- |
@@ -572,6 +596,12 @@ Create **empty GameObjects** under Markers for these rows. Scale `(1,1,1)`; no r
 | D10 | (5, 0, -8.5) | (0, 90, 0) | 2 | Lobby → Security |
 | D11 | (-5, 0, -8.5) | (0, -90, 0) | 2 | Lobby → Toilet |
 | D12 | (15.5, 0, 8) | (0, 0, 0) | 2 | MaintenanceEast → Exit |
+| D13 | (-5.1, 0, 14) | (0, 0, 0) | 2.8 | Exhibition → Egypt |
+| D14 | (-7, 0, 22) | (0, 0, 0) | 2.8 | Egypt → StoneAge |
+| D15 | (-3.5, 0, 26) | (0, 90, 0) | 2.8 | StoneAge → GreeceRome |
+| D16 | (3.5, 0, 26) | (0, 90, 0) | 2.8 | GreeceRome → AsianHeritage |
+| D17 | (7, 0, 22) | (0, 180, 0) | 2.8 | AsianHeritage → NaturalHistory |
+| D18 | (5.1, 0, 14) | (0, 180, 0) | 2.8 | NaturalHistory → Exhibition |
 
 ### Route markers
 
@@ -591,6 +621,11 @@ Empty GameObjects under Markers, rotation `(0,0,0)`, scale `(1,1,1)`. These are 
 | Route_Exit | (15.5, 0, 10) |
 | Route_Security | (8, 0, -8.5) |
 | Route_Toilet | (-7, 0, -8.5) |
+| Route_Egypt | (-7, 0, 18) |
+| Route_StoneAge | (-7, 0, 26) |
+| Route_GreeceRome | (0, 0, 26) |
+| Route_AsianHeritage | (7, 0, 26) |
+| Route_NaturalHistory | (7, 0, 18) |
 
 ## Appendix B — Fixed cover and fixture placeholders
 
@@ -614,10 +649,15 @@ Create under FixedCover, Rotation `(0,0,0)`, Box Collider enabled, WorldSolid. A
 | Partition_Toilet | (-8, 1, -10) | (0.1, 2, 1.6) |
 | Bowl_Toilet_Proxy | (-9, 0.35, -10) | (0.6, 0.7, 0.8) |
 | Sink_Toilet_Proxy | (-6.5, 0.85, -6.5) | (1, 0.3, 0.5) |
+| Pedestal_Egypt | (-9.4, 0.6, 20.8) | (1.2, 1.2, 1.2) |
+| Pedestal_StoneAge | (-9.4, 0.6, 28.8) | (1.2, 1.2, 1.2) |
+| Pedestal_GreeceRome | (-2.4, 0.6, 28.8) | (1.2, 1.2, 1.2) |
+| Pedestal_AsianHeritage | (4.6, 0.6, 28.8) | (1.2, 1.2, 1.2) |
+| Pedestal_NaturalHistory | (4.6, 0.6, 20.8) | (1.2, 1.2, 1.2) |
 
 ## Appendix C — Initial point lights
 
-Create under Lighting; Rotation `(0,0,0)`, Scale `(1,1,1)`. Ranges are metres. Intensities are provisional values for the ordinary URP Light Inspector, not universal physical units. Start with Shadows None; use Realtime for placement, then Baked for the fixed-light bake. Keep ceilings active while evaluating. These positions cover all ten spaces and both corridor legs; tune and record actual brightness in Unity.
+Create under Lighting; Rotation `(0,0,0)`, Scale `(1,1,1)`. Ranges are metres. Intensities are provisional values for the ordinary URP Light Inspector, not universal physical units. Start with Shadows None; use Realtime for placement, then Baked for the fixed-light bake. Keep ceilings active while evaluating. These positions cover all fifteen spaces and both corridor legs; tune and record actual brightness in Unity.
 
 | Name | Position X,Y,Z | Range | Initial intensity | Colour |
 | --- | --- | --- | --- | --- |
@@ -638,6 +678,11 @@ Create under Lighting; Rotation `(0,0,0)`, Scale `(1,1,1)`. Ranges are metres. I
 | L_StaffEast | (15.5, 3, 1) | 5 | 1 | #D7E4EE |
 | L_StaffNorth | (15.5, 3, 6) | 4 | 1 | #D7E4EE |
 | L_Exit | (15.5, 3, 10) | 4 | 1 | #D7E4EE |
+| L_Egypt | (-7, 3, 18) | 7 | 1.4 | #FFE2BA |
+| L_StoneAge | (-7, 3, 26) | 7 | 1.4 | #FFE2BA |
+| L_GreeceRome | (0, 3, 26) | 7 | 1.4 | #FFE2BA |
+| L_AsianHeritage | (7, 3, 26) | 7 | 1.4 | #FFE2BA |
+| L_NaturalHistory | (7, 3, 18) | 7 | 1.4 | #FFE2BA |
 
 ## Appendix D — Minimal fixed decoration
 
@@ -658,11 +703,11 @@ Copy a row for each real milestone. Record actual results rather than marking pl
 
 | Date | Phase/change | Screenshot/clip | Actual result | Decision/why | Commit hash |
 | --- | --- | --- | --- | --- | --- |
-| YYYY-MM-DD | v2 plan / later milestone | Evidence/01-plan-v2.png | Plan check only; Unity pending | Gallery loop and support rooms | After committing |
+| YYYY-MM-DD | v3 extension plan / later milestone | Evidence/01-plan-v3.png | Plan check only; Unity pending | Gallery loop and support rooms | After committing |
 
 ## Plan validation and outstanding work
 
-`Plan_Validation.json` records document-generation checks. The plan has ten named spaces, eleven non-overlapping floor slabs, twelve interior doorways, one closed main entrance and nine fixed windows. A conservative 2D model checks positive sizes, unique cube names, door ownership between the correct adjacent rooms, reachable route markers, direct routes restricted to each door's two adjacent rooms, and alternate gallery routes with each loop doorway blocked individually. It uses a 0.25 m grid and 0.35 m body radius with fixed cover included.
+`Plan_Validation.json` records document-generation checks. The plan has fifteen named spaces, sixteen non-overlapping floor slabs, eighteen interior doorways, one closed main entrance and seven fixed windows. A conservative 2D model checks positive sizes, unique cube names, door ownership between the correct adjacent rooms, reachable route markers, direct routes restricted to each door's two adjacent rooms, and alternate routes with each of the four original public-loop doors and six new gallery-loop doors blocked individually. It uses a 0.25 m grid and 0.35 m body radius with fixed cover included.
 
 This is **not** a Unity NavMesh/physics test. Actual agent dimensions, voxelization, controller skin width, dynamic doors, animation, shooting, lighting, visibility and build performance still need in-engine validation. The simplified model does not establish accessibility/building-code compliance or guarantee tactical AI behaviour.
 
