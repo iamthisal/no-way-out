@@ -1,4 +1,4 @@
-# Abandoned museum — world art guide (plan v3.1)
+# Abandoned museum — world art guide (plan v3.2)
 
 Use [the current World Builder manual](WorldBuilder/README.md) and [floor plan](WorldBuilder/Museum_FloorPlan.png). This is an art direction target, not a statement that assets or lighting have been completed.
 

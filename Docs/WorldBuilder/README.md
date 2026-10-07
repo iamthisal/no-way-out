@@ -1,6 +1,6 @@
 # Abandoned Museum — Student 1 World Builder manual
 
-**Plan v3.1 · 6 October 2026 · 15 named spaces · Current stage: extend the existing greybox**
+**Plan v3.2 · 6 October 2026 · 15 named spaces · Current stage: extend the existing greybox**
 
 **Approved five-gallery loop extension.** Keep the ten-space v2 skeleton. Add five northern galleries and replace the Exhibition north-wall and Exit north-wall assemblies to turn W01/W03 into D13/D18. W02 becomes the locked glass door D19; W09 becomes the closed exit door D20. Start with [Extension_Build_Steps.md](Extension_Build_Steps.md); the full appendices below also support a fresh build. The Unity scene has not been changed by this documentation update.
 
@@ -54,7 +54,7 @@ The rubric assigns Visual Cohesion 15, Build Stability 15, Role-Specific Quality
 
 ## Phase 1 — Approved fifteen-space loop plan
 
-**Owner: Student 1. Plan v3.1, approved 6 October 2026.** The current drawing is `Museum_FloorPlan.png`. The previous ten-room Unity skeleton is retained. Read `Extension_Build_Steps.md` before extending it; do not rebuild the whole museum.
+**Owner: Student 1. Plan v3.2, approved 6 October 2026.** The current drawing is `Museum_FloorPlan.png`. The previous ten-room Unity skeleton is retained. Read `Extension_Build_Steps.md` before extending it; do not rebuild the whole museum.
 
 ### Layout and circulation
 
@@ -123,7 +123,7 @@ World_Museum
 
 ## Phase 3 — Greybox the complete museum
 
-**Owner: Student 1. Build all rooms before art.** Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build.
+**Owner: Student 1. Build all rooms before art.** Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build. Existing v2 builders should use Extension_Build_Steps.md instead of duplicating existing objects. The following instructions also support a fresh build.
 
 ### Exactly how to create one table entry
 
@@ -339,7 +339,7 @@ Open **File > Build Profiles** in Unity 6 (older editors use Build Settings). Us
 
 Save the scene and assets. Review changes in your chosen Git client; stage only your intentional work and its necessary dependencies. Write the relevant milestone message above, commit, and push your work branch according to team policy. Record the resulting hash beside the evidence. Do not make empty commits merely to satisfy a count, commit `Library`, or include unrelated teammate changes.
 
-The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. For this documentation-only milestone, a terminal alternative from the repository root is:
+The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. The commands below exclude tools and AI_HANDOFF.md, following your earlier preference. Review the root README and DesignDoc carefully because they already had local changes before this update. For this documentation-only milestone, a terminal alternative from the repository root is:
 
 ```sh
 git diff -- Docs/WorldBuilder
@@ -357,6 +357,9 @@ git commit -m "docs(world): plan five-gallery museum loop extension"
 | Prompt | What to demonstrate |
 |---|---|
 | Why a central hall? | It gives an identifiable hub; the public gallery loop reduces forced backtracking while security and storage connect a separate staff route |
+| Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
+| Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
+| Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
 | Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
 | Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
 | Why fifteen spaces? | Five themed galleries extend the existing ten-space museum as a continuous loop; shared assets limit the extra workload; the open-air gap is not a room |
@@ -403,9 +406,9 @@ Delete Wall_18_W09_Sill under Walls. Rename and resize the other four objects us
 
 | Existing object | New name | Position X,Y,Z | Scale X,Y,Z |
 |---|---|---|---|
-| Wall_18_Before_W09 | Wall_59_Before_D20 | (14.25, 1.75, 12) | (0.5, 3.5, 0.2) |
+| Wall_18_Before_W09 | Wall_59_Before_D20 | (14.2, 1.75, 12) | (0.6, 3.5, 0.2) |
 | Wall_18_W09_Header | Wall_59_D20_Header | (15.5, 3, 12) | (2, 1, 0.2) |
-| Wall_18_End | Wall_59_End | (16.75, 1.75, 12) | (0.5, 3.5, 0.2) |
+| Wall_18_End | Wall_59_End | (16.8, 1.75, 12) | (0.6, 3.5, 0.2) |
 | Wall_18_W09_Pane | Exit_ClosedDoorPlaceholder | (15.5, 1.25, 12) | (2, 2.5, 0.1) |
 
 Keep the first three under Walls and the panel under Windows. Apply an opaque grey/metal material to the exit panel. It remains closed and collidable for now. Student 2 owns future interaction; the team defines level completion. Do not remove its collision or let the player walk out until an exterior landing or a transition is implemented and tested. No outdoor gameplay area is specified here.
@@ -421,9 +424,9 @@ Optional empty door markers: D19 at (0,0,14), D20 at (15.5,0,12), both Rotation 
 Save with Ctrl+S. Take one eye-level screenshot of each door. With the actual controller, confirm the glass is see-through but blocks movement, the exit blocks movement, and all D01–D18 interior passages still work. Re-bake navigation/lighting after the changes when those stages are reached. Suggested scene commit after verification: feat(world): add exit and locked courtyard doors. Student 1 owns this geometry/material work; no interaction code is required here.
 
 
-## Appendix A — Exact v3.1 shell geometry
+## Appendix A — Exact v3.2 shell geometry
 
-**Use these v3.1 values for the completed extension. Existing v2 builders must follow Extension_Build_Steps.md to preserve their work.** Positions are object centres. Cube Scale is full size, not half size. All physical rows use Rotation `(0,0,0)`, enabled non-trigger Box Colliders and no Rigidbody. All organiser parents must be Position `(0,0,0)`, Rotation `(0,0,0)`, Scale `(1,1,1)` so the listed local positions equal world positions. Ceilings use Default layer and are initially inactive through their parent; all other construction cubes use WorldSolid.
+**Use these v3.2 values for the completed extension. Existing v2 builders must follow Extension_Build_Steps.md to preserve their work.** Positions are object centres. Cube Scale is full size, not half size. All physical rows use Rotation `(0,0,0)`, enabled non-trigger Box Colliders and no Rigidbody. All organiser parents must be Position `(0,0,0)`, Rotation `(0,0,0)`, Scale `(1,1,1)` so the listed local positions equal world positions. Ceilings use Default layer and are initially inactive through their parent; all other construction cubes use WorldSolid.
 
 ### Room/slab bounds
 
@@ -493,7 +496,7 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 
 | Name | Position X,Y,Z | Scale X,Y,Z |
 | --- | --- | --- |
-| Wall_01_Before_W08 | (-9.25, 1.75, -11) | (1.5, 3.5, 0.2) |
+| Wall_01_Before_W08 | (-9.3, 1.75, -11) | (1.6, 3.5, 0.2) |
 | Wall_01_W08_Sill | (-7.75, 0.9, -11) | (1.5, 1.8, 0.2) |
 | Wall_01_W08_Header | (-7.75, 3.1, -11) | (1.5, 0.8, 0.2) |
 | Wall_01_End | (-6, 1.75, -11) | (2, 3.5, 0.2) |
@@ -503,20 +506,20 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_03_Before_W07 | (6, 1.75, -11) | (2, 3.5, 0.2) |
 | Wall_03_W07_Sill | (8, 0.6, -11) | (2, 1.2, 0.2) |
 | Wall_03_W07_Header | (8, 3.1, -11) | (2, 0.8, 0.2) |
-| Wall_03_End | (10, 1.75, -11) | (2, 3.5, 0.2) |
-| Wall_04_Solid | (-7.5, 1.75, -6) | (5, 3.5, 0.2) |
+| Wall_03_End | (10.05, 1.75, -11) | (2.1, 3.5, 0.2) |
+| Wall_04_Solid | (-7.55, 1.75, -6) | (5.1, 3.5, 0.2) |
 | Wall_05_Before_D09 | (6, 1.75, -6) | (2, 3.5, 0.2) |
 | Wall_05_D09_Header | (8, 3, -6) | (2, 1, 0.2) |
 | Wall_05_End | (10, 1.75, -6) | (2, 3.5, 0.2) |
 | Wall_06_Solid | (12.5, 1.75, -6) | (3, 3.5, 0.2) |
-| Wall_07_Solid | (15.5, 1.75, -6) | (3, 3.5, 0.2) |
+| Wall_07_Solid | (15.55, 1.75, -6) | (3.1, 3.5, 0.2) |
 | Wall_08_Before_D01 | (-3.1, 1.75, -5) | (3.8, 3.5, 0.2) |
 | Wall_08_D01_Header | (0, 3, -5) | (2.4, 1, 0.2) |
 | Wall_08_End | (3.1, 1.75, -5) | (3.8, 3.5, 0.2) |
-| Wall_09_Solid | (-10.5, 1.75, -3) | (11, 3.5, 0.2) |
+| Wall_09_Solid | (-10.55, 1.75, -3) | (11.1, 3.5, 0.2) |
 | Wall_10_Before_D08 | (6.75, 1.75, -3) | (3.5, 3.5, 0.2) |
 | Wall_10_D08_Header | (9.5, 3, -3) | (2, 1, 0.2) |
-| Wall_10_End | (12.25, 1.75, -3) | (3.5, 3.5, 0.2) |
+| Wall_10_End | (12.3, 1.75, -3) | (3.6, 3.5, 0.2) |
 | Wall_11_Before_D04 | (-14.1, 1.75, 5) | (3.8, 3.5, 0.2) |
 | Wall_11_D04_Header | (-11, 3, 5) | (2.4, 1, 0.2) |
 | Wall_11_End | (-8.4, 1.75, 5) | (2.8, 3.5, 0.2) |
@@ -529,11 +532,11 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_16_Before_D12 | (14.25, 1.75, 8) | (0.5, 3.5, 0.2) |
 | Wall_16_D12_Header | (15.5, 3, 8) | (2, 1, 0.2) |
 | Wall_16_End | (16.75, 1.75, 8) | (0.5, 3.5, 0.2) |
-| Wall_17_Solid | (-11.5, 1.75, 11) | (9, 3.5, 0.2) |
-| Wall_59_Before_D20 | (14.25, 1.75, 12) | (0.5, 3.5, 0.2) |
+| Wall_17_Solid | (-11.55, 1.75, 11) | (9.1, 3.5, 0.2) |
+| Wall_59_Before_D20 | (14.2, 1.75, 12) | (0.6, 3.5, 0.2) |
 | Wall_59_D20_Header | (15.5, 3, 12) | (2, 1, 0.2) |
-| Wall_59_End | (16.75, 1.75, 12) | (0.5, 3.5, 0.2) |
-| Wall_40_Solid | (-8.75, 1.75, 14) | (3.5, 3.5, 0.2) |
+| Wall_59_End | (16.8, 1.75, 12) | (0.6, 3.5, 0.2) |
+| Wall_40_Solid | (-8.8, 1.75, 14) | (3.6, 3.5, 0.2) |
 | Wall_41_Before_D13 | (-6.75, 1.75, 14) | (0.5, 3.5, 0.2) |
 | Wall_41_D13_Header | (-5.1, 3, 14) | (2.8, 1, 0.2) |
 | Wall_41_End | (-3.6, 1.75, 14) | (0.2, 3.5, 0.2) |
@@ -543,7 +546,7 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_43_Before_D18 | (3.6, 1.75, 14) | (0.2, 3.5, 0.2) |
 | Wall_43_D18_Header | (5.1, 3, 14) | (2.8, 1, 0.2) |
 | Wall_43_End | (6.75, 1.75, 14) | (0.5, 3.5, 0.2) |
-| Wall_44_Solid | (8.75, 1.75, 14) | (3.5, 3.5, 0.2) |
+| Wall_44_Solid | (8.8, 1.75, 14) | (3.6, 3.5, 0.2) |
 | Wall_45_Before_D14 | (-9.45, 1.75, 22) | (2.1, 3.5, 0.2) |
 | Wall_45_D14_Header | (-7, 3, 22) | (2.8, 1, 0.2) |
 | Wall_45_End | (-4.55, 1.75, 22) | (2.1, 3.5, 0.2) |
@@ -551,9 +554,9 @@ Create each row exactly once under Walls. Numbered names group pieces on a singl
 | Wall_47_Before_D17 | (4.55, 1.75, 22) | (2.1, 3.5, 0.2) |
 | Wall_47_D17_Header | (7, 3, 22) | (2.8, 1, 0.2) |
 | Wall_47_End | (9.45, 1.75, 22) | (2.1, 3.5, 0.2) |
-| Wall_48_Solid | (-7, 1.75, 30) | (7, 3.5, 0.2) |
+| Wall_48_Solid | (-7.05, 1.75, 30) | (7.1, 3.5, 0.2) |
 | Wall_49_Solid | (0, 1.75, 30) | (7, 3.5, 0.2) |
-| Wall_50_Solid | (7, 1.75, 30) | (7, 3.5, 0.2) |
+| Wall_50_Solid | (7.05, 1.75, 30) | (7.1, 3.5, 0.2) |
 | Wall_20_Before_W04 | (-16, 1.75, -2.25) | (0.2, 3.5, 1.5) |
 | Wall_20_W04_Sill | (-16, 0.6, -0.75) | (0.2, 1.2, 1.5) |
 | Wall_20_W04_Header | (-16, 3.1, -0.75) | (0.2, 0.8, 1.5) |
@@ -752,7 +755,7 @@ Copy a row for each real milestone. Record actual results rather than marking pl
 
 | Date | Phase/change | Screenshot/clip | Actual result | Decision/why | Commit hash |
 | --- | --- | --- | --- | --- | --- |
-| YYYY-MM-DD | v3.1 extension plan / later milestone | Evidence/01-plan-v3.1.png | Plan check only; Unity pending | Gallery loop and support rooms | After committing |
+| YYYY-MM-DD | v3.2 corner revision / later milestone | Evidence/01-plan-v3.2.png | Plan check only; Unity pending | Gallery loop and support rooms | After committing |
 
 ## Plan validation and outstanding work
 
@@ -761,3 +764,27 @@ Copy a row for each real milestone. Record actual results rather than marking pl
 This is **not** a Unity NavMesh/physics test. Actual agent dimensions, voxelization, controller skin width, dynamic doors, animation, shooting, lighting, visibility and build performance still need in-engine validation. The simplified model does not establish accessibility/building-code compliance or guarantee tactical AI behaviour.
 
 The optional `tools/generate_plan.py` is the shared source for the PNG, CSV, coordinate appendices and validation report. It requires Python and Pillow, and is not required to build the level manually. It does not create/import a Unity scene. If the plan changes, update that specification and the explanatory phases together; do not edit only the PNG or only one coordinate table.
+
+## Corner corrections — revision 3.2
+
+Updated 7 October 2026. These 13 approved wall changes close the 12 identified outward footprint corners and the exposed storage/staff junction at (14,-3). This is not a claim that every possible decorative seam has been inspected. No filler cubes are added. Each horizontal wall grows 0.1 m at one end and its centre moves 0.05 m towards that end, keeping its other end and the adjoining door/window opening fixed. Room footprints, floor slabs and door widths are unchanged.
+
+Edit under Museum > Walls only. Keep Position Y=1.75, Rotation=(0,0,0), Scale Y=3.5 and Scale Z=0.2. Enter final values below, not increments. Keep WorldSolid and enabled non-trigger Box Colliders. Save, inspect at eye level, and rebake NavMesh if already baked. This documentation update does not modify or certify the current Unity scene.
+
+| Name | Position X,Y,Z | Scale X,Y,Z |
+| --- | --- | --- |
+| Wall_01_Before_W08 | (-9.3, 1.75, -11) | (1.6, 3.5, 0.2) |
+| Wall_03_End | (10.05, 1.75, -11) | (2.1, 3.5, 0.2) |
+| Wall_04_Solid | (-7.55, 1.75, -6) | (5.1, 3.5, 0.2) |
+| Wall_07_Solid | (15.55, 1.75, -6) | (3.1, 3.5, 0.2) |
+| Wall_09_Solid | (-10.55, 1.75, -3) | (11.1, 3.5, 0.2) |
+| Wall_10_End | (12.3, 1.75, -3) | (3.6, 3.5, 0.2) |
+| Wall_17_Solid | (-11.55, 1.75, 11) | (9.1, 3.5, 0.2) |
+| Wall_59_Before_D20 | (14.2, 1.75, 12) | (0.6, 3.5, 0.2) |
+| Wall_59_End | (16.8, 1.75, 12) | (0.6, 3.5, 0.2) |
+| Wall_40_Solid | (-8.8, 1.75, 14) | (3.6, 3.5, 0.2) |
+| Wall_44_Solid | (8.8, 1.75, 14) | (3.6, 3.5, 0.2) |
+| Wall_48_Solid | (-7.05, 1.75, 30) | (7.1, 3.5, 0.2) |
+| Wall_50_Solid | (7.05, 1.75, 30) | (7.1, 3.5, 0.2) |
+
+At the storage junction change Wall_10_End only; keep Wall_35_Before_D07 unchanged. Wall_10_End retains X=10.5 at D08 and now ends at X=14.1. The exit-side changes preserve D20 at X=14.5 to 16.5.

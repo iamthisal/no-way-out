@@ -1,5 +1,5 @@
 {
-  "plan": "v3.1",
+  "plan": "v3.2",
   "named_spaces": 15,
   "floor_slabs": 16,
   "floor_area_m2": 916,
@@ -13,8 +13,19 @@
   "gallery_loop_single_door_block_tests": 4,
   "checks": "PASS: unique positive geometry, non-overlapping slabs, assigned shared boundaries, door ownership, marker reachability, gallery-loop alternatives",
   "limitations": "Conservative 2D 0.25 m grid and 0.35 m radius; not Unity physics, NavMesh baking, enemy behaviour, lighting or build verification.",
-  "preserved_v2_physical_rows": 122,
+  "preserved_v2_physical_rows": 115,
   "replaced_v2_rows": 18,
   "added_v3_rows": 53,
-  "modified_existing_assembly": "Wall_19 Exhibition north wall plus Wall_18 Exit north wall; W02/W09 become D19/D20"
+  "modified_existing_assembly": "Exhibition/Exit boundary door conversions plus 13 documented corner wall extensions",
+  "corner_corrections": 13,
+  "modified_retained_v2_rows": [
+    "Wall_01_Before_W08",
+    "Wall_03_End",
+    "Wall_04_Solid",
+    "Wall_07_Solid",
+    "Wall_09_Solid",
+    "Wall_10_End",
+    "Wall_17_Solid"
+  ],
+  "new_or_modified_rows_from_v2": 60
 }
