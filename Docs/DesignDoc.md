@@ -1,5 +1,7 @@
 # System Architecture & Technical Design Document
 
+> **Room furniture P3 — 8 October 2026:** [Image-based object placement guide](WorldBuilder/Room_Object_Placement.md) now defines the furniture/exhibit coordinates for all fifteen spaces. It supersedes the earlier cover/decor proposals; shell v3.2 stays unchanged. Placement is planned, not applied to Unity.
+
 > **Current environment specification: museum v3.2, 15 spaces.** [WorldBuilder/README.md](WorldBuilder/README.md) contains the complete coordinate tables; [Extension_Build_Steps.md](WorldBuilder/Extension_Build_Steps.md) preserves the existing skeleton while adding the five-gallery loop. Use `Museum_Main.unity` under `Assets/_Project/Scenes/Museum`. D13–D18 are 2.8 m wide and 2.5 m high. W01/W03 become connections; W02 becomes locked courtyard door D19; W09 becomes closed exit door D20. Student 1 supplies static geometry and initial NavMesh, Student 2 supplies player/interactive physics, Student 3 original models, and Student 4 enemy movement/animation. Rebuild and test navigation after the extension. The legacy warehouse architecture below is not evidence of implemented systems or an instruction to replace the museum scene. Revision 3.2 includes 13 wall-end adjustments for corner closure; room footprints and doorway widths stay unchanged.
 
 ## Overview
@@ -76,3 +78,8 @@ Lockdown.Tests.EditMode
 - **Zero Engine Couplings in Core Math**: Heuristic and search algorithms in `Lockdown.AI.Core` should prioritize pure C# logic and mathematics where feasible, enabling rapid headless testing.
 - **Cross-Domain Communication**:
   - The Player controller (`Lockdown.Runtime` or `Player/`) must never directly reference concrete enemy AI classes (`Lockdown.AI.Agents`). Interaction must occur via `IDamageable`, `IPerceptionTarget`, or events registered on shared interfaces.
+
+> P3 toilet update (9 October 2026): follow Room_Object_Placement.md for the two cubicles and fixed-open damaged door panels. The old open-divider proposal is superseded. Shell v3.2 is unchanged.
+
+
+> Furniture correction P4 (9 October 2026): use the current Room_Object_Placement.md/CSV. Egypt and Natural History graphics now avoid doors; the Security monitor strip clears its window; Egypt gains a west-wall photo. P3 cubicles remain, with the W08 glazing junction clarified in the guide. Shell unchanged.
