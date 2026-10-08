@@ -1,5 +1,7 @@
 # No Way Out
 
+> **Room furniture P3 — 8 October 2026:** [Image-based object placement guide](Docs/WorldBuilder/Room_Object_Placement.md) now defines the furniture/exhibit coordinates for all fifteen spaces. It supersedes the earlier cover/decor proposals; shell v3.2 stays unchanged. Placement is planned, not applied to Unity.
+
 > **Current World Builder plan: abandoned museum v3.2 (15 spaces).** Use [the build manual](Docs/WorldBuilder/README.md), [extension-only steps](Docs/WorldBuilder/Extension_Build_Steps.md) and [floor plan](Docs/WorldBuilder/Museum_FloorPlan.png). Five northern themed galleries form a loop back to the Exhibition Hall. Existing room footprints stay; W01/W03 become wider connecting doorways W02 becomes locked courtyard door D19; W09 becomes exit door D20. Current scene: `Assets/_Project/Scenes/Museum/Museum_Main.unity`. This is an approved documentation plan; this update changes documents only; confirm current scene progress separately. The warehouse concept and architecture below remain legacy proposals, not current museum construction instructions. Revision 3.2 includes 13 wall-end adjustments for corner closure; room footprints and doorway widths stay unchanged.
 
 > A 3D stealth-action game set inside a rogue automated warehouse. Escape before the blast doors seal — if the AI lets you.
@@ -96,3 +98,8 @@ Open the project in Unity (URP). The project targets Unity 6 or later. Read [CON
 | [`Docs/AI/Stalker.md`](Docs/AI/Stalker.md) | Stalker — stealth hunter agent specification |
 | [`Docs/AIPerformanceLog.md`](Docs/AIPerformanceLog.md) | Benchmarking log: latency, GC alloc, draw calls |
 | [`Docs/OptimisationLog.md`](Docs/OptimisationLog.md) | Optimisation entries with before/after metrics |
+
+> P3 toilet update (9 October 2026): follow Room_Object_Placement.md for the two cubicles and fixed-open damaged door panels. The old open-divider proposal is superseded. Shell v3.2 is unchanged.
+
+
+> Furniture correction P4 (9 October 2026): use the current Room_Object_Placement.md/CSV. Egypt and Natural History graphics now avoid doors; the Security monitor strip clears its window; Egypt gains a west-wall photo. P3 cubicles remain, with the W08 glazing junction clarified in the guide. Shell unchanged.

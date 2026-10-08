@@ -1,4 +1,11 @@
+
+
+> **Guest toilet extension E2 (9 October 2026):** Use Guest_Toilet_Extension.md and its CSV. Room footprint 6.6m by 7m. Reuse storage and corridor/exit walls only; add independent west and north walls. Do NOT use the exhibition wall. Four cubicles; 127 total props. Baseline shell CSV is pre-extension; Museum_FloorPlan_E2.png includes E2; this addendum overrides Wall_36_Solid. Unity untouched.
 # Abandoned Museum — Student 1 World Builder manual
+
+> **Furniture update P3 (9 October 2026):** Use [Room_Object_Placement.md](Room_Object_Placement.md) and [Room_Object_Placement.csv](Room_Object_Placement.csv) for the fifteen image-based room layouts. These replace the older Appendix B/Appendix D furniture proposals and FixedCover entries in Museum_Geometry.csv. Keep shell v3.2, courtyard ground and door panels. Do not build both furniture schemes. Lights remain provisional.
+
+
 
 **Plan v3.2 · 6 October 2026 · 15 named spaces · Current stage: extend the existing greybox**
 
@@ -788,3 +795,8 @@ Edit under Museum > Walls only. Keep Position Y=1.75, Rotation=(0,0,0), Scale Y=
 | Wall_50_Solid | (7.05, 1.75, 30) | (7.1, 3.5, 0.2) |
 
 At the storage junction change Wall_10_End only; keep Wall_35_Before_D07 unchanged. Wall_10_End retains X=10.5 at D08 and now ends at X=14.1. The exit-side changes preserve D20 at X=14.5 to 16.5.
+
+> P3 toilet update (9 October 2026): follow Room_Object_Placement.md for the two cubicles and fixed-open damaged door panels. The old open-divider proposal is superseded. Shell v3.2 is unchanged.
+
+
+> Furniture correction P4 (9 October 2026): use the current Room_Object_Placement.md/CSV. Egypt and Natural History graphics now avoid doors; the Security monitor strip clears its window; Egypt gains a west-wall photo. P3 cubicles remain, with the W08 glazing junction clarified in the guide. Shell unchanged.
