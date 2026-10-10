@@ -1,3 +1,4 @@
 {
-  "name": "Lockdown.Runtime"
+  "name": "Lockdown.Runtime",
+  "references": ["Unity.InputSystem"]
 }
