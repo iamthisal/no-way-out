@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 4150328987794356814}
   - component: {fileID: 541372591319592732}
   - component: {fileID: 7083367978448083995}
+  - component: {fileID: 1263270997329048805}
+  - component: {fileID: 5375737106442867028}
   m_Layer: 0
   m_Name: FirstPersonPlayer
   m_TagString: Player
@@ -264,6 +266,31 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1263270997329048805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5330627581561011299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ff2f9a6824187d4c8c5ff897e3e7067, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Player.LootInventory
+--- !u!114 &5375737106442867028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5330627581561011299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e111c1dbb2be374d8b4c7a8198c3ff7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Player.PlayerInteraction
+  reach: 2.5
 --- !u!1 &6447105416475803693
 GameObject:
   m_ObjectHideFlags: 0
