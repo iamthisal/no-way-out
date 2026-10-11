@@ -7,10 +7,16 @@ namespace Lockdown.Player
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Health), typeof(FirstPersonController))]
+    [RequireComponent(typeof(AudioSource))]
     public sealed class PlayerVitals : MonoBehaviour
     {
+        [SerializeField] private AudioClip hitSound;
+        [SerializeField, Range(0f, 1f)] private float hitVolume = 0.7f;
+        [SerializeField] private AudioClip deathSound;
+        [SerializeField, Range(0f, 1f)] private float deathVolume = 0.8f;
         private Health health;
         private FirstPersonController controller;
+        private AudioSource hitAudio;
         private float hitEndsAt;
         private GUIStyle labelStyle;
         private GUIStyle deathStyle;
@@ -19,6 +25,11 @@ namespace Lockdown.Player
         {
             health = GetComponent<Health>();
             controller = GetComponent<FirstPersonController>();
+            hitAudio = GetComponent<AudioSource>();
+            if (hitAudio == null) hitAudio = gameObject.AddComponent<AudioSource>();
+            hitAudio.playOnAwake = false;
+            hitAudio.loop = false;
+            hitAudio.spatialBlend = 0f;
         }
 
         private void OnEnable()
@@ -33,10 +44,21 @@ namespace Lockdown.Player
             health.OnDeath.RemoveListener(Die);
         }
 
-        private void ShowHit() { hitEndsAt = Time.time + 0.2f; }
+        private void ShowHit()
+        {
+            hitEndsAt = Time.time + 0.2f;
+            if (!health.IsDead && hitSound != null) hitAudio.PlayOneShot(hitSound, hitVolume);
+        }
 
         private void Die()
         {
+            hitAudio.Stop();
+            if (deathSound != null)
+            {
+                hitAudio.clip = deathSound;
+                hitAudio.volume = deathVolume;
+                hitAudio.Play();
+            }
             controller.ReleaseCursor();
             controller.enabled = false;
             foreach (var weapon in GetComponentsInChildren<FirstPersonWeapon>(true)) weapon.enabled = false;
