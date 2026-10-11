@@ -48,7 +48,7 @@ namespace Lockdown.Tests
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Characters/FirstPersonPlayer.prefab");
             playerObject = Object.Instantiate(prefab, new Vector3(80f, 0.05f, 0f), Quaternion.identity);
             var player = playerObject.GetComponent<FirstPersonController>();
-            var weapon = playerObject.GetComponentInChildren<FirstPersonWeapon>();
+            var weapon = playerObject.GetComponentInChildren<FirstPersonWeapon>(true);
             Assert.That(weapon, Is.Not.Null, "The player prefab should contain the equipped pistol.");
             floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
             floor.transform.position = new Vector3(80f, -0.25f, 0f);
@@ -62,6 +62,8 @@ namespace Lockdown.Tests
             yield return new WaitForSeconds(0.3f);
             Assert.That(weapon.CurrentAmmo, Is.EqualTo(12));
             player.CaptureCursor();
+            yield return null;
+            Assert.That(playerObject.GetComponent<PlayerEquipment>().TryEquipPistol(), Is.True);
             yield return null;
 
             InputSystem.QueueStateEvent(mouse, new MouseState { buttons = 1 });
