@@ -60,6 +60,7 @@ namespace Lockdown.Editor
                 serialized.FindProperty("playerCamera").objectReferenceValue = camera;
                 serialized.FindProperty("inputActions").objectReferenceValue = input;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
+                player.AddComponent<PlayerVitals>();
                 var weaponPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrototypeWeaponBuilder.WeaponPath);
                 if (weaponPrefab != null)
                 {
