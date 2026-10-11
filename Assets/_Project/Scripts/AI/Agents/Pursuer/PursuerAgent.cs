@@ -7,12 +7,15 @@ namespace Lockdown.AI.Agents
     [RequireComponent(typeof(NavMeshAgent))]
     public sealed class PursuerAgent : MonoBehaviour
     {
+        public enum PursuerState { Patrol, Chase }
+
         [Header("References")]
         [SerializeField] private Transform[] patrolPoints = new Transform[0];
         [SerializeField] private Transform playerTarget;
 
         [Header("Movement")]
         [SerializeField, Min(0.1f)] private float patrolSpeed = 2f;
+        [SerializeField, Min(0.1f)] private float chaseSpeed = 4f;
         [SerializeField, Min(0.1f)] private float arrivalDistance = 0.5f;
 
         [Header("Player Detection")]
@@ -26,18 +29,28 @@ namespace Lockdown.AI.Agents
         private int patrolIndex;
 
         public bool IsPlayerVisible { get; private set; }
+        public PursuerState State { get; private set; } = PursuerState.Patrol;
 
         private void Awake() { agent = GetComponent<NavMeshAgent>(); }
 
         private void Update()
         {
-            // Detection does not require navigation and does not change patrol behavior yet.
+            // Detection still works when the agent is not placed on a NavMesh.
             IsPlayerVisible = CanSeePlayer();
 
             // Navigation commands require an enabled agent placed on a baked NavMesh.
             if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
 
-            Patrol();
+            PursuerState nextState = IsPlayerVisible ? PursuerState.Chase : PursuerState.Patrol;
+            if (State != nextState)
+            {
+                // Discard the previous route so losing sight cannot continue the chase.
+                agent.ResetPath();
+                State = nextState;
+            }
+            agent.speed = IsPlayerVisible ? chaseSpeed : patrolSpeed;
+            if (IsPlayerVisible) MoveTo(playerTarget.position);
+            else Patrol();
         }
 
         private void Patrol()
@@ -60,11 +73,15 @@ namespace Lockdown.AI.Agents
                 patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
                 return;
             }
-            agent.speed = patrolSpeed;
+            MoveTo(point.position);
+        }
+
+        private void MoveTo(Vector3 destination)
+        {
             agent.isStopped = false;
-            // Request a path only when needed or when the waypoint moves more than 0.2 units.
-            if (!agent.hasPath || (agent.destination - point.position).sqrMagnitude > 0.04f)
-                agent.SetDestination(point.position);
+            // Request a path only when needed or when the destination moves more than 0.2 units.
+            if (!agent.hasPath || (agent.destination - destination).sqrMagnitude > 0.04f)
+                agent.SetDestination(destination);
         }
 
         private bool CanSeePlayer()
@@ -89,6 +106,7 @@ namespace Lockdown.AI.Agents
         private void OnDisable()
         {
             IsPlayerVisible = false;
+            State = PursuerState.Patrol;
             // Clear the route so disabling this controller does not leave the agent moving.
             if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh) agent.ResetPath();
         }
