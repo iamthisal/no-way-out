@@ -69,6 +69,7 @@ namespace Lockdown.Editor
                     weapon.transform.SetParent(holder.transform, false);
                 }
                 PlayerEquipmentBuilder.Configure(player);
+                LootPickupBuilder.ConfigurePlayer(player);
                 PrefabUtility.SaveAsPrefabAsset(player, PrefabPath);
             }
             finally { EditorSceneManager.ClosePreviewScene(preview); }
