@@ -1,5 +1,20 @@
 # Warehouse Lockdown
 
+## Role in the joint project
+
+This prototype is the behavior reference for the Unity museum game in the parent
+repository. The current GV/IS scope selects three ground agents: Sentinel
+(`Pursuer`), Stalker (`Ambusher`) and Hound, plus a Dynamic Spawning Agent.
+See [AI scope](../Docs/AI/README.md) and
+[spawning specification](../Docs/AI/DynamicSpawner.md).
+
+Rex and Wasp are excluded from that scope but still run in this prototype.
+Controls/descriptions below document the existing HTML build. Room controllers
+provide configured event-driven waves; player-performance adaptation is not
+implemented. Unity ports require their own validation.
+
+## Running the prototype
+
 Run `npm install`, then `npm run dev` and open http://127.0.0.1:4173/.
 For a production build, run `npm run build`, then `npm run preview`.
 
