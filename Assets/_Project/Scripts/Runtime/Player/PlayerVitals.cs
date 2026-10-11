@@ -39,7 +39,9 @@ namespace Lockdown.Player
         {
             controller.ReleaseCursor();
             controller.enabled = false;
-            foreach (var weapon in GetComponentsInChildren<FirstPersonWeapon>()) weapon.enabled = false;
+            foreach (var weapon in GetComponentsInChildren<FirstPersonWeapon>(true)) weapon.enabled = false;
+            var equipment = GetComponent<PlayerEquipment>();
+            if (equipment != null) equipment.enabled = false;
         }
 
         public void RestartEncounter()
