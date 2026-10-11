@@ -18,12 +18,18 @@ namespace Lockdown.Tests
         private Keyboard keyboard;
         private Mouse mouse;
         private bool previousRunInBackground;
+        private InputSettings.BackgroundBehavior previousInputBackground;
+        private InputSettings.EditorInputBehaviorInPlayMode previousEditorInput;
 
         [SetUp]
         public void SetUp()
         {
             previousRunInBackground = Application.runInBackground;
             Application.runInBackground = true;
+            previousInputBackground = InputSystem.settings.backgroundBehavior;
+            previousEditorInput = InputSystem.settings.editorInputBehaviorInPlayMode;
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+            InputSystem.settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
         }
 
         [UnityTest]
@@ -49,6 +55,8 @@ namespace Lockdown.Tests
             yield return new WaitForSeconds(1f);
             Assert.That(controller.IsGrounded, Is.True, "Gravity should settle the player on the floor. Position=" + player.transform.position);
             Assert.That(controller.PlayerCamera.transform.localPosition.y, Is.EqualTo(1.6f).Within(0.01f));
+            controller.CaptureCursor();
+            yield return null;
 
             Vector3 start = player.transform.position;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W));
@@ -133,6 +141,8 @@ namespace Lockdown.Tests
                 if (listener.isActiveAndEnabled) activeListeners++;
             Assert.That(activeCameras, Is.EqualTo(1));
             Assert.That(activeListeners, Is.EqualTo(1));
+            controller.CaptureCursor();
+            yield return null;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W));
             yield return new WaitForSeconds(1.5f);
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
@@ -146,6 +156,8 @@ namespace Lockdown.Tests
         {
             Cleanup();
             Application.runInBackground = previousRunInBackground;
+            InputSystem.settings.backgroundBehavior = previousInputBackground;
+            InputSystem.settings.editorInputBehaviorInPlayMode = previousEditorInput;
             yield return null;
         }
 

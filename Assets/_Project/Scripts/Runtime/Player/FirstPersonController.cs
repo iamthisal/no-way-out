@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 namespace Lockdown.Player
 {
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(-100)]
     [RequireComponent(typeof(CharacterController))]
     public sealed class FirstPersonController : MonoBehaviour
     {
@@ -39,6 +40,7 @@ namespace Lockdown.Player
         public bool IsGrounded => controller != null && controller.isGrounded;
         public bool IsCursorCaptured => cursorCaptured;
         public Camera PlayerCamera => playerCamera;
+        public bool CanUseWeapon { get; private set; }
 
         private void Awake()
         {
@@ -93,6 +95,7 @@ namespace Lockdown.Player
 
         public void ReleaseCursor()
         {
+            CanUseWeapon = false;
             cursorCaptured = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -112,6 +115,7 @@ namespace Lockdown.Player
             }
 
             bool acceptsInput = cursorCaptured;
+            CanUseWeapon = acceptsInput && !captureClick;
             if (acceptsInput && !captureClick) UpdateLook(Time.deltaTime);
 
             if (controller.isGrounded && verticalVelocity < 0f) verticalVelocity = -2f;

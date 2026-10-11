@@ -1,0 +1,5 @@
+{
+  "name": "Lockdown.Tests.Enemies",
+  "references": ["Lockdown.Runtime", "Lockdown.Interfaces"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
