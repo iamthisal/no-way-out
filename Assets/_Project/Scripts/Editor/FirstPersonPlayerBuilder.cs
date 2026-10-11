@@ -67,6 +67,7 @@ namespace Lockdown.Editor
                     var weapon = (GameObject)PrefabUtility.InstantiatePrefab(weaponPrefab, preview);
                     weapon.transform.SetParent(holder.transform, false);
                 }
+                PlayerEquipmentBuilder.Configure(player);
                 PrefabUtility.SaveAsPrefabAsset(player, PrefabPath);
             }
             finally { EditorSceneManager.ClosePreviewScene(preview); }

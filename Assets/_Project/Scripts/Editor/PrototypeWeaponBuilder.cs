@@ -93,6 +93,7 @@ namespace Lockdown.Editor
                     var pistol = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(WeaponPath), player.scene);
                     pistol.transform.SetParent(holder, false);
                 }
+                PlayerEquipmentBuilder.Configure(player);
                 PrefabUtility.SaveAsPrefabAsset(player, FirstPersonPlayerBuilder.PrefabPath);
             }
             finally { PrefabUtility.UnloadPrefabContents(player); }
