@@ -60,6 +60,15 @@ namespace Lockdown.Editor
                 serialized.FindProperty("playerCamera").objectReferenceValue = camera;
                 serialized.FindProperty("inputActions").objectReferenceValue = input;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
+                player.AddComponent<PlayerVitals>();
+                PlayerHitAudioBuilder.Configure(player);
+                var weaponPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrototypeWeaponBuilder.WeaponPath);
+                if (weaponPrefab != null)
+                {
+                    var weapon = (GameObject)PrefabUtility.InstantiatePrefab(weaponPrefab, preview);
+                    weapon.transform.SetParent(holder.transform, false);
+                }
+                PlayerEquipmentBuilder.Configure(player);
                 PrefabUtility.SaveAsPrefabAsset(player, PrefabPath);
             }
             finally { EditorSceneManager.ClosePreviewScene(preview); }
