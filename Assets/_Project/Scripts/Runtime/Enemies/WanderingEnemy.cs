@@ -97,6 +97,7 @@ namespace Lockdown.Enemies
             AnimateWalk();
             if (bodyRenderer != null)
             {
+                if (bodyProperties == null) bodyProperties = new MaterialPropertyBlock();
                 bodyProperties.SetColor("_BaseColor", Time.time < hitFlashEndsAt ? Color.white : bodyColor);
                 bodyRenderer.SetPropertyBlock(bodyProperties);
             }
@@ -142,6 +143,7 @@ namespace Lockdown.Enemies
             foreach (var collider in GetComponentsInChildren<Collider>()) collider.enabled = false;
             if (bodyRenderer != null)
             {
+                if (bodyProperties == null) bodyProperties = new MaterialPropertyBlock();
                 bodyProperties.SetColor("_BaseColor", bodyColor * 0.45f);
                 bodyRenderer.SetPropertyBlock(bodyProperties);
             }
