@@ -77,13 +77,14 @@ namespace Lockdown.Tests
             Assert.That(Vector3.Distance(agent.destination, enemy.WanderOrigin), Is.LessThanOrEqualTo(enemy.WanderRadius + 0.05f));
 
             var player = Object.FindFirstObjectByType<FirstPersonController>();
-            var weapon = player.GetComponentInChildren<FirstPersonWeapon>();
+            var weapon = player.GetComponentInChildren<FirstPersonWeapon>(true);
             var body = player.GetComponent<CharacterController>();
             body.enabled = false;
             player.transform.position = enemy.transform.position + Vector3.back * 1.6f + Vector3.up * 0.05f;
             body.enabled = true;
             player.CaptureCursor();
             yield return null;
+            Assert.That(player.GetComponent<PlayerEquipment>().TryEquipPistol(), Is.True);
             int deaths = 0;
             health.OnDeath.AddListener(() => deaths++);
             for (int i = 0; i < 4; i++)

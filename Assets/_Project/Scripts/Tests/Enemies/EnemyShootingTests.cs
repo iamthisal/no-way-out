@@ -73,10 +73,12 @@ namespace Lockdown.Tests
             shooter.GetComponent<WanderingEnemy>().enabled = false;
             var player = Object.FindFirstObjectByType<FirstPersonController>();
             var health = player.GetComponent<Health>();
-            var weapon = player.GetComponentInChildren<FirstPersonWeapon>();
+            var weapon = player.GetComponentInChildren<FirstPersonWeapon>(true);
             var vitals = player.GetComponent<PlayerVitals>();
             SetPosition(player, shooter.transform.position + Vector3.back * 2f);
             player.CaptureCursor();
+            yield return null;
+            Assert.That(player.GetComponent<PlayerEquipment>().TryEquipPistol(), Is.True);
             health.TakeDamage(90f);
             yield return new WaitForSeconds(1.1f);
             Assert.That(health.IsDead, Is.True);
@@ -93,7 +95,8 @@ namespace Lockdown.Tests
             var freshPlayer = Object.FindFirstObjectByType<FirstPersonController>();
             Assert.That(freshPlayer.enabled, Is.True);
             Assert.That(freshPlayer.GetComponent<Health>().CurrentHealth, Is.EqualTo(100f));
-            Assert.That(freshPlayer.GetComponentInChildren<FirstPersonWeapon>().enabled, Is.True);
+            Assert.That(freshPlayer.GetComponentInChildren<FirstPersonWeapon>(true).enabled, Is.True);
+            Assert.That(freshPlayer.GetComponent<PlayerEquipment>().IsPistolEquipped, Is.False, "Restart should begin with empty hands.");
             Assert.That(Object.FindFirstObjectByType<EnemyShooting>().ShotsFired, Is.Zero);
         }
 
