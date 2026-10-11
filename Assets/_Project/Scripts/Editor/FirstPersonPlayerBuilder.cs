@@ -61,6 +61,7 @@ namespace Lockdown.Editor
                 serialized.FindProperty("inputActions").objectReferenceValue = input;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
                 player.AddComponent<PlayerVitals>();
+                PlayerHitAudioBuilder.Configure(player);
                 var weaponPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrototypeWeaponBuilder.WeaponPath);
                 if (weaponPrefab != null)
                 {
