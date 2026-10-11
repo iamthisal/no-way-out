@@ -36,6 +36,7 @@ namespace Lockdown.Weapons
         private Quaternion restRotation;
         private float recoil;
         private GUIStyle ammoStyle;
+        private bool waitForAttackRelease;
 
         public int CurrentAmmo { get; private set; }
         public int MagazineSize => magazineSize;
@@ -65,6 +66,7 @@ namespace Lockdown.Weapons
         {
             attackAction?.Enable();
             reloadAction?.Enable();
+            waitForAttackRelease = true;
         }
 
         private void OnDisable()
@@ -94,8 +96,9 @@ namespace Lockdown.Weapons
             transform.localPosition = restPosition + Vector3.back * (recoil * 0.035f);
             transform.localRotation = restRotation * Quaternion.Euler(-recoil * 5f, 0f, 0f);
             if (!player.CanUseWeapon) return;
+            if (!attackAction.IsPressed()) waitForAttackRelease = false;
             if (reloadAction.WasPressedThisFrame()) TryReload();
-            if (attackAction.WasPressedThisFrame()) TryFire();
+            if (!waitForAttackRelease && attackAction.WasPressedThisFrame()) TryFire();
         }
 
         public bool TryFire()
