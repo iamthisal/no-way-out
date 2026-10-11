@@ -9283,6 +9283,8 @@ GameObject:
   - component: {fileID: 340877181}
   - component: {fileID: 340877183}
   - component: {fileID: 340877182}
+  - component: {fileID: 340877185}
+  - component: {fileID: 340877184}
   m_Layer: 0
   m_Name: P_Lobby_BrochureTray
   m_TagString: Untagged
@@ -9362,6 +9364,41 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 340877180}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &340877184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340877180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f2dc7efe3c7b0b46b2db3cf776c4281, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootItem
+  itemName: Prototype Trinket
+  value: 100
+--- !u!65 &340877185
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340877180}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 1, z: 0.99999994}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &342069973
 GameObject:
   m_ObjectHideFlags: 0
@@ -46466,6 +46503,8 @@ GameObject:
   - component: {fileID: 2124675072}
   - component: {fileID: 2124675074}
   - component: {fileID: 2124675073}
+  - component: {fileID: 2124675076}
+  - component: {fileID: 2124675075}
   m_Layer: 0
   m_Name: P_Lobby_Monitor
   m_TagString: Untagged
@@ -46545,6 +46584,41 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124675071}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2124675075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124675071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f2dc7efe3c7b0b46b2db3cf776c4281, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootItem
+  itemName: Prototype Relic
+  value: 250
+--- !u!65 &2124675076
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124675071}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2133968265
 GameObject:
   m_ObjectHideFlags: 0
