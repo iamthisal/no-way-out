@@ -21,6 +21,7 @@ namespace Lockdown.AI.Agents
 
         private void Update()
         {
+            // Navigation commands require an enabled agent placed on a baked NavMesh.
             if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
 
             Patrol();
@@ -32,12 +33,15 @@ namespace Lockdown.AI.Agents
             Transform point = patrolPoints[patrolIndex];
             if (point == null)
             {
+                // Skip missing waypoints and wrap around to keep the route looping.
                 agent.ResetPath();
                 patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
                 return;
             }
             Vector3 offset = point.position - transform.position;
+            // Check ground-plane distance so waypoint height does not prevent arrival.
             offset.y = 0f;
+            // Wait for path calculation and respect the agent's stopping distance.
             if (!agent.pathPending && offset.magnitude <= Mathf.Max(arrivalDistance, agent.stoppingDistance))
             {
                 patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
@@ -45,12 +49,14 @@ namespace Lockdown.AI.Agents
             }
             agent.speed = patrolSpeed;
             agent.isStopped = false;
+            // Request a path only when needed or when the waypoint moves more than 0.2 units.
             if (!agent.hasPath || (agent.destination - point.position).sqrMagnitude > 0.04f)
                 agent.SetDestination(point.position);
         }
 
         private void OnDisable()
         {
+            // Clear the route so disabling this controller does not leave the agent moving.
             if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh) agent.ResetPath();
         }
     }
