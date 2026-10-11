@@ -1,85 +1,61 @@
-# System Architecture & Technical Design Document
+# System Architecture & Technical Design
 
-> **Room furniture P3 — 8 October 2026:** [Image-based object placement guide](WorldBuilder/Room_Object_Placement.md) now defines the furniture/exhibit coordinates for all fifteen spaces. It supersedes the earlier cover/decor proposals; shell v3.2 stays unchanged. Placement is planned, not applied to Unity.
+## Current Scope
 
-> **Current environment specification: museum v3.2, 15 spaces.** [WorldBuilder/README.md](WorldBuilder/README.md) contains the complete coordinate tables; [Extension_Build_Steps.md](WorldBuilder/Extension_Build_Steps.md) preserves the existing skeleton while adding the five-gallery loop. Use `Museum_Main.unity` under `Assets/_Project/Scenes/Museum`. D13–D18 are 2.8 m wide and 2.5 m high. W01/W03 become connections; W02 becomes locked courtyard door D19; W09 becomes closed exit door D20. Student 1 supplies static geometry and initial NavMesh, Student 2 supplies player/interactive physics, Student 3 original models, and Student 4 enemy movement/animation. Rebuild and test navigation after the extension. The legacy warehouse architecture below is not evidence of implemented systems or an instruction to replace the museum scene. Revision 3.2 includes 13 wall-end adjustments for corner closure; room footprints and doorway widths stay unchanged.
+No Way Out is a joint GV and IS project. Unity contains the museum game; `game_html/` contains a warehouse prototype used as an AI behavior reference. Identify which runtime a change targets.
 
-## Overview
-**Warehouse Lockdown** is structured around strict separation of concerns using Unity Assembly Definitions (`.asmdef`). This architecture guarantees rapid compilation cycles, prevents circular dependencies, and establishes explicit domain boundaries between team roles.
+The selected IS agents are **Sentinel/Pursuer, Stalker/Ambusher, Hound, and Dynamic Spawning Agent**. Rex and Wasp are excluded. See [AI scope](AI/README.md) for implementation status.
 
----
+The environment specification is [museum v3.2, fifteen spaces](WorldBuilder/README.md). Use `Assets/_Project/Scenes/Museum/Museum_Main.unity`. Preserve the room footprints, gallery loop, doorway clearance, P3 toilet cubicles and recorded P4 corrections. The previously referenced `WorldBuilder/Room_Object_Placement.md` is absent from this checkout; confirm placement against the team's current plans. The HTML map is not a replacement for the museum plan. Validate construction and navigation in Unity.
 
-## 1. Architecture Decisions
+## HTML Reference
 
-- **Multi-Scene Additive Workflow**:
-  - `Bootstrap.unity`: Game lifecycle manager, global DI container, input management. Always loaded first.
-  - `Env.unity`: Static world geometry, baked/realtime lighting, reflections, audio reverberation zones.
-  - `Interactables.unity`: Doors, consoles, crates, conveyor switches, physics props.
-  - `Agents.unity`: AI spawn anchors, waypoint paths, perception grids, blackboard state.
-  - `ModelShowcase.unity`: Standalone testbed scene for world builders and modelers.
-- **Data-Driven Blackboard**:
-  - Global blackboard for security alert levels, lockdown stage, and active alarm hubs.
-  - Local agent blackboards for tactical memory, target vectors, and cover evaluation.
-- **Interface Segregation**:
-  - Gameplay systems communicate across domain boundaries via pure interfaces defined in `Lockdown.Interfaces`.
+| Module under `game_html/src/` | Responsibility |
+|---|---|
+| `enemy-ai.js` | Pursuer and Ambusher states; shared ranged combat |
+| `hound-ai.js` | Sound memory, scoring, tracking, sniffing and biting |
+| `room-controller.js` | Entry-triggered waves, alive counts, waits and lever unlocks |
+| `room-config.js` | Room bounds, wave mixes, spawn points, pauses and recovery settings |
+| `main.js` | Three.js/Cannon integration, EasyStar navigation, perception, cover queries and enemy creation |
 
----
+The prototype uses Three.js rendering, Cannon ES physics and EasyStar grid A* navigation. Navigation, perception and sound delivery are restricted to the enemy's room. Closed doors block movement, shots and sight. Runtime callbacks supply perception, movement and combat to behavior modules.
 
-## 2. Module Boundaries & Assembly Definitions
+Spawning is deterministic: room entry starts a configured wave, enemy deaths permit the next wave after a pause, and the final wave unlocks the room lever. Player-performance adaptation is not implemented. Rex and Wasp remain in the prototype runtime.
 
-The project code is divided into five dedicated assemblies:
+## Unity Module Boundaries
 
-```
+The assembly layout is the integration structure, not evidence that the selected AI has already been ported:
+
+```text
 Lockdown.AI.Agents
-   ├── references: Lockdown.AI.Core
-   ├── references: Lockdown.Interfaces
-   └── references: Lockdown.Runtime
-
+  -> Lockdown.AI.Core
+  -> Lockdown.Interfaces
+  -> Lockdown.Runtime
 Lockdown.Runtime
-   └── references: Lockdown.Interfaces
-
-Lockdown.AI.Core
-   └── references: (none)
-
-Lockdown.Interfaces
-   └── references: (none)
-
+  -> Lockdown.Interfaces
 Lockdown.Tests.EditMode
-   └── references: Lockdown.AI.Core
+  -> Lockdown.AI.Core
 ```
 
-### Module Responsibilities
+| Assembly | Intended responsibility |
+|---|---|
+| `Lockdown.Interfaces` | Shared damage/interaction contracts and agreed perception/spawning interfaces |
+| `Lockdown.AI.Core` | Engine-independent decisions, scoring, memory and spawning policy where practical |
+| `Lockdown.Runtime` | Player, health, weapons, world interactions and movement execution |
+| `Lockdown.AI.Agents` | Unity integration of the three ground behaviors and spawning agent |
+| `Lockdown.Tests.EditMode` | Focused checks for implemented decisions and transitions |
 
-1. **`Lockdown.Interfaces`**:
-   - Contains pure C# contracts (e.g., `IAgent`, `IInteractable`, `IDamageable`, `IBlackboard`, `IPerceptionTarget`).
-   - Zero project dependencies; serves as the central decoupling bridge.
+AI folders currently contain assembly definitions; existing enemy runtime scripts are separate from the selected HTML behaviors. Implement and validate Unity equivalents before describing the four-agent integration as complete.
 
-2. **`Lockdown.AI.Core`**:
-   - Foundational AI algorithms: state machines (FSM), blackboard data structures, A* / utility heuristics, spatial search algorithms, and perception math.
-   - Zero project dependencies; independent of specific gameplay runtime implementations to allow pure headless testing.
+Keep dependencies acyclic. Player/world systems should communicate through shared contracts/events. Keep physics/rendering outside core decision algorithms. HTML JavaScript is a behavioral reference, not code Unity can execute directly.
 
-3. **`Lockdown.Runtime`**:
-   - Concrete runtime implementations for character movement, animation bridging, world managers, camera controllers, and debug utilities.
-   - Depends solely on `Lockdown.Interfaces`.
+## Integration Requirements
 
-4. **`Lockdown.AI.Agents`**:
-   - Concrete agent logic and state trees for `Rex`, `Sentinel`, `Wasp`, and `Stalker`.
-   - Depends on `Lockdown.AI.Core` (for algorithmic primitives), `Lockdown.Interfaces` (for interaction contracts), and `Lockdown.Runtime` (for physics and movement execution).
+- Agree enemy dimensions, navigation clearance, spawn markers and room boundaries with the museum builder. Rebuild/test navigation after geometry changes.
+- Supply grounded movement, facing, animation, perception and damage through Unity runtime adapters.
+- Preserve sound position, kind and age for Hound; continuous player-position knowledge must not replace sound tracking.
+- Supply reachable cover/peek positions and retreat routes for Ambusher, and pursuit/search destinations for Pursuer.
+- Give the spawning agent live counts, encounter activation and validated spawn positions. Keep population limits and pause behavior explicit.
+- Define/test any adaptive spawning policy separately from the fixed-wave baseline. Its inputs, decisions and IS evaluation evidence remain to be implemented.
 
-5. **`Lockdown.Tests.EditMode`**:
-   - Unit tests running in the Unity Test Framework validating core data structures, heuristics, and state machine transitions.
-
----
-
-## 3. Dependency Rules & Enforcement
-
-- **Strict Upward Flow**: High-level modules may depend on low-level abstractions, never the reverse.
-- **No Circular References**: Unity `.asmdef` files enforce acyclic graph dependencies at compile time.
-- **Zero Engine Couplings in Core Math**: Heuristic and search algorithms in `Lockdown.AI.Core` should prioritize pure C# logic and mathematics where feasible, enabling rapid headless testing.
-- **Cross-Domain Communication**:
-  - The Player controller (`Lockdown.Runtime` or `Player/`) must never directly reference concrete enemy AI classes (`Lockdown.AI.Agents`). Interaction must occur via `IDamageable`, `IPerceptionTarget`, or events registered on shared interfaces.
-
-> P3 toilet update (9 October 2026): follow Room_Object_Placement.md for the two cubicles and fixed-open damaged door panels. The old open-divider proposal is superseded. Shell v3.2 is unchanged.
-
-
-> Furniture correction P4 (9 October 2026): use the current Room_Object_Placement.md/CSV. Egypt and Natural History graphics now avoid doors; the Security monitor strip clears its window; Egypt gains a west-wall photo. P3 cubicles remain, with the W08 glazing junction clarified in the guide. Shell unchanged.
+The former additive `Bootstrap`, `Env`, `Interactables`, `Agents` and `ModelShowcase` scene layout was a proposal. Check actual scene loading and agree ownership before adopting it for the museum; it does not require replacing `Museum_Main`.
