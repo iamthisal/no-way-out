@@ -27,12 +27,18 @@ namespace Lockdown.Tests
         private Keyboard keyboard;
         private Mouse mouse;
         private bool previousBackground;
+        private InputSettings.BackgroundBehavior previousInputBackground;
+        private InputSettings.EditorInputBehaviorInPlayMode previousEditorInput;
 
         [UnityTest]
         public IEnumerator PistolFiresReloadsAndWallsBlockDamage()
         {
             previousBackground = Application.runInBackground;
             Application.runInBackground = true;
+            previousInputBackground = InputSystem.settings.backgroundBehavior;
+            previousEditorInput = InputSystem.settings.editorInputBehaviorInPlayMode;
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+            InputSystem.settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
             foreach (var listener in Object.FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
                 listener.enabled = false;
             foreach (var otherPlayer in Object.FindObjectsByType<FirstPersonController>(FindObjectsSortMode.None))
@@ -55,6 +61,8 @@ namespace Lockdown.Tests
             player.CaptureCursor();
             yield return new WaitForSeconds(0.3f);
             Assert.That(weapon.CurrentAmmo, Is.EqualTo(12));
+            player.CaptureCursor();
+            yield return null;
 
             InputSystem.QueueStateEvent(mouse, new MouseState { buttons = 1 });
             yield return null;
@@ -112,6 +120,8 @@ namespace Lockdown.Tests
             if (keyboard != null && keyboard.added) InputSystem.RemoveDevice(keyboard);
             if (mouse != null && mouse.added) InputSystem.RemoveDevice(mouse);
             Application.runInBackground = previousBackground;
+            InputSystem.settings.backgroundBehavior = previousInputBackground;
+            InputSystem.settings.editorInputBehaviorInPlayMode = previousEditorInput;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             yield return null;
