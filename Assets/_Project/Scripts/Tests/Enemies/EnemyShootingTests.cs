@@ -36,11 +36,17 @@ namespace Lockdown.Tests
             var player = Object.FindFirstObjectByType<FirstPersonController>();
             var health = player.GetComponent<Health>();
             Assert.That(health, Is.Not.Null, "The player must have the shared Health component.");
+            var hitAudio = player.GetComponent<AudioSource>();
+            Assert.That(hitAudio, Is.Not.Null, "The player must have a local hit audio source.");
+            Assert.That(hitAudio.spatialBlend, Is.Zero);
+            Assert.That(hitAudio.playOnAwake, Is.False);
+            Assert.That(hitAudio.isPlaying, Is.False, "No hit sound should play on spawn.");
             SetPosition(player, shooter.transform.position + Vector3.back * 2f);
             player.CaptureCursor();
             yield return new WaitForSeconds(1f);
             Assert.That(shooter.ShotsFired, Is.EqualTo(1));
             Assert.That(health.CurrentHealth, Is.EqualTo(90f));
+            Assert.That(hitAudio.isPlaying, Is.True, "An enemy hit should play the player's oof sound.");
             Assert.That(shooter.TryFire(), Is.False, "Fire interval should prevent immediate repeat shots.");
 
             wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -50,6 +56,7 @@ namespace Lockdown.Tests
             yield return new WaitForSeconds(1.5f);
             Assert.That(shooter.ShotsFired, Is.EqualTo(1), "A wall should block shooting and damage.");
             Assert.That(health.CurrentHealth, Is.EqualTo(90f));
+            Assert.That(hitAudio.isPlaying, Is.False, "Blocked enemy shots should not play hit audio.");
             Object.DestroyImmediate(wall);
             yield return new WaitForSeconds(1.1f);
             Assert.That(shooter.ShotsFired, Is.EqualTo(2));
