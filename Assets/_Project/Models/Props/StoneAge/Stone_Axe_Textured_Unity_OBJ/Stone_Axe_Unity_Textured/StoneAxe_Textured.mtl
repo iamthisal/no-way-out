@@ -1,0 +1,28 @@
+# Color textures supplied beside OBJ; map_Kd is supported by OBJ importers.
+
+newmtl Wooden_Handle
+Ka 0.13 0.13 0.13
+Kd 1 1 1
+Ks 0.09 0.09 0.09
+Ns 26
+d 1.0
+illum 2
+map_Kd Axe_Wood_Albedo.png
+
+newmtl Flint_Head
+Ka 0.13 0.13 0.13
+Kd 1 1 1
+Ks 0.09 0.09 0.09
+Ns 15
+d 1.0
+illum 2
+map_Kd Axe_Flint_Albedo.png
+
+newmtl Leather_Bindings
+Ka 0.13 0.13 0.13
+Kd 1 1 1
+Ks 0.09 0.09 0.09
+Ns 12
+d 1.0
+illum 2
+map_Kd Axe_Leather_Albedo.png
