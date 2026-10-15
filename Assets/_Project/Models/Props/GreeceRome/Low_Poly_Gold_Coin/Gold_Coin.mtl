@@ -1,0 +1,7 @@
+newmtl Gold_Coin_Material
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.5 0.5 0.5
+Ns 50
+illum 2
+map_Kd Textures/TB_coin_LP_Material_002_BaseColor.jpeg
