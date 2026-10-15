@@ -1,0 +1,9 @@
+# Unity-importable material with embedded model color texture
+newmtl AncientEye_Pendant
+Ka 0.5 0.5 0.5
+Kd 1.0 1.0 1.0
+Ks 0.15 0.15 0.15
+Ns 50.0
+d 1.0
+illum 2
+map_Kd Eye_Pendant_BaseColor.png

@@ -1,0 +1,36 @@
+newmtl aiStandardSurface1SG
+illum 4
+Kd 0.75 0.67 0.54
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl aiStandardSurface5SG
+illum 4
+Kd 0.75 0.67 0.54
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl aiStandardSurface6SG
+illum 4
+Kd 0.75 0.67 0.54
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl aiStandardSurface7SG
+illum 4
+Kd 0.75 0.67 0.54
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl lambert1SG
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl pasted__aiStandardSurface6SG
+illum 4
+Kd 0.75 0.67 0.54
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
