@@ -7,11 +7,13 @@ namespace Lockdown.AI.Agents
     [RequireComponent(typeof(NavMeshAgent))]
     public sealed class PursuerAgent : MonoBehaviour
     {
-        public enum PursuerState { Patrol, Chase }
+        public enum PursuerState { Patrol, Chase, Investigate, Attack, Search, Return, Dead }
 
         [Header("References")]
         [SerializeField] private Transform[] patrolPoints = new Transform[0];
         [SerializeField] private Transform playerTarget;
+
+        [SerializeField] private PursuerSettings settings = new PursuerSettings();
 
         [Header("Movement")]
         [SerializeField, Min(0.1f)] private float patrolSpeed = 2f;
