@@ -1,0 +1,26 @@
+# Materials for Digital Door Lock and Keycard. Diffuse textures linked relative to this file.
+newmtl MAT_DoorLock
+Ka 1.0 1.0 1.0
+Kd 1.0 1.0 1.0
+Ks 0.15 0.15 0.15
+Ns 60
+d 1.0
+illum 2
+map_Kd DoorLock_Color.png
+
+newmtl MAT_GreenIndicator
+Ka 0.0 0.3 0.0
+Kd 0.0 1.0 0.0
+Ks 0.0 0.0 0.0
+Ns 0
+d 1.0
+illum 1
+
+newmtl MAT_Keycard
+Ka 1.0 1.0 1.0
+Kd 1.0 1.0 1.0
+Ks 0.1 0.1 0.1
+Ns 20
+d 1.0
+illum 2
+map_Kd Keycard_Color.png
