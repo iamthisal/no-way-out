@@ -1,0 +1,16 @@
+# Original Blender material colors. No image texture provided in source.
+newmtl Original_Light
+Kd 0.800000 0.800000 0.800000
+Ka 0.050000 0.050000 0.050000
+Ks 0.080000 0.080000 0.080000
+Ns 30.0
+d 1.0
+illum 2
+
+newmtl Original_Dark
+Kd 0.057802 0.057802 0.057802
+Ka 0.010000 0.010000 0.010000
+Ks 0.060000 0.060000 0.060000
+Ns 10.0
+d 1.0
+illum 2

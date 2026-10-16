@@ -1,0 +1,10 @@
+# Unity-compatible Wavefront material with stone texture assigned
+newmtl Marble_Bust_Stone
+Ka 0.15 0.15 0.15
+Kd 1.0 1.0 1.0
+Ks 0.04 0.04 0.04
+Ns 24
+d 1.0
+illum 2
+map_Kd Textures/Marble_Bust_Color.jpg
+map_Bump Textures/Marble_Bust_Normal.png
