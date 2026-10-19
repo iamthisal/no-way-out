@@ -29,6 +29,8 @@ namespace Lockdown.Tests
         private bool previousBackground;
         private InputSettings.BackgroundBehavior previousInputBackground;
         private InputSettings.EditorInputBehaviorInPlayMode previousEditorInput;
+        private Vector3 capturePosition;
+        private Quaternion captureRotation;
 
         [UnitySetUp]
         public IEnumerator Setup()
@@ -154,6 +156,123 @@ namespace Lockdown.Tests
             Assert.That(door.IsOpen, Is.False);
             Assert.That(Vector3.Distance(door.transform.position, hingePosition), Is.LessThan(0.001f));
             Assert.That(Quaternion.Angle(door.transform.localRotation, Quaternion.identity), Is.LessThan(0.02f));
+        }
+
+        [UnityTest]
+        public IEnumerator MuseumInteriorDoorsHaveMovingCollidersAndFixedWashroomFrames()
+        {
+            // This checkout already references a missing exterior-door prefab. Expect only
+            // those two specific load errors while still checking every interior door.
+            if (string.IsNullOrEmpty(AssetDatabase.GUIDToAssetPath("3c09e9fafae22354683897089c02f979")))
+            {
+                LogAssert.Expect(LogType.Error, new Regex("^Problem detected while opening the Scene file: 'Assets/_Project/Scenes/Museum/Museum_Main.unity'"));
+                LogAssert.Expect(LogType.Error, "Prefab instance problem. Missing Prefab Asset: 'Exit_MuseumDoubleDoor (Missing Prefab with guid: 3c09e9fafae22354683897089c02f979)'");
+            }
+            EditorSceneManager.LoadSceneInPlayMode("Assets/_Project/Scenes/Museum/Museum_Main.unity",
+                new LoadSceneParameters(LoadSceneMode.Additive));
+            yield return null;
+            var museum = SceneManager.GetSceneByName("Museum_Main");
+            foreach (var root in museum.GetRootGameObjects())
+            {
+                foreach (var shooting in root.GetComponentsInChildren<Lockdown.Enemies.EnemyShooting>(true)) shooting.enabled = false;
+                foreach (var otherPlayer in root.GetComponentsInChildren<FirstPersonController>(true)) otherPlayer.gameObject.SetActive(false);
+            }
+            int count = 0;
+            foreach (var root in museum.GetRootGameObjects())
+            {
+                foreach (var configured in root.GetComponentsInChildren<Door>(true))
+                {
+                    count++;
+                    Assert.That(configured.GetComponent<BoxCollider>(), Is.Not.Null);
+                    Assert.That(configured.GetComponent<UnityEngine.AI.NavMeshObstacle>().carving, Is.True);
+                    Assert.That(configured.transform.childCount, Is.GreaterThan(0));
+                    var collider = configured.GetComponent<BoxCollider>();
+                    var closedRotation = configured.transform.localRotation;
+                    var normal = configured.transform.forward;
+                    bool found = false;
+                    foreach (float side in new[] { 1f, -1f })
+                    {
+                        var body = player.GetComponent<CharacterController>();
+                        body.enabled = false;
+                        var position = collider.bounds.center + normal * side * 1.6f;
+                        position.y = 0.05f;
+                        player.transform.position = position;
+                        body.enabled = true;
+                        AimAt(collider.bounds.center);
+                        player.CaptureCursor();
+                        yield return null;
+                        Physics.SyncTransforms();
+                        if (interaction.CurrentTarget == configured) { found = true; break; }
+                    }
+                    Assert.That(found, Is.True, configured.transform.parent.name + " cannot be reached from either side.");
+                    if (configured.transform.parent.name == "Door_D09_Security") Capture(configured, "closed");
+                    Assert.That(interaction.TryInteract(), Is.True);
+                    float deadline = Time.realtimeSinceStartup + 3f;
+                    while (configured.IsMoving && Time.realtimeSinceStartup < deadline) yield return null;
+                    Assert.That(configured.IsMoving, Is.False);
+                    Assert.That(Quaternion.Angle(configured.transform.localRotation, closedRotation), Is.GreaterThan(90f));
+                    Physics.SyncTransforms();
+                    if (configured.transform.parent.name == "Door_D09_Security") Capture(configured, "open");
+                    // Approach the opened leaf rather than interacting through empty space.
+                    var controller = player.GetComponent<CharacterController>();
+                    controller.enabled = false;
+                    var approach = collider.bounds.center + configured.transform.forward * 1.2f;
+                    approach.y = 0.05f;
+                    player.transform.position = approach;
+                    controller.enabled = true;
+                    AimAt(collider.bounds.center);
+                    Physics.SyncTransforms();
+                    Assert.That(interaction.TryInteract(), Is.True, "Opened panel must remain interactable: " + configured.transform.parent.name);
+                    deadline = Time.realtimeSinceStartup + 3f;
+                    while (configured.IsMoving && Time.realtimeSinceStartup < deadline) yield return null;
+                    Assert.That(configured.IsOpen, Is.False);
+                    Assert.That(configured.IsMoving, Is.False);
+                    Assert.That(Quaternion.Angle(configured.transform.localRotation, closedRotation), Is.LessThan(0.02f));
+                    if (configured.transform.parent.name.Contains("Toilet"))
+                    {
+                        var frame = configured.transform.parent.Find("Visuals/door_washroom/Cube.001");
+                        Assert.That(frame, Is.Not.Null);
+                        Assert.That(frame.IsChildOf(configured.transform), Is.False);
+                        Assert.That(frame.GetComponent<MeshCollider>(), Is.Not.Null);
+                    }
+                }
+            }
+            Assert.That(count, Is.EqualTo(7));
+            yield return SceneManager.UnloadSceneAsync(museum);
+        }
+
+        private void Capture(Door configured, string state)
+        {
+            var view = new GameObject("Door verification camera");
+            view.transform.SetParent(fixture.transform);
+            var camera = view.AddComponent<Camera>();
+            if (state == "closed")
+            {
+                capturePosition = player.PlayerCamera.transform.position;
+                captureRotation = player.PlayerCamera.transform.rotation;
+            }
+            view.transform.SetPositionAndRotation(capturePosition, captureRotation);
+            var target = new RenderTexture(640, 640, 24);
+            var pixels = new Texture2D(640, 640, TextureFormat.RGB24, false);
+            var previous = RenderTexture.active;
+            try
+            {
+                camera.targetTexture = target;
+                camera.Render();
+                RenderTexture.active = target;
+                pixels.ReadPixels(new Rect(0f, 0f, 640f, 640f), 0, 0);
+                pixels.Apply();
+                Directory.CreateDirectory("Temp/DoorsVerification");
+                File.WriteAllBytes("Temp/DoorsVerification/door-" + state + ".png", pixels.EncodeToPNG());
+            }
+            finally
+            {
+                RenderTexture.active = previous;
+                camera.targetTexture = null;
+                Object.DestroyImmediate(target);
+                Object.DestroyImmediate(pixels);
+                Object.DestroyImmediate(view);
+            }
         }
 
         private IEnumerator WaitForDoor()
