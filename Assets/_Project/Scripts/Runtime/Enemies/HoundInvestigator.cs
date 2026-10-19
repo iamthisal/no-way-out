@@ -35,7 +35,8 @@ namespace Lockdown.Enemies
                 HasArrived = true;
             }
             // Retry if a door was closed or a carved obstacle changed the route.
-            if (!HasArrived && !agent.pathPending && Time.time >= nextAttempt) TryMove();
+            if (!HasArrived && !agent.pathPending && Time.time >= nextAttempt &&
+                (!agent.hasPath || agent.pathStatus != NavMeshPathStatus.PathComplete)) TryMove();
         }
 
         private void TryMove()
