@@ -14,6 +14,7 @@ namespace Lockdown.World
         [SerializeField] private AudioClip breakSound;
         [SerializeField] private UnityEvent onBroken = new UnityEvent();
         private Health health;
+        private bool started;
 
         public bool IsBroken { get; private set; }
         public UnityEvent OnBroken => onBroken;
@@ -29,8 +30,12 @@ namespace Lockdown.World
         private void OnEnable()
         {
             health.OnDeath.AddListener(Break);
-            if (health.IsDead) Break();
+            if (started && health.IsDead) Break();
         }
+
+        // All scene Awake calls finish before Start. Health may not have initialized
+        // CurrentHealth yet when another component's OnEnable runs on scene load.
+        private void Start() { started = true; if (health.IsDead) Break(); }
 
         private void OnDisable() { health.OnDeath.RemoveListener(Break); }
 
