@@ -1,0 +1,5 @@
+{
+  "name": "Lockdown.Tests.Doors",
+  "references": ["Lockdown.Runtime", "Lockdown.Interfaces", "Unity.InputSystem"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Lockdown.Tests.Hammer",
+  "references": ["Lockdown.Runtime", "Lockdown.Interfaces", "Unity.InputSystem"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

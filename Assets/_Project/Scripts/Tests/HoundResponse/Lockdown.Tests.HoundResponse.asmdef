@@ -1,0 +1,5 @@
+{
+  "name": "Lockdown.Tests.HoundResponse",
+  "references": ["Lockdown.Runtime", "Lockdown.Interfaces"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
