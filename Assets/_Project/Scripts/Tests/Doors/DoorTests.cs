@@ -92,11 +92,35 @@ namespace Lockdown.Tests
             Assert.That(Quaternion.Angle(Quaternion.identity, door.transform.localRotation), Is.LessThan(0.02f));
         }
 
+        [UnityTest]
+        public IEnumerator ClosedPanelBlocksPlayerAndOpenPanelClearsPassage()
+        {
+            var body = player.GetComponent<CharacterController>();
+            body.Move(Vector3.forward * 3.5f);
+            Assert.That(player.transform.localPosition.z, Is.LessThan(2f));
+            ResetPlayer();
+            Assert.That(interaction.TryInteract(), Is.True);
+            yield return WaitForDoor();
+            Physics.SyncTransforms();
+            body.Move(Vector3.forward * 3.5f);
+            Assert.That(player.transform.localPosition.z, Is.GreaterThan(3f));
+        }
+
         private IEnumerator WaitForDoor()
         {
             float timeout = Time.realtimeSinceStartup + 3f;
             while (door.IsMoving && Time.realtimeSinceStartup < timeout) yield return null;
             Assert.That(door.IsMoving, Is.False, "Door animation did not finish.");
+        }
+
+        private void ResetPlayer()
+        {
+            var body = player.GetComponent<CharacterController>();
+            body.enabled = false;
+            player.transform.localPosition = new Vector3(0f, 0.05f, 0f);
+            body.enabled = true;
+            AimAt(panel.bounds.center);
+            Physics.SyncTransforms();
         }
 
         private void AimAt(Vector3 point)
