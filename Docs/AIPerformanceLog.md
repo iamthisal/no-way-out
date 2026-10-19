@@ -7,6 +7,7 @@ Identify runtime (HTML or Unity), commit, hardware, room/scene, population and r
 | Date / commit | Runtime and conditions | Agent / scenario | Decision or path cost | Frame / allocation impact | Behavior result and evidence |
 |---|---|---|---|---|---|
 | Not measured | Baseline pending | Selected four-agent scope | Pending | Pending | Record actual checks and measurements |
+| 2026-10-19 / feature/interactive-doors (base de67995) | Unity 6000.6.3f1, Museum_Main; seven interior doors; functional checks only | Door collision and navigation integration | Not measured | Not measured | Five Play Mode door tests passed; every interior door opened/closed through player interaction. Closed/open player passage and obstacle carving configuration checked; security-door screenshots visually checked. Local evidence: Temp/DoorsVerification/results.xml, door-closed.png, door-open.png. Enemy routes and carving timing were not measured. See [door notes](PlayerDoors.md) for the pre-existing missing exterior prefab and blocked loot regression tests. |
 
 ## Evaluation Scenarios
 
