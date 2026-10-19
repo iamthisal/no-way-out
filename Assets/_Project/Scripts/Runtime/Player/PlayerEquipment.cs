@@ -12,15 +12,20 @@ namespace Lockdown.Player
     {
         [SerializeField] private GameObject emptyHands;
         [SerializeField] private FirstPersonWeapon pistol;
+        [SerializeField] private FirstPersonHammer hammer;
         [SerializeField] private bool startWithPistol;
 
         private FirstPersonController controller;
         private Health health;
         private InputAction handsAction;
         private InputAction pistolAction;
+        private InputAction hammerAction;
+        private enum Slot { Hands, Pistol, Hammer }
 
         public bool IsPistolEquipped => pistol != null && pistol.gameObject.activeSelf;
         public GameObject EmptyHands => emptyHands;
+        public bool HasHammer { get; private set; }
+        public bool IsHammerEquipped => hammer != null && hammer.gameObject.activeInHierarchy;
 
         private void Awake()
         {
@@ -36,54 +41,71 @@ namespace Lockdown.Player
             handsAction.AddBinding("<Gamepad>/dpad/left");
             pistolAction = new InputAction("SelectPistol", InputActionType.Button, "<Keyboard>/2");
             pistolAction.AddBinding("<Gamepad>/dpad/right");
+            hammerAction = new InputAction("SelectHammer", InputActionType.Button, "<Keyboard>/3");
+            hammerAction.AddBinding("<Gamepad>/dpad/up");
         }
 
         private void OnEnable()
         {
             handsAction?.Enable();
             pistolAction?.Enable();
+            hammerAction?.Enable();
         }
 
         // Let the pistol initialize once before hiding it so switching never resets ammunition.
-        private void Start() { ApplySelection(startWithPistol); }
+        private void Start() { ApplySelection(startWithPistol ? Slot.Pistol : Slot.Hands); }
 
         private void Update()
         {
             if (!CanSwitch()) return;
             if (handsAction.WasPressedThisFrame()) TryEquipHands();
             else if (pistolAction.WasPressedThisFrame()) TryEquipPistol();
+            else if (hammerAction.WasPressedThisFrame()) TryEquipHammer();
         }
 
-        public bool TryEquipHands() => Select(false);
-        public bool TryEquipPistol() => Select(true);
+        public bool TryEquipHands() => Select(Slot.Hands);
+        public bool TryEquipPistol() => Select(Slot.Pistol);
+        public bool TryEquipHammer() => Select(Slot.Hammer);
 
-        private bool Select(bool usePistol)
+        public bool TryCollectHammer()
+        {
+            if (!CanSwitch() || HasHammer || hammer == null) return false;
+            HasHammer = true;
+            ApplySelection(Slot.Hammer);
+            return true;
+        }
+
+        private bool Select(Slot slot)
         {
             if (!CanSwitch()) return false;
-            ApplySelection(usePistol);
+            if (slot == Slot.Hammer && (!HasHammer || hammer == null)) return false;
+            ApplySelection(slot);
             return true;
         }
 
         private bool CanSwitch() => isActiveAndEnabled && controller != null && controller.enabled &&
             controller.CanUseWeapon && health != null && !health.IsDead;
 
-        private void ApplySelection(bool usePistol)
+        private void ApplySelection(Slot slot)
         {
             if (emptyHands == null || pistol == null) return;
-            emptyHands.SetActive(!usePistol);
-            pistol.gameObject.SetActive(usePistol);
+            emptyHands.SetActive(slot == Slot.Hands);
+            pistol.gameObject.SetActive(slot == Slot.Pistol);
+            if (hammer != null) hammer.gameObject.SetActive(slot == Slot.Hammer && HasHammer);
         }
 
         private void OnDisable()
         {
             handsAction?.Disable();
             pistolAction?.Disable();
+            hammerAction?.Disable();
         }
 
         private void OnDestroy()
         {
             handsAction?.Dispose();
             pistolAction?.Dispose();
+            hammerAction?.Dispose();
         }
     }
 }
