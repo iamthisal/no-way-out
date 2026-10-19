@@ -124,13 +124,15 @@ namespace Lockdown.Editor
             {
                 if (!NavMesh.SamplePosition(candidate, out var hit, 0.8f, NavMesh.AllAreas)) continue;
                 Physics.SyncTransforms();
-                if (Physics.CheckBox(hit.position + Vector3.up * 0.48f, new Vector3(0.32f, 0.40f, 0.75f), rotation, ~0, QueryTriggerInteraction.Ignore)) continue;
+                if (!Physics.Raycast(hit.position + Vector3.up * 0.5f, Vector3.down, out var floor, 1f, ~0, QueryTriggerInteraction.Ignore)) continue;
+                var position = floor.point;
+                if (Physics.CheckBox(position + Vector3.up * 0.48f, new Vector3(0.32f, 0.40f, 0.75f), rotation, ~0, QueryTriggerInteraction.Ignore)) continue;
                 var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
-                instance.transform.SetPositionAndRotation(hit.position, rotation);
+                instance.transform.SetPositionAndRotation(position, rotation);
                 Undo.RegisterCreatedObjectUndo(instance, "Place museum hound");
                 EditorSceneManager.MarkSceneDirty(scene);
                 Selection.activeGameObject = instance;
-                Debug.Log("Museum hound placed in the central hall at " + hit.position + ". Save the scene.");
+                Debug.Log("Museum hound placed in the central hall at " + position + ". Save the scene.");
                 return;
             }
             throw new InvalidOperationException("No clear central-hall position was found for the hound.");
