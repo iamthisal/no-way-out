@@ -146,3 +146,117 @@ move together.
 
 This is a transform-controlled door. It does not use a Rigidbody, HingeJoint,
 Animator Controller, or an animation clip to produce the swing.
+
+## 5. How does the player interact with it?
+
+Files:
+
+- `Assets/_Project/Scripts/Runtime/Player/PlayerInteraction.cs`
+- `Assets/_Project/Scripts/Interfaces/IInteractable.cs`
+
+The player script already handles **E** and the gamepad's west button, displayed
+as **X** by the existing UI. Each new button press calls `TryInteract()`.
+
+The detection process is:
+
+1. Check whether the active, living player can interact. This also uses the
+   controller's existing gameplay-input gate, `CanUseWeapon`.
+2. Cast a ray from the player camera along its forward direction, with a default
+   reach of 2.5 metres.
+3. Sort the ray hits by distance and ignore colliders belonging to the player.
+4. Use the first remaining collider. `GetComponentInParent<IInteractable>()`
+   finds its interaction component on that object or a parent.
+5. Display the target's `InteractionLabel` and call its `TryInteract()` when E is
+   pressed.
+
+The first solid world collider blocks the ray even if it is not interactive. That
+prevents selecting a door behind a wall.
+
+`IInteractable` defines two members:
+
+```csharp
+string InteractionLabel { get; }
+bool TryInteract(GameObject interactor);
+```
+
+The player knows this common contract. `Door` supplies opening/closing behavior;
+`LootItem` supplies collection behavior. This is an example of **interface-based
+polymorphism**: the same player call invokes the target object's implementation.
+
+## 6. What does Door.cs do during gameplay?
+
+File: `Assets/_Project/Scripts/Runtime/World/Door.cs`.
+
+`Door` is a `MonoBehaviour` attached to the hinge and implements `IInteractable`.
+It has three Inspector settings:
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `openAngle` | 95 degrees | Rotation relative to the closed pose; negative reverses swing |
+| `degreesPerSecond` | 180 | Angular movement speed |
+| `startsOpen` | false | Initial requested state |
+
+### Awake: remember the starting pose
+
+`Awake()` stores the hinge's initial local rotation as `closedRotation`. It sets
+`IsOpen` from `startsOpen` and applies the initial angle.
+
+Saving the closed rotation means the same script works on doors facing different
+directions. It does not assume the world-space closed rotation is zero.
+
+### TryInteract: change the target state
+
+`TryInteract()` rejects a disabled door or null interactor. It also checks that
+the player's current valid interaction target is this exact door. A direct method
+call therefore does not bypass the player's reach and sight checks.
+
+Then it toggles:
+
+```csharp
+IsOpen = !IsOpen;
+```
+
+`IsOpen` describes the **requested state**, not proof that the animation has already
+finished. The prompt changes to `Close door` when opening is requested and to
+`Open door` when closing is requested. `IsMoving` reports whether the current angle
+still differs from the target.
+
+### Update: move smoothly toward the target
+
+`TargetAngle` is either zero or `openAngle`. Each frame:
+
+```csharp
+currentAngle = Mathf.MoveTowards(currentAngle, TargetAngle,
+    Mathf.Max(1f, degreesPerSecond) * Time.deltaTime);
+transform.localRotation = closedRotation * Quaternion.Euler(0f, currentAngle, 0f);
+```
+
+`MoveTowards` advances the angle and reaches the target without overshooting.
+Multiplying speed by `Time.deltaTime` makes movement depend on elapsed time rather
+than the number of frames. At the defaults, a full swing takes approximately
+95 / 180 = **0.53 seconds** of game time.
+
+`Quaternion.Euler` creates the local Y-axis swing. Combining it with the stored
+closed rotation applies that swing relative to the original pose.
+
+Pressing again mid-swing changes the target, so the panel reverses from its current
+angle. Holding E does not repeatedly toggle it because the player script uses
+`WasPressedThisFrame()`.
+
+## 7. What are the collider and navigation obstacle for?
+
+The **BoxCollider** represents the moving panel for physics queries and physical
+blocking. When closed, it blocks player passage and raycasts. When the panel
+swings away, its collider moves away with it.
+
+The **NavMeshObstacle** represents the panel to Unity navigation. Its box matches
+the collider, carving is enabled, and `carveOnlyStationary` is enabled. A stationary
+panel can therefore carve blocked space in the NavMesh after Unity's stationary
+threshold. The obstacle moves with the door.
+
+These components serve different systems. A collider alone does not guarantee that
+a NavMesh agent plans a route around a door. A navigation obstacle is not a
+replacement for the player's physical collider.
+
+Carving configuration was checked. Enemy route behavior, carving timing, and AI
+performance were not measured, so do not claim those were proven by the door tests.
