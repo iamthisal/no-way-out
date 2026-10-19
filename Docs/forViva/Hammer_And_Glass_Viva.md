@@ -3,19 +3,21 @@
 ## A short explanation to say first
 
 > The storage room already had a hammer model, and the exhibition area already
-> had a glass display with an armored helmet. I reused those models and added the
+> had glass displays with artifacts. I reused those models and added the
 > gameplay sequence. E collects the hammer as equipment. The equipment system
 > switches between hands, pistol, and hammer. A short-range hammer strike damages
-> the glass through the existing damage interface. When the glass health reaches
+> each case's glass through the existing damage interface. When its health reaches
 > zero, it removes its visual and collision barrier, allowing the player to collect
-> the helmet through the existing loot system.
+> the contents through the existing loot system. All seven glass cases now work,
+> with ten separate collectibles worth $3,650 in total.
 
 ## 1. Existing work and new work
 
 The hammer mesh, its storage-room placement, the display model, and the helmet
 model were already present in `Museum_Main`. The helmet's imported object is named
 `Homem De Ferro`; its gameplay loot label is **Armored Helmet**, worth **$500**.
-This feature does not claim authorship of those existing models.
+This feature does not claim authorship of those existing models. The expanded
+setup also reuses the existing bust, skull, and pottery meshes in the other cases.
 
 Existing systems reused:
 
@@ -82,7 +84,8 @@ cancels a pending impact. Holstering does not reset the cooldown.
 
 ## 4. How glass breaking exposes the loot
 
-The configured display is `P_Exhibition_CaseEast`. Its original solid placeholder
+The first configured display was `P_Exhibition_CaseEast`; the setup now covers all
+seven glass cases. Each case's original solid placeholder
 collider is disabled because it would continue blocking interaction after glass
 breaking. The glass mesh gets its own collider, Health, and BreakableGlass.
 Separate mesh colliders preserve the wooden base and thin frame.
@@ -99,6 +102,19 @@ When that event fires, it:
 The helmet remains active. Its `LootItem` uses the existing E interaction. Before
 breaking, the glass is the first solid raycast hit and blocks the helmet. After
 breaking, the ray can reach the helmet, so normal collection becomes available.
+
+Each protected `LootItem` also stores a reference to its own `BreakableGlass`.
+`IsProtected` prevents collection until that specific glass is broken, even if a
+loot collider is directly targeted or slightly overlaps a pane. Breaking a
+different case does not unlock it. Unprotected lobby loot keeps its original
+behavior because its optional glass reference is null.
+
+`GlassDisplayBuilder` stores the seven scene root names and their artifact paths,
+labels, and values. It finds their existing glass meshes and adds components to
+those objects. It reuses existing components and effects on subsequent runs.
+Pottery inside the imported cabinets is marked as loot before frame colliders
+are added, so the objects remain collectible rather than becoming cabinet walls.
+Frames, signs, windows, and the courtyard glass door are not loot.
 
 The display has 50 health. A 100-damage hammer strike breaks it in one hit; the
 existing 25-damage pistol can also break it in two hits. The hammer provides a way
@@ -122,14 +138,23 @@ committed separately so the history shows the issue and its resolution.
 
 ## 6. Testing and demonstration
 
-Six runtime tests cover pickup restrictions, ownership, equipment keys, ammo
+Seven runtime tests cover pickup restrictions, ownership, equipment keys, ammo
 preservation, held-button input, cooldown, range, walls, one-target impacts,
-cancelled strikes, and breaking glass once without hiding child loot.
+cancelled strikes, breaking glass once without hiding child loot, and the explicit
+per-case protection check even when loot is directly targeted.
 
 The museum test checks the actual world hammer, the actual glass display, one
 mouse strike without consuming pistol ammo, collecting the $500 helmet once,
 and encounter restart. Restart reloads the scene, restoring the pickup, intact
 glass, and empty player inventory. Ownership is not persisted across encounters.
+
+An additional museum sweep finds all seven exhibit panes, verifies that each has
+one breakable component and blocker, and breaks them with actual hammer strikes.
+It collects all ten items once for $3,650, checks independent case protection and
+frame preservation, then restarts and verifies that all cases and loot return.
+The expanded run passed all **14 tests**: nine hammer/glass tests plus five door
+regressions. The setup menu was also run twice before testing to check for duplicate
+components. The loot table is in [the feature guide](../HammerAndGlass.md).
 
 The door regression suite also runs alongside this feature. The known missing
 exterior-door prefab remains a separate scene issue; museum tests explicitly
@@ -145,6 +170,7 @@ A demonstration sequence:
 6. Swing with left-click, then collect the exposed helmet with E.
 7. Show the tests and the incremental commits for each working milestone.
 
-Only this first display is configured for the sequence. Additional cases can reuse
-the components. Enemy sound reactions, weapon durability, saved ownership, and a
-physical hammer-head sweep are possible extensions, not implemented features.
+All seven current glass exhibit cases are configured. Additional future cases can
+reuse the components and be added to the builder's definitions. Enemy sound
+reactions, weapon durability, saved ownership, and a physical hammer-head sweep
+are possible extensions, not implemented features.
