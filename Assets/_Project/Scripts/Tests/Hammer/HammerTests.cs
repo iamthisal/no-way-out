@@ -218,6 +218,37 @@ namespace Lockdown.Tests
             Assert.That(loot.activeInHierarchy, Is.True);
         }
 
+        [UnityTest]
+        public IEnumerator DisplayLootRequiresItsOwnGlassToBeBrokenEvenWhenTargetedDirectly()
+        {
+            var glass = MakeGlass(new Vector3(0f, 1.4f, 1.7f));
+            var model = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            model.transform.SetParent(fixture.transform, false);
+            model.transform.localPosition = new Vector3(0f, 1.4f, 1.2f);
+            model.transform.localScale = Vector3.one * 0.2f;
+            var loot = model.AddComponent<LootItem>();
+            var serialized = new SerializedObject(loot);
+            serialized.FindProperty("displayGlass").objectReferenceValue = glass;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            Aim(model.transform.position);
+            Physics.SyncTransforms();
+            Assert.That(interaction.CurrentTarget, Is.SameAs(loot));
+            Assert.That(loot.IsProtected, Is.True);
+            Assert.That(loot.InteractionLabel, Does.StartWith("Break glass"));
+            Assert.That(interaction.TryInteract(), Is.False);
+            Assert.That(loot.TryInteract(player.gameObject), Is.False);
+            var otherGlass = MakeGlass(new Vector3(3f, 1.4f, 1.7f));
+            otherGlass.GetComponent<Health>().TakeDamage(100f);
+            Assert.That(interaction.TryInteract(), Is.False, "Breaking another case cannot unlock this item.");
+            glass.GetComponent<Health>().TakeDamage(100f);
+            yield return null;
+            Physics.SyncTransforms();
+            Assert.That(loot.IsProtected, Is.False);
+            Assert.That(interaction.TryInteract(), Is.True);
+            Assert.That(player.GetComponent<LootInventory>().ItemCount, Is.EqualTo(1));
+            Assert.That(loot.TryInteract(player.gameObject), Is.False);
+        }
+
         private IEnumerator Collect()
         {
             var pickup = MakePickup();
