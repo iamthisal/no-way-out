@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8481906484273521946
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_Name
+      value: InvestigatingHound
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101507827598111553, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5369818359985264862}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7225437930523308635}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7671875130651459696}
+  m_SourcePrefab: {fileID: 100100000, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+--- !u!1 &6210690624148986991 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+  m_PrefabInstance: {fileID: 8481906484273521946}
+  m_PrefabAsset: {fileID: 0}
+--- !u!195 &5369818359985264862
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.32
+  m_Speed: 3.2
+  m_Acceleration: 9
+  avoidancePriority: 50
+  m_AngularSpeed: 360
+  m_StoppingDistance: 0.65
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.05
+  m_BaseOffset: -0.05
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &7225437930523308635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2823191ad87fdca459c1731a379ec265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.HoundInvestigator
+--- !u!114 &7671875130651459696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9de83152f4e27f46b0d08a00f05355d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.HoundLocomotion
