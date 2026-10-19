@@ -67,12 +67,12 @@ namespace Lockdown.Editor
             lootCollider.size = bounds.size;
             var loot = Undo.AddComponent<LootItem>(figure.gameObject);
             serialized = new SerializedObject(loot);
-            serialized.FindProperty("itemName").stringValue = "Iron Figure";
+            serialized.FindProperty("itemName").stringValue = "Armored Helmet";
             serialized.FindProperty("value").intValue = 500;
             serialized.ApplyModifiedProperties();
             Undo.CollapseUndoOperations(group);
             EditorSceneManager.MarkSceneDirty(scene);
-            Debug.Log("East exhibition glass now protects a $500 Iron Figure. Save the scene.");
+            Debug.Log("East exhibition glass now protects a $500 Armored Helmet. Save the scene.");
         }
 
         private static ParticleSystem CreateEffect(Transform display, Renderer glass)
