@@ -1,5 +1,9 @@
 # Hound model and presentation: viva notes
 
+These notes describe the original presentation milestone. The later glass
+response replaces the initially placed dog with a pack spawned after a break;
+see [Glass_Hound_Response_Viva.md](Glass_Hound_Response_Viva.md).
+
 ## What I built
 
 I created an original low-poly museum guard dog, imported it into Unity, and
