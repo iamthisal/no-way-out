@@ -106,6 +106,39 @@ namespace Lockdown.Tests
             Assert.That(player.transform.localPosition.z, Is.GreaterThan(3f));
         }
 
+        [UnityTest]
+        public IEnumerator InteractionRequiresReachSightAndLivingActivePlayer()
+        {
+            var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            wall.transform.SetParent(fixture.transform, false);
+            wall.transform.localPosition = new Vector3(0f, 1.4f, 1f);
+            wall.transform.localScale = new Vector3(2f, 3f, 0.1f);
+            Physics.SyncTransforms();
+            Assert.That(door.TryInteract(player.gameObject), Is.False, "Direct calls must not bypass walls.");
+            Object.DestroyImmediate(wall);
+            var body = player.GetComponent<CharacterController>();
+            body.enabled = false;
+            player.transform.localPosition = new Vector3(0f, 0.05f, -4f);
+            body.enabled = true;
+            Physics.SyncTransforms();
+            Assert.That(door.TryInteract(player.gameObject), Is.False, "Distant doors are unreachable.");
+            ResetPlayer();
+            player.ReleaseCursor();
+            Assert.That(door.TryInteract(player.gameObject), Is.False);
+            player.CaptureCursor();
+            yield return null;
+            interaction.enabled = false;
+            Assert.That(door.TryInteract(player.gameObject), Is.False);
+            interaction.enabled = true;
+            door.enabled = false;
+            Assert.That(interaction.TryInteract(), Is.False);
+            door.enabled = true;
+            player.GetComponent<Health>().TakeDamage(100f);
+            Assert.That(door.TryInteract(player.gameObject), Is.False);
+            Assert.That(door.TryInteract(null), Is.False);
+            Assert.That(door.IsOpen, Is.False);
+        }
+
         private IEnumerator WaitForDoor()
         {
             float timeout = Time.realtimeSinceStartup + 3f;
