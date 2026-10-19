@@ -139,6 +139,23 @@ namespace Lockdown.Tests
             Assert.That(door.IsOpen, Is.False);
         }
 
+        [UnityTest]
+        public IEnumerator MovingDoorCanReverseAndKeepsItsHingePosition()
+        {
+            fixture.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+            Physics.SyncTransforms();
+            var hingePosition = door.transform.position;
+            Assert.That(interaction.TryInteract(), Is.True);
+            yield return null;
+            AimAt(panel.bounds.center);
+            Physics.SyncTransforms();
+            Assert.That(interaction.TryInteract(), Is.True);
+            yield return WaitForDoor();
+            Assert.That(door.IsOpen, Is.False);
+            Assert.That(Vector3.Distance(door.transform.position, hingePosition), Is.LessThan(0.001f));
+            Assert.That(Quaternion.Angle(door.transform.localRotation, Quaternion.identity), Is.LessThan(0.02f));
+        }
+
         private IEnumerator WaitForDoor()
         {
             float timeout = Time.realtimeSinceStartup + 3f;
