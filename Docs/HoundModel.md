@@ -4,6 +4,11 @@ Branch: `feature/hound-model`. A low-poly tan/dark guard hound is placed in the
 central hall at approximately **(2.4, 0, 0.5)**, facing toward the lobby. This
 milestone supplies the dog model and idle presentation.
 
+The later `feature/glass-hound-response` branch replaces this standalone scene
+instance with dogs spawned only after glass breaks. The presentation prefab
+remains reusable. See [GlassHoundResponse.md](GlassHoundResponse.md) for current
+museum behaviour.
+
 ## Assets
 
 | Asset | Location |
