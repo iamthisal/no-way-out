@@ -55,10 +55,11 @@ namespace Lockdown.Tests
             var inventory = player.GetComponent<LootInventory>();
             var hammer = player.GetComponentInChildren<FirstPersonHammer>(true);
             var pickup = Object.FindAnyObjectByType<HammerPickup>();
-            var glass = Object.FindAnyObjectByType<BreakableGlass>();
             GameObject loot = null;
             foreach (var candidate in Object.FindObjectsByType<LootItem>(FindObjectsInactive.Exclude))
                 if (candidate.ItemName == "Armored Helmet") loot = candidate.gameObject;
+            Assert.That(loot, Is.Not.Null);
+            var glass = loot.GetComponent<LootItem>().DisplayGlass;
             Assert.That(pickup, Is.Not.Null);
             Assert.That(glass, Is.Not.Null);
             Assert.That(glass.IsBroken, Is.False, "Glass must start intact after Health initializes.");
