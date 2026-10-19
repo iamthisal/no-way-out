@@ -28,3 +28,23 @@ the active museum scene, skips doors already configured, and groups its changes
 into one Undo operation. Save the scene after running it. The washroom model
 instances are unpacked so their panel and frame can have different parents; the
 source model assets are preserved.
+
+## Verification
+
+On 19 October 2026, all five door Play Mode tests passed in Unity 6000.6.3f1
+on branch `feature/interactive-doors`. Closed/open security-door screenshots were
+visually checked. Results are in `Temp/DoorsVerification/results.xml` locally.
+
+Run the Play Mode assembly `Lockdown.Tests.Doors` in Unity Test Runner. It checks
+key presses and holding, movement reversal, interaction restrictions, closed/open
+player collision, and opening/closing every configured museum door. The museum
+test writes closed/open screenshots to `Temp/DoorsVerification/`.
+
+This checkout already references the absent `Exit_MuseumDoubleDoor` prefab GUID
+`3c09e9fafae22354683897089c02f979`. The museum door test expects the two specific
+scene-load errors only when that asset is absent. The existing loot regression
+tests fail on that scene-load error before exercising pickup. Restore the
+exterior asset separately to resolve that scene error.
+
+Navigation obstacles are configured and checked for carving. Enemy route behavior,
+carving delay, and AI performance have not been measured by these tests.
