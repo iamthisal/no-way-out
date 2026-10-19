@@ -260,3 +260,70 @@ replacement for the player's physical collider.
 
 Carving configuration was checked. Enemy route behavior, carving timing, and AI
 performance were not measured, so do not claim those were proven by the door tests.
+
+## 8. What was tested, and what are the limits?
+
+Five Play Mode tests in `Assets/_Project/Scripts/Tests/Doors/DoorTests.cs` passed:
+
+1. E opens/closes the door, updates the prompt, and does not toggle repeatedly
+   while held.
+2. The closed panel blocks the player; opening clears passage in the test setup.
+3. Interaction respects reach, sight, active components, cursor/gameplay input,
+   and player health.
+4. A moving door can reverse while retaining its hinge position, including under
+   a rotated parent.
+5. All seven configured museum doors can open and close through player interaction;
+   colliders, carving configuration, and separate washroom frames are checked.
+
+Closed/open security-door screenshots were also visually checked. Local evidence
+from the implementation session is under `Temp/DoorsVerification/`; Temp is not
+version-controlled and may be cleared by Unity.
+
+The scene already references a missing exterior prefab named `Exit_MuseumDoubleDoor`.
+The museum door test explicitly expects only its two known load errors when that
+asset is absent. The existing loot regression tests were blocked by that scene-load
+error. Do not describe the entire scene or all regression tests as error-free.
+
+This feature covers seven interior doors. It does not add keycard locks, door
+sounds, automatic closing, breakable glass, or detection of a person standing in
+the swing arc. Exterior boundary doors and decorative cubicle panels keep their
+existing behavior.
+
+## 9. Likely viva questions
+
+**Did you model the doors?**  
+The models were already part of the world. This feature adds gameplay behavior,
+hinges, collision, and navigation-obstacle setup to those models.
+
+**Why have both DoorBuilder and Door?**  
+The builder configures scene objects in the editor. Door handles their behavior
+during gameplay. The saved scene carries the setup into the game.
+
+**Could you configure a door without the builder?**  
+Yes. Create an unscaled hinge at the panel's edge, parent the moving panel under
+it, and add Door and a correctly sized collider. Add a navigation obstacle if
+navigation should account for it. Keep fixed frames outside the hinge. The builder
+automates that repeated setup for the seven existing scene doors.
+
+**Is the runtime door system limited to those seven names?**  
+No. The name list belongs to this museum-specific setup tool. Door itself can be
+attached to other correctly configured hinges without adding their names anywhere.
+
+**Why not put keyboard code inside every door?**  
+The player already owns input and target detection. Each door implements only its
+own response, so the player uses the same interaction contract for doors and loot.
+
+**How would you add a locked door later?**  
+Add a lock condition to the door's interaction logic and a suitable prompt; allow
+the state toggle only after the required key or condition is satisfied. That would
+be an extension; it is not implemented in the current feature.
+
+## A useful order for the live demonstration
+
+1. Show an existing door model and its world placement in the scene hierarchy.
+2. Expand its Hinge and show the Door, BoxCollider, and NavMeshObstacle components.
+3. Show the builder's name list and explain that positions come from the scene.
+4. Show IInteractable, then the player raycast and the Door state toggle.
+5. Show the angle update and explain Time.deltaTime and the edge pivot.
+6. Enter Play mode, open/close a door with E, and demonstrate blocked/clear passage.
+7. Show the door tests and state the measured results and remaining limitations.
