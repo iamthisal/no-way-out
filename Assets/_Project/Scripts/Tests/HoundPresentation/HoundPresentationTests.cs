@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections;
 using System.Text.RegularExpressions;
+using Lockdown.Enemies;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -78,7 +79,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator MuseumContainsOneHoundOnTheCentralHallFloor()
+        public IEnumerator MuseumStartsWithoutVisibleHoundsAndHasAGlassResponseDirector()
         {
             if (string.IsNullOrEmpty(AssetDatabase.GUIDToAssetPath("3c09e9fafae22354683897089c02f979")))
             {
@@ -89,16 +90,10 @@ namespace Lockdown.Tests
             yield return null;
             int count = 0;
             foreach (var root in SceneManager.GetActiveScene().GetRootGameObjects())
-                if (root.name == "MuseumHound")
-                {
-                    count++;
-                    Assert.That(root.transform.position.y, Is.InRange(-0.05f, 0.15f));
-                    Assert.That(root.transform.position.x, Is.InRange(-4f, 4f));
-                    Assert.That(root.transform.position.z, Is.InRange(-1f, 4f));
-                    Assert.That(root.GetComponentInChildren<Animator>().runtimeAnimatorController, Is.Not.Null);
-                    Assert.That(root.GetComponent<CapsuleCollider>().enabled, Is.True);
-                }
-            Assert.That(count, Is.EqualTo(1));
+                if (root.name == "MuseumHound") count++;
+            Assert.That(count, Is.Zero, "Dogs must only appear after glass breaks.");
+            Assert.That(Object.FindObjectsByType<GlassHoundResponse>(FindObjectsSortMode.None).Length, Is.EqualTo(1));
+            Assert.That(Object.FindObjectsByType<HoundInvestigator>(FindObjectsSortMode.None), Is.Empty);
         }
 
         private Transform FindBone(string name)
