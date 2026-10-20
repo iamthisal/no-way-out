@@ -1,3 +1,4 @@
+using Lockdown.AI.Core.Hound;
 using UnityEngine;
 
 namespace Lockdown.AI.Agents
@@ -7,6 +8,7 @@ namespace Lockdown.AI.Agents
     {
         [SerializeField] private HoundHearing dog;
         [SerializeField, Range(0f, 1f)] private float loudness = 1f;
+        [SerializeField] private HoundSoundKind kind = HoundSoundKind.Custom;
 
         [ContextMenu("Emit Test Noise")]
         public void EmitTestNoise()
@@ -23,7 +25,8 @@ namespace Lockdown.AI.Agents
                 return;
             }
 
-            dog.HearNoise(transform.position, loudness);
+            if (kind == HoundSoundKind.Custom) dog.HearNoise(transform.position, loudness);
+            else dog.TryHear(HoundSoundProfiles.Create(kind, transform.position, Time.timeAsDouble), transform);
         }
     }
 }
