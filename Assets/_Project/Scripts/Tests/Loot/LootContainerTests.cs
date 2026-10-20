@@ -126,6 +126,52 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
+        public IEnumerator EveryExhibitCrateModelOpensAndHasAHollowInterior()
+        {
+            foreach (string room in new[] { "Exhibition", "StoneAge", "Egypt", "GreeceRome", "AsianHeritage", "NaturalHistory", "ArtGallery", "Temporary" })
+            {
+                string suffix = room == "ArtGallery" ? "CrateNE" : room == "Temporary" ? "CrateNW" : "CoveredCrate";
+                string path = "Assets/_Project/Prefabs/Props/Decoration/" + room + "/LP_" + room + "_" + suffix + ".prefab";
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                Assert.That(prefab, Is.Not.Null, path);
+                var root = new GameObject(room + " crate");
+                root.SetActive(false);
+                root.transform.SetParent(fixture.transform, false);
+                root.transform.localPosition = new Vector3(0f, 0.5f, 2f);
+                root.AddComponent<BoxCollider>();
+                Object.Instantiate(prefab, root.transform);
+                var crate = root.AddComponent<LootContainer>();
+                bool covered = suffix == "CoveredCrate";
+                Set(crate, "modelKind", covered ? LootContainer.ModelKind.CoveredCrate : LootContainer.ModelKind.ExhibitionCrate);
+                root.SetActive(true);
+                AimAtCrate(crate);
+                yield return null;
+                Assert.That(interaction.TryInteract(), Is.True, room + " crate should open.");
+                yield return new WaitForSeconds(0.85f);
+                Assert.That(crate.IsAccessible, Is.True);
+                MeshCollider wood = null;
+                Transform cover = null;
+                foreach (var child in root.GetComponentsInChildren<Transform>())
+                {
+                    if (child.name == "Walnut") wood = child.GetComponent<MeshCollider>();
+                    if (child.name == "M_Museum_DustCloth") cover = child;
+                }
+                Assert.That(wood, Is.Not.Null, room + " needs solid crate walls.");
+                var ray = new Ray(wood.transform.TransformPoint(new Vector3(0f, 1f, 0f)), -wood.transform.up);
+                Assert.That(wood.Raycast(ray, out var hit, 3f), Is.True, room + " needs an interior floor.");
+                Assert.That(wood.transform.InverseTransformPoint(hit.point).y, Is.EqualTo(-0.5f).Within(0.01f),
+                    room + " must not have a solid top blocking its contents.");
+                if (covered)
+                {
+                    Assert.That(cover, Is.Not.Null);
+                    Assert.That(cover.parent.name, Is.EqualTo("CrateLidHinge"));
+                    Assert.That(Quaternion.Angle(cover.parent.localRotation, Quaternion.identity), Is.EqualTo(110f).Within(0.1f));
+                }
+                Object.DestroyImmediate(root);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator ContainerRequiresReachSightAndLivingPlayerAndDoesNotUnlockNeighbours()
         {
             var crate = MakeCrate();
