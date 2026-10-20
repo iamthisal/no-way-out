@@ -75523,11 +75523,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1898499995}
   - component: {fileID: 1898499996}
+  - component: {fileID: 920000011}
   m_Layer: 3
   m_Name: P_Storage_CrateSW
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  - component: {fileID: 920000011}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -82480,11 +82480,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2961894480346735657}
+  - component: {fileID: 920000012}
   m_Layer: 0
   m_Name: CoinBox_GreeceRome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  - component: {fileID: 920000012}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
