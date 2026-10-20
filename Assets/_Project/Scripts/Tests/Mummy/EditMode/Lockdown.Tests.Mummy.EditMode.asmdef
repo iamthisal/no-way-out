@@ -1,0 +1,6 @@
+{
+  "name": "Lockdown.Tests.Mummy.EditMode",
+  "references": ["Lockdown.AI.Core"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
