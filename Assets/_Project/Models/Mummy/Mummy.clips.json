@@ -1,0 +1,65 @@
+{
+  "fps": 30,
+  "clips": [
+    {
+      "name": "Idle",
+      "first": 0,
+      "last": 60,
+      "loop": true
+    },
+    {
+      "name": "Shamble",
+      "first": 70,
+      "last": 118,
+      "loop": true
+    },
+    {
+      "name": "Chase",
+      "first": 130,
+      "last": 162,
+      "loop": true
+    },
+    {
+      "name": "Bite",
+      "first": 170,
+      "last": 188,
+      "loop": false
+    },
+    {
+      "name": "Hit",
+      "first": 200,
+      "last": 210,
+      "loop": false
+    },
+    {
+      "name": "Fall",
+      "first": 220,
+      "last": 244,
+      "loop": false
+    },
+    {
+      "name": "Down",
+      "first": 250,
+      "last": 280,
+      "loop": true
+    },
+    {
+      "name": "Rise",
+      "first": 290,
+      "last": 338,
+      "loop": false
+    },
+    {
+      "name": "Entombed",
+      "first": 350,
+      "last": 410,
+      "loop": true
+    },
+    {
+      "name": "WalkOut",
+      "first": 420,
+      "last": 474,
+      "loop": false
+    }
+  ]
+}
