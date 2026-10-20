@@ -1,3 +1,4 @@
 {
-  "name": "Lockdown.AI.Agents"
+  "name": "Lockdown.AI.Agents",
+  "references": ["Lockdown.AI.Core", "Lockdown.Runtime", "Lockdown.Interfaces"]
 }
