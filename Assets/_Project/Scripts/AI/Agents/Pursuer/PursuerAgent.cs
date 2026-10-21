@@ -1,4 +1,5 @@
 using Lockdown.Combat;
+using System.Collections.Generic;
 using Lockdown.Agents.Pursuer;
 using UnityEngine;
 using Unity.Profiling;
@@ -22,11 +23,13 @@ namespace Lockdown.AI.Agents
         private readonly PursuerSearch search = new PursuerSearch();
         private readonly PursuerArrest arrest = new PursuerArrest();
         private readonly PursuerInterception interception = new PursuerInterception();
-        private Vector3 spawn, searchPoint, interceptPoint, coverPoint, formationPoint;
-        private bool searchingPoint, hasMemory, hasIntercept, retaliating, hasFlank, wasFleeing;
+        private Vector3 spawn, searchPoint, interceptPoint, coverPoint, formationPoint, lostGoal;
+        private List<Vector3> lostAreas = new List<Vector3>();
+        private bool searchingPoint, hasMemory, hasIntercept, retaliating, hasFlank, wasFleeing, lostPlanReady;
         private int patrolIndex;
-        private float lastSeenAt = float.NegativeInfinity, nextPlan, predictedAt, coverUntil, nextCover, nextFormation;
+        private float lastSeenAt = float.NegativeInfinity, nextPlan, coverUntil, nextCover, nextFormation;
         private float attackedAt = float.NegativeInfinity;
+        private float searchPointDeadline, scanUntil;
         private static readonly ProfilerMarker DecisionMarker = new ProfilerMarker(ProfilerCategory.Scripts, "Pursuer.Decision");
         public bool IsPlayerVisible { get; private set; }
         public PursuerState State { get; private set; } = PursuerState.Patrol;
@@ -38,6 +41,8 @@ namespace Lockdown.AI.Agents
         public float ArrestProgress => arrest.Progress;
         public Vector3 InterceptPoint => interceptPoint;
         public Vector3 ObservedVelocity => interception.Velocity;
+        public Vector3 SearchDestination => searchingPoint ? searchPoint : lostGoal;
+        public bool HasReachedSearchArea => search.HasReachedArea;
 
         private void Awake()
         {
@@ -87,6 +92,7 @@ namespace Lockdown.AI.Agents
             {
                 LastKnownPlayerPosition = playerTarget.position;
                 lastSeenAt = Time.time; hasMemory = true;
+                lostPlanReady = false;
                 interception.Observe(LastKnownPlayerPosition, Time.time);
                 perception.ClearClue();
                 perception.RaiseAlert(LastKnownPlayerPosition);
@@ -97,10 +103,17 @@ namespace Lockdown.AI.Agents
                 interception.LoseSight(); arrest.Reset(); controller.ShowNotice(null);
                 if (tracking)
                 {
+                    if (!lostPlanReady && hasMemory)
+                    {
+                        Vector3 velocity = interception.IsFresh(Time.time, settings.predictionLifetime) ? interception.Velocity : Vector3.zero;
+                        lostAreas = PursuerCornerSearch.Build(transform.position, LastKnownPlayerPosition, velocity,
+                            settings, controller.TryRouteLength, controller.IsScreened);
+                        lostGoal = lostAreas[0]; lostPlanReady = true;
+                    }
                     if (hasMemory && Time.time - lastSeenAt < settings.sightMemoryDuration)
-                        SetState(hasIntercept && Time.time - predictedAt <= settings.predictionLifetime ? PursuerState.Intercept : PursuerState.Chase,
-                            "Following a short-lived prediction or last confirmed position");
-                    else BeginSearch(hasIntercept && Time.time - predictedAt <= settings.predictionLifetime ? interceptPoint : LastKnownPlayerPosition);
+                        SetState(GroundDistance(lostGoal, LastKnownPlayerPosition) > 0.5f ? PursuerState.Intercept : PursuerState.Chase,
+                            "Taking a complete route to the likely escape corner or last confirmed position");
+                    else BeginPursuitSearch();
                 }
                 // Active pursuit/search is not overwritten by lower-priority sounds or alerts.
                 if (!IsContactState() && State != PursuerState.Search
@@ -125,7 +138,8 @@ namespace Lockdown.AI.Agents
                     else if (!Move(investigation.Position, settings.patrolSpeed, 0.4f)) BeginSearch(investigation.Position);
                     break;
                 case PursuerState.Chase:
-                    Advance(LastKnownPlayerPosition, settings.chaseSpeed, retaliating ? settings.combatStopDistance : settings.arrestRange * 0.75f);
+                    Advance(IsPlayerVisible ? LastKnownPlayerPosition : lostGoal, settings.chaseSpeed,
+                        !IsPlayerVisible ? 0.4f : retaliating ? settings.combatStopDistance : settings.arrestRange * 0.75f);
                     break;
                 case PursuerState.Approach:
                     controller.ShowNotice("Museum guard approaching — run to avoid arrest");
@@ -133,7 +147,7 @@ namespace Lockdown.AI.Agents
                     break;
                 case PursuerState.Intercept:
                     if (IsPlayerVisible) controller.ShowNotice("Guard is cutting off your escape");
-                    Advance(interceptPoint, settings.chaseSpeed, 0.35f);
+                    Advance(IsPlayerVisible ? interceptPoint : lostGoal, settings.chaseSpeed, 0.35f);
                     break;
                 case PursuerState.Arrest:
                     controller.Stop(); controller.Face(LastKnownPlayerPosition);
@@ -194,7 +208,6 @@ namespace Lockdown.AI.Agents
             {
                 nextPlan = Time.time + settings.replanInterval;
                 hasIntercept = interception.TryChoose(transform.position, Time.time, settings, controller.TryRouteLength, out interceptPoint);
-                predictedAt = Time.time;
             }
             wasFleeing = fleeing;
             if (!fleeing) hasIntercept = false;
@@ -215,7 +228,7 @@ namespace Lockdown.AI.Agents
         private void Attacked(Transform source)
         {
             if (State == PursuerState.Dead || source == null || playerTarget == null || !source.IsChildOf(playerTarget)) return;
-            retaliating = true; attackedAt = Time.time; arrest.Reset(); hasIntercept = false;
+            retaliating = true; attackedAt = Time.time; arrest.Reset(); hasIntercept = false; lostPlanReady = false;
             // This is one impact-time snapshot, not permission to read an unseen moving target later.
             LastKnownPlayerPosition = source.position; lastSeenAt = Time.time; hasMemory = true;
             controller.Face(LastKnownPlayerPosition);
@@ -250,19 +263,44 @@ namespace Lockdown.AI.Agents
         private void BeginSearch(Vector3 center)
         {
             search.Begin(center, Time.time, settings.searchDuration, settings.searchRadius);
-            searchingPoint = false; hasMemory = false;
+            searchingPoint = false; hasMemory = false; scanUntil = 0f;
             SetState(PursuerState.Search, "Lost contact; checking reachable nearby positions");
+        }
+        private void BeginPursuitSearch()
+        {
+            if (!lostPlanReady) lostAreas = new List<Vector3> { LastKnownPlayerPosition };
+            search.BeginApproach(lostAreas, Time.time, settings.searchDuration, settings.searchRadius, settings.lostTravelTimeout);
+            searchingPoint = false; hasMemory = false; scanUntil = 0f;
+            SetState(PursuerState.Search, "Travelling to predicted escape areas before starting the inspection timer");
         }
         private void Search()
         {
-            if (search.Expired(Time.time)) { SetState(PursuerState.Return, "Search timer expired"); return; }
+            if (search.Expired(Time.time))
+            {
+                SetState(PursuerState.Return, search.HasReachedArea ? "Completed area search; returning to patrol" : "Search routes could not be reached within the travel budget"); return;
+            }
+            if (Time.time < scanUntil)
+            {
+                controller.Stop(); controller.LookAround(360f / settings.searchScanDuration);
+                DecisionReason = "Scanning the escape corner before checking the next hiding area"; return;
+            }
             if (searchingPoint)
             {
-                if (GroundDistance(transform.position, searchPoint) < 0.6f || controller.RouteStatus() == PursuerRouteStatus.Blocked)
+                if (GroundDistance(transform.position, searchPoint) < 0.6f)
+                {
+                    controller.Stop(); searchingPoint = false;
+                    search.Arrived(searchPoint, Time.time); scanUntil = Time.time + settings.searchScanDuration; return;
+                }
+                if (controller.RouteStatus() == PursuerRouteStatus.Blocked || Time.time >= searchPointDeadline)
                 { controller.Stop(); searchingPoint = false; }
-                else { if (!Move(searchPoint, settings.patrolSpeed, 0.35f)) searchingPoint = false; return; }
+                else { if (!Move(searchPoint, search.HasReachedArea ? settings.patrolSpeed : settings.chaseSpeed, 0.35f)) searchingPoint = false; return; }
             }
-            if (search.TryNext(controller.CanReach, out searchPoint)) searchingPoint = Move(searchPoint, settings.patrolSpeed, 0.35f);
+            if (search.TryNext(controller.CanReach, out searchPoint))
+            {
+                searchPointDeadline = Time.time + (search.HasReachedArea ? settings.searchPointTimeout : settings.lostTravelTimeout);
+                searchingPoint = Move(searchPoint, search.HasReachedArea ? settings.patrolSpeed : settings.chaseSpeed, 0.35f);
+                DecisionReason = search.HasReachedArea ? "Checking another likely hiding area" : "Closing on the predicted escape area; inspection time has not started";
+            }
             else { controller.Stop(); controller.LookAround(); }
         }
         private void SetState(PursuerState state, string reason)
@@ -291,7 +329,7 @@ namespace Lockdown.AI.Agents
             if (perception != null) perception.enabled = false;
             if (formation != null) formation.enabled = false;
             combat?.Cancel(Time.time);
-            arrest.Reset(); interception.Reset(); hasIntercept = wasFleeing = false;
+            arrest.Reset(); interception.Reset(); hasIntercept = wasFleeing = lostPlanReady = false; scanUntil = 0f;
             if (controller != null) controller.SetWarning(false);
             if (controller != null) controller.ShowNotice(null);
             if (State != PursuerState.Dead) State = PursuerState.Patrol;
