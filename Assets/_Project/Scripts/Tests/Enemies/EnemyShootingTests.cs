@@ -85,7 +85,7 @@ namespace Lockdown.Tests
             SetPosition(player, shooter.transform.position + Vector3.back * 2f);
             player.CaptureCursor();
             yield return null;
-            Assert.That(player.GetComponent<PlayerEquipment>().TryEquipPistol(), Is.True);
+            Assert.That(player.GetComponent<PlayerEquipment>().TryCollectPistol(), Is.True, "The museum's pistol comes from the Security room locker.");
             health.TakeDamage(90f);
             yield return new WaitForSeconds(1.1f);
             Assert.That(health.IsDead, Is.True);

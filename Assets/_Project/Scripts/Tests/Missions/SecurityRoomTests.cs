@@ -127,6 +127,34 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
+        public IEnumerator TheOnlyPistolWaitsInTheSecurityLocker()
+        {
+            yield return LoadMuseum();
+            var player = Object.FindAnyObjectByType<FirstPersonController>();
+            var interaction = player.GetComponent<PlayerInteraction>();
+            var equipment = player.GetComponent<PlayerEquipment>();
+            Assert.That(equipment.HasPistol, Is.False, "The player starts without a gun.");
+            Assert.That(equipment.TryEquipPistol(), Is.False);
+            var pickup = Object.FindAnyObjectByType<PistolPickup>();
+            Assert.That(pickup, Is.Not.Null);
+            Assert.That(pickup.name, Is.EqualTo("P_Security_Locker"));
+            var locker = pickup.GetComponent<Collider>().bounds;
+            // The locker's doors face south into the room; the shelf stands a little further south.
+            Move(player, new Vector3(locker.center.x, 0f, locker.min.z - 0.9f));
+            Aim(player, locker.center + Vector3.up * 0.3f);
+            yield return null;
+            Physics.SyncTransforms();
+            Assert.That(interaction.CurrentTarget, Is.SameAs(pickup));
+            Assert.That(pickup.InteractionLabel, Is.EqualTo("Take the pistol (2 to equip)"));
+            Assert.That(interaction.TryInteract(), Is.True);
+            Assert.That(equipment.HasPistol, Is.True);
+            Assert.That(equipment.IsPistolEquipped, Is.True, "Taking the pistol puts it in the player's hands.");
+            yield return null;
+            Physics.SyncTransforms();
+            Assert.That(interaction.CurrentTarget, Is.Null, "The empty locker has nothing more to offer.");
+        }
+
+        [UnityTest]
         public IEnumerator OnceTheAlarmIsOffBreakingGlassBringsTheGuardToLook()
         {
             yield return LoadMuseum(guardListening: true);

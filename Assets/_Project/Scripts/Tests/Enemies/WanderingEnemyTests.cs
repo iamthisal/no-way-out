@@ -91,7 +91,7 @@ namespace Lockdown.Tests
             body.enabled = true;
             player.CaptureCursor();
             yield return null;
-            Assert.That(player.GetComponent<PlayerEquipment>().TryEquipPistol(), Is.True);
+            Assert.That(player.GetComponent<PlayerEquipment>().TryCollectPistol(), Is.True, "The museum's pistol comes from the Security room locker.");
             int deaths = 0;
             health.OnDeath.AddListener(() => deaths++);
             for (int i = 0; i < 4; i++)

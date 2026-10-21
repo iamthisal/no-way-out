@@ -76,7 +76,7 @@ namespace Lockdown.Tests
             yield return null;
             player.CaptureCursor();
             yield return null;
-            Assert.That(player.GetComponent<PlayerEquipment>().TryEquipPistol(), Is.True);
+            Assert.That(player.GetComponent<PlayerEquipment>().TryCollectPistol(), Is.True, "The museum's pistol comes from the Security room locker.");
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.E));
             yield return null;
             yield return null;

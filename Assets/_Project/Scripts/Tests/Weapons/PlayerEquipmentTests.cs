@@ -57,6 +57,9 @@ namespace Lockdown.Tests
             player.CaptureCursor();
             yield return null;
             Assert.That(player.CanUseWeapon, Is.True, "Switching requires a captured cursor and enabled controls.");
+            // The museum's pistol comes from the Security room locker; take it, then go back to empty hands.
+            Assert.That(equipment.TryCollectPistol(), Is.True);
+            Assert.That(equipment.TryEquipHands(), Is.True);
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Digit2));
             yield return null;
             yield return null;
