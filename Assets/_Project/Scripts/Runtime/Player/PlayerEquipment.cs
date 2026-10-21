@@ -14,6 +14,8 @@ namespace Lockdown.Player
         [SerializeField] private FirstPersonWeapon pistol;
         [SerializeField] private FirstPersonHammer hammer;
         [SerializeField] private bool startWithPistol;
+        // Off in the museum, where the pistol waits in the Security room locker.
+        [SerializeField] private bool ownsPistol = true;
 
         private FirstPersonController controller;
         private Health health;
@@ -24,6 +26,7 @@ namespace Lockdown.Player
 
         public bool IsPistolEquipped => pistol != null && pistol.gameObject.activeSelf;
         public GameObject EmptyHands => emptyHands;
+        public bool HasPistol => ownsPistol;
         public bool HasHammer { get; private set; }
         public bool IsHammerEquipped => hammer != null && hammer.gameObject.activeInHierarchy;
 
@@ -53,7 +56,7 @@ namespace Lockdown.Player
         }
 
         // Let the pistol initialize once before hiding it so switching never resets ammunition.
-        private void Start() { ApplySelection(startWithPistol ? Slot.Pistol : Slot.Hands); }
+        private void Start() { ApplySelection(startWithPistol && ownsPistol ? Slot.Pistol : Slot.Hands); }
 
         private void Update()
         {
@@ -75,10 +78,19 @@ namespace Lockdown.Player
             return true;
         }
 
+        public bool TryCollectPistol()
+        {
+            if (!CanSwitch() || ownsPistol) return false;
+            ownsPistol = true;
+            ApplySelection(Slot.Pistol);
+            return true;
+        }
+
         private bool Select(Slot slot)
         {
             if (!CanSwitch()) return false;
             if (slot == Slot.Hammer && (!HasHammer || hammer == null)) return false;
+            if (slot == Slot.Pistol && !ownsPistol) return false;
             ApplySelection(slot);
             return true;
         }
