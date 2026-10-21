@@ -3,13 +3,14 @@ using Lockdown.Combat;
 using Lockdown.Player;
 using Lockdown.World;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Lockdown.Enemies
 {
     /// <summary>
-    /// The patrolling guard's eyes. While he can see the player a "?" fills, faster up close. When it is
-    /// full he whistles, raises the alarm and chases with his cap rifle until he has not seen the player
-    /// for a while, then goes back to his patrol.
+    /// The patrolling guard's eyes and ears. While he can see the player a "?" fills, faster up close. When
+    /// it is full he whistles, raises the alarm and chases with his cap rifle until he has not seen the
+    /// player for a while, then goes back to his patrol. Breaking glass within earshot brings him to look.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(WanderingEnemy), typeof(EnemyShooting), typeof(Health))]
@@ -25,6 +26,9 @@ namespace Lockdown.Enemies
         [SerializeField, Min(0f)] private float giveUpAfter = 8f;
         // He has just come on shift: no spotting in the first moments of the level.
         [SerializeField, Min(0f)] private float startGrace = 2f;
+        [SerializeField, Min(0f)] private float hearingRange = 30f;
+        // How long he looks around where the glass broke before going back to his route.
+        [SerializeField, Min(0f)] private float searchTime = 5f;
         [SerializeField] private AudioSource whistle;
 
         private WanderingEnemy legs;
@@ -37,12 +41,19 @@ namespace Lockdown.Enemies
         private float lastSeenAt;
         private float nextPursuitUpdate;
         private Vector3 lastSeen;
+        private Vector3 noise;
+        private float searchUntil;
+        private float investigationEndsAt;
+        private BreakableGlass[] glasses = new BreakableGlass[0];
+        private UnityAction[] listeners = new UnityAction[0];
         private GUIStyle markStyle;
 
         public float Suspicion { get; private set; }
         public bool IsChasing { get; private set; }
+        public bool IsInvestigating { get; private set; }
         public bool CanSeePlayer { get; private set; }
         public Vector3 LastSeen => lastSeen;
+        public Vector3 Noise => noise;
         public event Action Spotted;
 
         private void Awake()
@@ -56,6 +67,35 @@ namespace Lockdown.Enemies
         {
             awakeAt = Time.time + startGrace;
             health.OnDamaged.AddListener(OnShot);
+        }
+
+        private void Start()
+        {
+            glasses = FindObjectsByType<BreakableGlass>(FindObjectsInactive.Include);
+            listeners = new UnityAction[glasses.Length];
+            for (int i = 0; i < glasses.Length; i++)
+            {
+                var glass = glasses[i];
+                listeners[i] = () => Hear(glass.transform.position);
+                glass.OnBroken.AddListener(listeners[i]);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            for (int i = 0; i < glasses.Length; i++) if (glasses[i] != null) glasses[i].OnBroken.RemoveListener(listeners[i]);
+        }
+
+        // Walk over to a noise and search there, unless he is already chasing the player.
+        public void Hear(Vector3 point)
+        {
+            if (health.IsDead || !isActiveAndEnabled || !legs.isActiveAndEnabled || IsChasing) return;
+            if (Vector3.Distance(transform.position, point) > hearingRange) return;
+            IsInvestigating = true;
+            noise = point;
+            searchUntil = 0f;
+            investigationEndsAt = Time.time + 30f;
+            legs.Pursue(point);
         }
 
         private void OnDisable()
@@ -83,6 +123,7 @@ namespace Lockdown.Enemies
                 else Suspicion -= Time.deltaTime * suspicionDecay;
                 Suspicion = Mathf.Clamp01(Suspicion);
                 if (Suspicion >= 1f) Spot();
+                else if (IsInvestigating) Investigate();
             }
             else if (CanSeePlayer)
             {
@@ -92,6 +133,19 @@ namespace Lockdown.Enemies
             }
             else if (Time.time - lastSeenAt >= giveUpAfter) GiveUp();
             rifle.HoldFire = !IsChasing;
+        }
+
+        private void Investigate()
+        {
+            Vector3 offset = noise - transform.position;
+            offset.y = 0f;
+            if (searchUntil <= 0f && (offset.magnitude < 2.5f || Time.time >= investigationEndsAt)) searchUntil = Time.time + searchTime;
+            if (searchUntil <= 0f) return;
+            // Turn slowly on the spot, looking for whoever broke the glass.
+            transform.Rotate(0f, 70f * Time.deltaTime, 0f);
+            if (Time.time < searchUntil) return;
+            IsInvestigating = false;
+            legs.ResumePatrol();
         }
 
         private void FindPlayer()
@@ -144,6 +198,7 @@ namespace Lockdown.Enemies
         private void Spot()
         {
             IsChasing = true;
+            IsInvestigating = false;
             Suspicion = 1f;
             lastSeen = player != null ? player.transform.position : transform.position;
             lastSeenAt = Time.time;

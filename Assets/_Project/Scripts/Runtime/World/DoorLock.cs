@@ -15,8 +15,8 @@ namespace Lockdown.World
         private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
         private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
 
-        [SerializeField] private string keyId = "StorageKeycard";
-        [SerializeField] private string keyName = "Storage keycard";
+        [SerializeField] private string keyId = "StaffKeycard";
+        [SerializeField] private string keyName = "staff keycard";
         [SerializeField] private bool breakable;
         // One hammer blow (100) breaks it.
         [SerializeField, Min(1f)] private float strength = 100f;
@@ -33,7 +33,8 @@ namespace Lockdown.World
         public bool IsBreakable => breakable;
         public string KeyId => keyId;
         public string Label => PlayerHasKey() ? "Unlock with the " + keyName
-            : breakable ? "Locked. Break the lock with the hammer" : "Locked. Needs the " + keyName;
+            : breakable ? "Locked. Break the lock with the hammer"
+            : string.IsNullOrEmpty(keyId) ? "This door is sealed" : "Locked. Needs the " + keyName;
 
         private void Awake() { ShowState(); }
 
@@ -46,6 +47,14 @@ namespace Lockdown.World
             IsLocked = false;
             ShowState();
             return true;
+        }
+
+        // Releases the lock without a key, for mission scripts.
+        public void Unlock()
+        {
+            if (!IsLocked) return;
+            IsLocked = false;
+            ShowState();
         }
 
         // Smashing is quiet: it opens the lock without raising the alarm.

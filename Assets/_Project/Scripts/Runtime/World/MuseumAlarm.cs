@@ -5,7 +5,7 @@ namespace Lockdown.World
 {
     /// <summary>
     /// The museum's security alarm. Breaking display glass raises it, and so does the guard spotting the
-    /// player. The Security room's computer turns it off.
+    /// player. The Security room's computer switches it off for good.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class MuseumAlarm : MonoBehaviour
@@ -18,6 +18,7 @@ namespace Lockdown.World
 
         public static MuseumAlarm Current { get; private set; }
         public bool IsOn { get; private set; }
+        public bool IsDisabled { get; private set; }
         public string Cause { get; private set; }
         public event Action Raised;
         public event Action Silenced;
@@ -46,11 +47,18 @@ namespace Lockdown.World
 
         public void Raise(string cause)
         {
-            if (IsOn) return;
+            if (IsOn || IsDisabled) return;
             IsOn = true;
             Cause = cause;
             if (siren != null && siren.clip != null) siren.Play();
             Raised?.Invoke();
+        }
+
+        // Switched off at the Security computer: nothing can raise it again.
+        public void Disable()
+        {
+            IsDisabled = true;
+            Silence();
         }
 
         public void Silence()

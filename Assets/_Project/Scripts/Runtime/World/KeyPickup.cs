@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace Lockdown.World
 {
-    /// <summary>A key lying in the museum, such as the Storage keycard. Taking it adds its id to the player's keys.</summary>
+    /// <summary>A key lying in the museum, such as the staff keycard. Taking it adds its id to the player's keys.</summary>
     [DisallowMultipleComponent]
     public sealed class KeyPickup : MonoBehaviour, IInteractable
     {
-        [SerializeField] private string keyId = "StorageKeycard";
-        [SerializeField] private string displayName = "Storage keycard";
+        [SerializeField] private string keyId = "StaffKeycard";
+        [SerializeField] private string displayName = "staff keycard";
 
         public string KeyId => keyId;
         public bool IsCollected { get; private set; }
