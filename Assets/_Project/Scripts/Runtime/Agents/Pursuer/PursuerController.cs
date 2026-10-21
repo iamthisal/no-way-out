@@ -77,7 +77,7 @@ namespace Lockdown.Agents.Pursuer
             if (direction.sqrMagnitude > 0.001f)
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction), 360f * Time.deltaTime);
         }
-        public void LookAround() { transform.Rotate(0f, 65f * Time.deltaTime, 0f); }
+        public void LookAround(float degreesPerSecond = 65f) { transform.Rotate(0f, degreesPerSecond * Time.deltaTime, 0f); }
         public void DisableBody()
         {
             Stop(); SetWarning(false); ShowNotice(null);
