@@ -120,3 +120,38 @@ In the museum it checks that his route reaches Stone Age and the lobby, that it
 avoids Egypt, Storage and Security, and that he sets off north without spotting
 the player at the start. `WanderingEnemyTests` now accepts a patrol stop as his
 destination.
+
+## Step 3: the Security room
+
+- **The locks.** Both Security doors (D09 from the Staff Corridor, D10 from the
+  lobby) have breakable locks. The prompt reads "Locked. Break the lock with the
+  hammer".
+- **Breaking in.** One hammer blow to the door breaks its lock, and the card
+  reader light goes dark. Pistol shots also count: four of them, at 25 damage each,
+  reach the lock's strength of 100. Breaking a lock is quiet and does not raise the
+  alarm. The door then opens normally with **E**.
+- **The computer.** The desk computer (`AlarmConsole` on `P_Security_DeskMonitor`)
+  shows a red screen while the alarm is on. Press **E** at it ("Turn off the
+  alarm") to turn the alarm off; the screen goes back to blue. When the alarm is
+  already off it reads "Security console: all quiet".
+- **Glass sets off the alarm.** Breaking any display glass now raises the alarm,
+  as well as calling the hounds. `MuseumAlarm` listens to every `BreakableGlass`.
+- **The skeleton archer is out.** It is removed from the museum for now; its code
+  and prefab stay. The dinosaur-room step will bring skeletons back.
+- **Building it.** **Tools > Lockdown > Missions > Place Security Room Locks and
+  Console** adds the locks, reusing the World Builder's card readers by both
+  doors. It also wires the console and removes the archer.
+
+### Testing (step 3)
+
+`SecurityRoomTests`:
+
+- **Lock rules:** a breakable lock gives way to one hammer blow but not to one
+  pistol shot, and keycard locks ignore damage.
+- **Breaking in:** in the museum the hammer quietly breaks both Security locks and
+  the doors open.
+- **The computer:** it turns a raised alarm off.
+- **Glass:** breaking display glass raises the alarm.
+- **The archer:** it is gone.
+
+`DoorTests` smashes the breakable locks before its sweep of every door.
