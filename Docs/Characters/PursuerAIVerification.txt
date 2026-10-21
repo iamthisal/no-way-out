@@ -1,5 +1,6 @@
 PASSED
 PASS: Pursuer FSM exists in Museum_Main
+PASS: Separate runtime controller is connected to the pursuer brain
 PASS: Pursuer is bound to the baked museum NavMesh
 PASS: Actual player is assigned
 PASS: Four patrol points are assigned
@@ -26,4 +27,4 @@ PASS: Lethal damage enters Dead and disables navigation
 PASS: Death disables the weapon
 PASS: Death removes collision and releases formation slot
 PASS: Death animation plays on imported character
-PROFILE: one pursuer, mixed museum integration scenario, 616 recorded frames; average decision 44.78 us; maximum 2113.40 us. Rendering, animation and managed allocation costs are not included.
+PROFILE: one pursuer, mixed museum integration scenario, 607 recorded frames; average decision 87.98 us; maximum 3276.40 us. Rendering, animation and managed allocation costs are not included.

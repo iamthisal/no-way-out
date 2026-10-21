@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<test-run id="2" testcasecount="9" result="Passed" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.2757876">
-  <test-suite type="TestSuite" id="1000" name="NoWayOut_UnitySetup" fullname="NoWayOut_UnitySetup" runstate="Runnable" testcasecount="27" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.275788" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+<test-run id="2" testcasecount="9" result="Passed" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-21 09:41:35Z" end-time="2026-10-21 09:41:36Z" duration="0.1434436">
+  <test-suite type="TestSuite" id="1000" name="NoWayOut_UnitySetup" fullname="NoWayOut_UnitySetup" runstate="Runnable" testcasecount="27" result="Passed" start-time="2026-10-21 09:41:35Z" end-time="2026-10-21 09:41:36Z" duration="0.143444" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
     <properties>
       <property name="platform" value="EditMode" />
     </properties>
-    <test-suite type="Assembly" id="1036" name="Lockdown.Tests.Pursuer.dll" fullname="C:/Users/thisa/Desktop/warehouse_game/Library/ScriptAssemblies/Lockdown.Tests.Pursuer.dll" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.174682" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <test-suite type="Assembly" id="1036" name="Lockdown.Tests.Pursuer.dll" fullname="C:/Users/thisa/Desktop/warehouse_game/Library/ScriptAssemblies/Lockdown.Tests.Pursuer.dll" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-21 09:41:35Z" end-time="2026-10-21 09:41:36Z" duration="0.120923" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
       <properties>
         <property name="_PID" value="10340" />
         <property name="_APPDOMAIN" value="Unity Child Domain" />
         <property name="platform" value="EditMode" />
         <property name="EditorOnly" value="True" />
       </properties>
-      <test-suite type="TestSuite" id="1037" name="Lockdown" fullname="Lockdown" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.164713" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestSuite" id="1037" name="Lockdown" fullname="Lockdown" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-21 09:41:35Z" end-time="2026-10-21 09:41:36Z" duration="0.119224" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-suite type="TestSuite" id="1038" name="Tests" fullname="Lockdown.Tests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.164047" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="TestSuite" id="1038" name="Tests" fullname="Lockdown.Tests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-21 09:41:35Z" end-time="2026-10-21 09:41:36Z" duration="0.117797" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-suite type="TestFixture" id="1026" name="PursuerDecisionTests" fullname="Lockdown.Tests.PursuerDecisionTests" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.062964" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestFixture" id="1026" name="PursuerDecisionTests" fullname="Lockdown.Tests.PursuerDecisionTests" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-21 09:41:35Z" end-time="2026-10-21 09:41:36Z" duration="0.114405" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-case id="1029" name="BlockedWeaponAttemptCancelsAttackInsteadOfIgnoringFailure" fullname="Lockdown.Tests.PursuerDecisionTests.BlockedWeaponAttemptCancelsAttackInsteadOfIgnoringFailure" methodname="BlockedWeaponAttemptCancelsAttackInsteadOfIgnoringFailure" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="858810545" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.014598" asserts="0">
+            <test-case id="1029" name="BlockedWeaponAttemptCancelsAttackInsteadOfIgnoringFailure" fullname="Lockdown.Tests.PursuerDecisionTests.BlockedWeaponAttemptCancelsAttackInsteadOfIgnoringFailure" methodname="BlockedWeaponAttemptCancelsAttackInsteadOfIgnoringFailure" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="2028485585" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.034348" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1027" name="BurstWaitsForWarningThenFiresThreeShotsAndCoolsDown" fullname="Lockdown.Tests.PursuerDecisionTests.BurstWaitsForWarningThenFiresThreeShotsAndCoolsDown" methodname="BurstWaitsForWarningThenFiresThreeShotsAndCoolsDown" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="795514603" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.000720" asserts="0">
+            <test-case id="1027" name="BurstWaitsForWarningThenFiresThreeShotsAndCoolsDown" fullname="Lockdown.Tests.PursuerDecisionTests.BurstWaitsForWarningThenFiresThreeShotsAndCoolsDown" methodname="BurstWaitsForWarningThenFiresThreeShotsAndCoolsDown" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="1084657436" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.001651" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1033" name="EntirelyUnreachableSearchDoesNotLoopForever" fullname="Lockdown.Tests.PursuerDecisionTests.EntirelyUnreachableSearchDoesNotLoopForever" methodname="EntirelyUnreachableSearchDoesNotLoopForever" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="1993869185" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.000724" asserts="0">
+            <test-case id="1033" name="EntirelyUnreachableSearchDoesNotLoopForever" fullname="Lockdown.Tests.PursuerDecisionTests.EntirelyUnreachableSearchDoesNotLoopForever" methodname="EntirelyUnreachableSearchDoesNotLoopForever" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="1002199512" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.001333" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1035" name="FormationUsesDistinctSlotsAndFallsBackForUnreachableFlank" fullname="Lockdown.Tests.PursuerDecisionTests.FormationUsesDistinctSlotsAndFallsBackForUnreachableFlank" methodname="FormationUsesDistinctSlotsAndFallsBackForUnreachableFlank" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="2043982340" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.010548" asserts="0">
+            <test-case id="1035" name="FormationUsesDistinctSlotsAndFallsBackForUnreachableFlank" fullname="Lockdown.Tests.PursuerDecisionTests.FormationUsesDistinctSlotsAndFallsBackForUnreachableFlank" methodname="FormationUsesDistinctSlotsAndFallsBackForUnreachableFlank" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="55873413" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.019560" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1030" name="InvestigationInspectsAfterArrivalAndHasATravelTimeout" fullname="Lockdown.Tests.PursuerDecisionTests.InvestigationInspectsAfterArrivalAndHasATravelTimeout" methodname="InvestigationInspectsAfterArrivalAndHasATravelTimeout" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="391542092" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.000442" asserts="0">
+            <test-case id="1030" name="InvestigationInspectsAfterArrivalAndHasATravelTimeout" fullname="Lockdown.Tests.PursuerDecisionTests.InvestigationInspectsAfterArrivalAndHasATravelTimeout" methodname="InvestigationInspectsAfterArrivalAndHasATravelTimeout" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="250386425" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.001012" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1028" name="OcclusionCancelsBurstAndReacquisitionNeedsAnotherWarning" fullname="Lockdown.Tests.PursuerDecisionTests.OcclusionCancelsBurstAndReacquisitionNeedsAnotherWarning" methodname="OcclusionCancelsBurstAndReacquisitionNeedsAnotherWarning" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="496737515" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.000339" asserts="0">
+            <test-case id="1028" name="OcclusionCancelsBurstAndReacquisitionNeedsAnotherWarning" fullname="Lockdown.Tests.PursuerDecisionTests.OcclusionCancelsBurstAndReacquisitionNeedsAnotherWarning" methodname="OcclusionCancelsBurstAndReacquisitionNeedsAnotherWarning" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="157843204" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.000952" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1034" name="PatrolUsesConeButTrackedPlayerSurvivesTurningAndWallsStillBlock" fullname="Lockdown.Tests.PursuerDecisionTests.PatrolUsesConeButTrackedPlayerSurvivesTurningAndWallsStillBlock" methodname="PatrolUsesConeButTrackedPlayerSurvivesTurningAndWallsStillBlock" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="1887972608" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.011199" asserts="0">
+            <test-case id="1034" name="PatrolUsesConeButTrackedPlayerSurvivesTurningAndWallsStillBlock" fullname="Lockdown.Tests.PursuerDecisionTests.PatrolUsesConeButTrackedPlayerSurvivesTurningAndWallsStillBlock" methodname="PatrolUsesConeButTrackedPlayerSurvivesTurningAndWallsStillBlock" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="810024414" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.013940" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1032" name="SearchCandidatesAreFiniteAndUnique" fullname="Lockdown.Tests.PursuerDecisionTests.SearchCandidatesAreFiniteAndUnique" methodname="SearchCandidatesAreFiniteAndUnique" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="1114134689" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.001862" asserts="0">
+            <test-case id="1032" name="SearchCandidatesAreFiniteAndUnique" fullname="Lockdown.Tests.PursuerDecisionTests.SearchCandidatesAreFiniteAndUnique" methodname="SearchCandidatesAreFiniteAndUnique" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="1412789067" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.006303" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1031" name="SearchSkipsUnreachablePositionsAndEndsAfterItsBudget" fullname="Lockdown.Tests.PursuerDecisionTests.SearchSkipsUnreachablePositionsAndEndsAfterItsBudget" methodname="SearchSkipsUnreachablePositionsAndEndsAfterItsBudget" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="55862832" result="Passed" start-time="2026-10-21 09:01:29Z" end-time="2026-10-21 09:01:29Z" duration="0.000568" asserts="0">
+            <test-case id="1031" name="SearchSkipsUnreachablePositionsAndEndsAfterItsBudget" fullname="Lockdown.Tests.PursuerDecisionTests.SearchSkipsUnreachablePositionsAndEndsAfterItsBudget" methodname="SearchSkipsUnreachablePositionsAndEndsAfterItsBudget" classname="Lockdown.Tests.PursuerDecisionTests" runstate="Runnable" seed="2072038329" result="Passed" start-time="2026-10-21 09:41:36Z" end-time="2026-10-21 09:41:36Z" duration="0.001126" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />

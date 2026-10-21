@@ -1,7 +1,7 @@
 # Pursuer verification artifacts
 
 - `PursuerAimWarning.png`, `PursuerAttack.png`, `PursuerDeath.png`: current gameplay character, captured from the actual museum player camera during automated verification.
-- `PursuerAIVerification.txt`: 27 full-encounter integration assertions and the recorded decision marker timings.
+- `PursuerAIVerification.txt`: 28 full-encounter integration assertions after separating the runtime controller from AI decisions, and the recorded decision marker timings.
 - `PursuerDecisionTests.xml`: nine NUnit tests for perception, attack timing, investigation, search and formation behavior.
 - `PursuerWandererRegression.xml`: four passing legacy combat tests after removing the museum wanderer. These instantiate test-only prefab fixtures and isolate the pursuer; the saved museum contains no wandering enemy.
 

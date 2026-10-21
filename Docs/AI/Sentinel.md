@@ -2,6 +2,33 @@
 
 The Unity museum pursuer implements a finite-state machine with **Patrol, Investigate, Chase, Attack, Search, Return and Dead** states. Its inputs are sight, sound snapshots, ally alerts, navigation status, elapsed time, target health and its own health. The HTML [Pursuer](../../game_html/src/enemy-ai.js) remains the behavior reference.
 
+## Code ownership and review map
+
+Decision-making lives in [`Scripts/AI/Agents/Pursuer`](../../Assets/_Project/Scripts/AI/Agents/Pursuer):
+
+| File | Responsibility |
+|---|---|
+| `PursuerAgent.cs` | FSM, priorities, remembered sightings and choosing actions. |
+| `PursuerPerception.cs` | Sight, hearing, clue memory and ally alerts. |
+| `PursuerInvestigation.cs`, `PursuerSearch.cs` | Investigation timing and bounded search candidates. |
+| `PursuerAttackCycle.cs` | Warning, burst and cooldown decisions. |
+| `PursuerFormation.cs` | Selecting distinct reachable approach positions. |
+| `PursuerSettings.cs` | Configurable decision parameters. |
+| `PursuerStimulusRelay.cs` | Gameplay integration: translates weapon, movement and glass events into AI inputs. |
+
+Execution lives in [`Scripts/Runtime/Agents/Pursuer`](../../Assets/_Project/Scripts/Runtime/Agents/Pursuer), namespace `Lockdown.Agents.Pursuer`:
+
+| File | Responsibility |
+|---|---|
+| `PursuerController.cs` | Command boundary: move, stop, turn, fire, warning feedback and body shutdown. |
+| `PursuerNavigation.cs` | NavMesh paths, stopping distance, physical obstacle checks and movement progress. |
+| `PursuerLocomotion.cs` | Drives animation from actual velocity. |
+| `PursuerPresentation.cs` | Warning sound and shot, hit and death animation feedback. |
+
+The dependency is `Lockdown.AI.Agents` → `Lockdown.Runtime`. Runtime controls do not reference the AI assembly or choose FSM states. The brain asks the controller to act and reads execution results. Shared `Runtime/Enemies/EnemyShooting.cs` and `Runtime/Combat/Health.cs` remain reusable execution components. Editor builders and verification stay in `Scripts/Editor`; they are not gameplay decision code.
+
+Existing script GUIDs are preserved and moved components declare their previous namespace/assembly for Unity serialization. The gameplay prefab contains the controller explicitly. This separation changes code ownership, not gunshot/damage reaction policies.
+
 ## Decisions and transitions
 
 | State | Behavior | Exit condition |
