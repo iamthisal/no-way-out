@@ -3,11 +3,17 @@ using UnityEngine;
 
 namespace Lockdown.World
 {
-    /// <summary>The museum's security alarm. The guard raises it when he spots the player.</summary>
+    /// <summary>
+    /// The museum's security alarm. Breaking display glass raises it, and so does the guard spotting the
+    /// player. The Security room's computer turns it off.
+    /// </summary>
     [DisallowMultipleComponent]
     public sealed class MuseumAlarm : MonoBehaviour
     {
+        public const string GlassCause = "Display glass broken";
+
         [SerializeField] private AudioSource siren;
+        private BreakableGlass[] glasses = new BreakableGlass[0];
         private GUIStyle style;
 
         public static MuseumAlarm Current { get; private set; }
@@ -17,6 +23,20 @@ namespace Lockdown.World
         public event Action Silenced;
 
         private void OnEnable() { Current = this; }
+
+        // Every display case is wired to the alarm.
+        private void Start()
+        {
+            glasses = FindObjectsByType<BreakableGlass>(FindObjectsInactive.Include);
+            foreach (var glass in glasses) glass.OnBroken.AddListener(OnGlassBroken);
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var glass in glasses) if (glass != null) glass.OnBroken.RemoveListener(OnGlassBroken);
+        }
+
+        private void OnGlassBroken() { Raise(GlassCause); }
 
         private void OnDisable()
         {
