@@ -32,6 +32,28 @@ namespace Lockdown.Editor
         // A reader this close to a door's leaf (the World Builder mounted several) belongs to that door.
         private const float ReaderReach = 1.6f;
 
+        private const string AudioFolder = "Assets/_Project/Audio/Missions";
+        // Mission step 2: the guard's loop through the public rooms and the back galleries. Egypt will be
+        // barred, and the Storage and Security rooms are behind doors, so he walks the dead-end north row
+        // out and back. He starts in Central Hall heading north, away from the player in the lobby.
+        private static readonly (string room, Vector2 spot)[] GuardRoute =
+        {
+            // Room centres hold their centrepiece exhibits, so the stops stand beside them.
+            ("Central Hall", new Vector2(0f, 1.5f)),
+            ("Artifact Exhibition", new Vector2(0f, 11.2f)),
+            ("Natural History", new Vector2(5f, 18f)),
+            ("Asian Heritage", new Vector2(8.7f, 26f)),
+            ("Greece / Rome", new Vector2(0f, 27.7f)),
+            ("Stone Age", new Vector2(-6.5f, 23.6f)),
+            ("Greece / Rome", new Vector2(0f, 27.7f)),
+            ("Asian Heritage", new Vector2(8.7f, 26f)),
+            ("Natural History", new Vector2(5f, 18f)),
+            ("Artifact Exhibition", new Vector2(-2f, 10f)),
+            ("Temporary", new Vector2(-11.7f, 8f)),
+            ("Art Gallery", new Vector2(-10f, 1f)),
+            ("Lobby", new Vector2(0f, -7.5f)),
+        };
+
         private static readonly Dictionary<string, (Color color, float smoothness, float emission)> Palette =
             new Dictionary<string, (Color, float, float)>
             {
@@ -128,6 +150,89 @@ namespace Lockdown.Editor
             EditorSceneManager.MarkSceneDirty(scene);
             Selection.activeGameObject = missions;
             Debug.Log("Storage doors locked; the keycard waits in Stone Age at " + KeycardSpot + ". Save the scene.");
+        }
+
+        [MenuItem("Tools/Lockdown/Missions/Place Guard Patrol and Alarm")]
+        public static void PlaceGuard()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != ScenePath)
+                throw new InvalidOperationException("Open Museum_Main in Edit mode first.");
+            var guards = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Lockdown.Enemies.WanderingEnemy>(true)).ToArray();
+            if (guards.Length != 1) throw new InvalidOperationException("Expected one wandering enemy to become the guard, found " + guards.Length + ".");
+            var guard = guards[0];
+            var missions = scene.GetRootGameObjects().FirstOrDefault(r => r.name == "Missions");
+            if (missions == null) throw new InvalidOperationException("Place the Storage keycard and locks first.");
+
+            var stops = new Vector3[GuardRoute.Length];
+            for (int i = 0; i < stops.Length; i++)
+            {
+                var (room, spot) = GuardRoute[i];
+                if (!NavMesh.SamplePosition(new Vector3(spot.x, 0f, spot.y), out var hit, 1f, NavMesh.AllAreas))
+                    throw new InvalidOperationException("The guard's stop in " + room + " is off the NavMesh.");
+                stops[i] = hit.position;
+            }
+            var path = new NavMeshPath();
+            for (int i = 0; i < stops.Length; i++)
+            {
+                var next = stops[(i + 1) % stops.Length];
+                if (!NavMesh.CalculatePath(stops[i], next, NavMesh.AllAreas, path) || path.status != NavMeshPathStatus.PathComplete)
+                    throw new InvalidOperationException("No walkable path from " + GuardRoute[i].room + " to " + GuardRoute[(i + 1) % stops.Length].room + ".");
+            }
+            var walker = new SerializedObject(guard);
+            var route = walker.FindProperty("patrolRoute");
+            route.arraySize = stops.Length;
+            for (int i = 0; i < stops.Length; i++) route.GetArrayElementAtIndex(i).vector3Value = stops[i];
+            walker.ApplyModifiedProperties();
+
+            var senses = guard.GetComponent<Lockdown.Enemies.GuardSenses>();
+            if (senses == null) senses = Undo.AddComponent<Lockdown.Enemies.GuardSenses>(guard.gameObject);
+            var whistle = guard.transform.Find("Whistle");
+            if (whistle == null)
+            {
+                whistle = new GameObject("Whistle").transform;
+                Undo.RegisterCreatedObjectUndo(whistle.gameObject, "Add guard whistle");
+                whistle.SetParent(guard.transform, false);
+                whistle.localPosition = new Vector3(0f, 1.55f, 0.2f);
+                var source = whistle.gameObject.AddComponent<AudioSource>();
+                source.clip = Clip("GuardWhistle");
+                source.playOnAwake = false;
+                source.spatialBlend = 1f;
+                source.rolloffMode = AudioRolloffMode.Linear;
+                source.minDistance = 3f;
+                source.maxDistance = 30f;
+            }
+            var serializedSenses = new SerializedObject(senses);
+            serializedSenses.FindProperty("whistle").objectReferenceValue = whistle.GetComponent<AudioSource>();
+            serializedSenses.ApplyModifiedProperties();
+
+            var alarm = missions.GetComponentInChildren<MuseumAlarm>(true);
+            if (alarm == null)
+            {
+                var holder = new GameObject("MuseumAlarm");
+                Undo.RegisterCreatedObjectUndo(holder, "Add museum alarm");
+                holder.transform.SetParent(missions.transform, false);
+                alarm = holder.AddComponent<MuseumAlarm>();
+                var siren = holder.AddComponent<AudioSource>();
+                siren.clip = Clip("AlarmSiren");
+                siren.loop = true;
+                siren.playOnAwake = false;
+                siren.spatialBlend = 0f;
+                siren.volume = 0.35f;
+                var serializedAlarm = new SerializedObject(alarm);
+                serializedAlarm.FindProperty("siren").objectReferenceValue = siren;
+                serializedAlarm.ApplyModifiedPropertiesWithoutUndo();
+            }
+            EditorSceneManager.MarkSceneDirty(scene);
+            Selection.activeGameObject = guard.gameObject;
+            Debug.Log("The guard now patrols " + stops.Length + " stops from Central Hall to Stone Age and back through the west galleries. Save the scene.");
+        }
+
+        private static AudioClip Clip(string name)
+        {
+            var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(AudioFolder + "/" + name + ".wav");
+            if (clip == null) throw new InvalidOperationException("Generate " + name + ".wav with Blender/Missions/generate_audio.py first.");
+            return clip;
         }
 
         private static List<Renderer> ReadersBeside(Scene scene, Door door, out bool outsideCovered)
