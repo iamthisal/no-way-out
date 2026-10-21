@@ -457,6 +457,17 @@ MonoBehaviour:
   settings:
     patrolSpeed: 2
     chaseSpeed: 4
+    approachSpeed: 2.8
+    arrestRange: 1.6
+    arrestDuration: 1.5
+    fleeingSpeed: 1.2
+    interceptLeadTime: 1.5
+    predictionLifetime: 2
+    replanInterval: 0.5
+    minimumShortcutSaving: 0.6
+    combatStopDistance: 2.8
+    coverDuration: 1.1
+    coverCooldown: 6
     detectionRange: 20
     fieldOfView: 100
     sightMemoryDuration: 3
