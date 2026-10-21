@@ -4,6 +4,7 @@ using Lockdown.Combat;
 using Lockdown.Enemies;
 using Lockdown.Player;
 using Lockdown.Weapons;
+using Lockdown.AI.Agents;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace Lockdown.Tests
             EditorSceneManager.LoadSceneInPlayMode("Assets/_Project/Scenes/Museum/Museum_Main.unity",
                 new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
-            var shooter = Object.FindFirstObjectByType<EnemyShooting>();
+            var shooter = PrepareWanderingShooter();
             Assert.That(shooter, Is.Not.Null);
             shooter.GetComponent<WanderingEnemy>().enabled = false;
             var player = Object.FindFirstObjectByType<FirstPersonController>();
@@ -76,7 +77,7 @@ namespace Lockdown.Tests
             EditorSceneManager.LoadSceneInPlayMode("Assets/_Project/Scenes/Museum/Museum_Main.unity",
                 new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
-            var shooter = Object.FindFirstObjectByType<EnemyShooting>();
+            var shooter = PrepareWanderingShooter();
             shooter.GetComponent<WanderingEnemy>().enabled = false;
             var player = Object.FindFirstObjectByType<FirstPersonController>();
             var health = player.GetComponent<Health>();
@@ -104,7 +105,17 @@ namespace Lockdown.Tests
             Assert.That(freshPlayer.GetComponent<Health>().CurrentHealth, Is.EqualTo(100f));
             Assert.That(freshPlayer.GetComponentInChildren<FirstPersonWeapon>(true).enabled, Is.True);
             Assert.That(freshPlayer.GetComponent<PlayerEquipment>().IsPistolEquipped, Is.False, "Restart should begin with empty hands.");
-            Assert.That(Object.FindFirstObjectByType<EnemyShooting>().ShotsFired, Is.Zero);
+            Assert.That(PrepareWanderingShooter().ShotsFired, Is.Zero);
+        }
+
+        private static EnemyShooting PrepareWanderingShooter()
+        {
+            // This suite validates the autonomous wanderer, independently of the pursuer FSM.
+            foreach (var pursuer in Object.FindObjectsByType<PursuerAgent>(FindObjectsInactive.Exclude))
+                pursuer.gameObject.SetActive(false);
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Characters/WanderingEnemy.prefab");
+            Assert.That(prefab, Is.Not.Null);
+            return Object.Instantiate(prefab, new Vector3(0f, 0.05f, -2.5f), Quaternion.Euler(0f, 180f, 0f)).GetComponent<EnemyShooting>();
         }
 
         private static void SetPosition(FirstPersonController player, Vector3 position)

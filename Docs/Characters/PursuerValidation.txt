@@ -1,0 +1,5 @@
+Source: Quaternius Toon Shooter Game Kit / Character_Soldier.
+Imported clips: 17
+Height: 1.9
+Gameplay scripts: 0
+Active weapons: SMG

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-21 10:23:19Z" end-time="2026-10-21 10:23:39Z" duration="19.5074586">
+  <test-suite type="TestSuite" id="1077" name="NoWayOut_UnitySetup" fullname="NoWayOut_UnitySetup" runstate="Runnable" testcasecount="35" result="Passed" start-time="2026-10-21 10:23:19Z" end-time="2026-10-21 10:23:39Z" duration="19.507459" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1095" name="Lockdown.Tests.Enemies.dll" fullname="C:/Users/thisa/Desktop/warehouse_game/Library/ScriptAssemblies/Lockdown.Tests.Enemies.dll" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 10:23:19Z" end-time="2026-10-21 10:23:39Z" duration="19.493599" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10340" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1096" name="Lockdown" fullname="Lockdown" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 10:23:19Z" end-time="2026-10-21 10:23:39Z" duration="19.490750" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1097" name="Tests" fullname="Lockdown.Tests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 10:23:19Z" end-time="2026-10-21 10:23:39Z" duration="19.487480" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1087" name="EnemyShootingTests" fullname="Lockdown.Tests.EnemyShootingTests" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 10:23:19Z" end-time="2026-10-21 10:23:31Z" duration="11.277040" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1089" name="EnemyDamageStopsPlayerAndRestartRestoresEncounter" fullname="Lockdown.Tests.EnemyShootingTests.EnemyDamageStopsPlayerAndRestartRestoresEncounter" methodname="EnemyDamageStopsPlayerAndRestartRestoresEncounter" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" seed="1839684718" result="Passed" start-time="2026-10-21 10:23:19Z" end-time="2026-10-21 10:23:24Z" duration="4.165773" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1088" name="EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" fullname="Lockdown.Tests.EnemyShootingTests.EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" methodname="EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" seed="45532948" result="Passed" start-time="2026-10-21 10:23:24Z" end-time="2026-10-21 10:23:31Z" duration="7.088148" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1092" name="WanderingEnemyTests" fullname="Lockdown.Tests.WanderingEnemyTests" classname="Lockdown.Tests.WanderingEnemyTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 10:23:31Z" end-time="2026-10-21 10:23:39Z" duration="8.205334" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1093" name="HealthClampsDamageAndAnnouncesDeathOnce" fullname="Lockdown.Tests.WanderingEnemyTests.HealthClampsDamageAndAnnouncesDeathOnce" methodname="HealthClampsDamageAndAnnouncesDeathOnce" classname="Lockdown.Tests.WanderingEnemyTests" runstate="Runnable" seed="607588123" result="Passed" start-time="2026-10-21 10:23:31Z" end-time="2026-10-21 10:23:31Z" duration="0.003386" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1094" name="WanderingPrefabWandersAndDiesFromFourPistolHits" fullname="Lockdown.Tests.WanderingEnemyTests.WanderingPrefabWandersAndDiesFromFourPistolHits" methodname="WanderingPrefabWandersAndDiesFromFourPistolHits" classname="Lockdown.Tests.WanderingEnemyTests" runstate="Runnable" seed="683911023" result="Passed" start-time="2026-10-21 10:23:31Z" end-time="2026-10-21 10:23:39Z" duration="8.180910" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:\Users\thisa\Desktop\warehouse_game\Logs\PursuerWandererRegression.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
