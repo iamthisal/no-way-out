@@ -60,7 +60,7 @@ namespace Lockdown.Enemies
             if (!controlledByAI || actor == null) return false;
             target = actor.GetComponent<FirstPersonController>();
             targetHealth = actor.GetComponent<Health>();
-            return HasVisibleTarget();
+            return HasVisibleTarget() && HitsPlayer(muzzle.position, AimPoint() - muzzle.position, out _);
         }
 
         public bool TryFireControlled(Transform actor)
