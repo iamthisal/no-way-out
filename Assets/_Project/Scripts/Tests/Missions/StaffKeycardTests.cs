@@ -15,10 +15,12 @@ using Object = UnityEngine.Object;
 
 namespace Lockdown.Tests
 {
-    public sealed class StorageKeycardTests
+    public sealed class StaffKeycardTests
     {
-        private const string KeyId = "StorageKeycard";
-        private static readonly string[] StorageDoors = { "Door_D06_Storage", "Door_D07_Storage", "Door_D08_Storage" };
+        private const string KeyId = "StaffKeycard";
+        private const string FrontDoor = "Door_D06_Storage";
+        // Storage's doors into the Staff Corridor, on the way to the Security room.
+        private static readonly string[] BackDoors = { "Door_D07_Storage", "Door_D08_Storage" };
         private bool previousBackground;
         private GameObject fixture;
 
@@ -72,7 +74,7 @@ namespace Lockdown.Tests
             yield return null;
             Physics.SyncTransforms();
             Assert.That(interaction.CurrentTarget, Is.SameAs(door));
-            Assert.That(door.InteractionLabel, Is.EqualTo("Locked. Needs the Storage keycard"));
+            Assert.That(door.InteractionLabel, Is.EqualTo("Locked. Needs the staff keycard"));
             Assert.That(ColourDistance(LightColour(light), new Color(0.9f, 0.08f, 0.06f)), Is.LessThan(0.002f), "The reader shows red while locked.");
             Assert.That(interaction.TryInteract(), Is.False);
             Assert.That(door.IsOpen, Is.False);
@@ -80,7 +82,7 @@ namespace Lockdown.Tests
             PlayerKeys.For(player.gameObject).Add("SomeOtherKey");
             Assert.That(interaction.TryInteract(), Is.False, "Only the matching key opens the lock.");
             PlayerKeys.For(player.gameObject).Add(KeyId);
-            Assert.That(door.InteractionLabel, Is.EqualTo("Unlock with the Storage keycard"));
+            Assert.That(door.InteractionLabel, Is.EqualTo("Unlock with the staff keycard"));
             Assert.That(interaction.TryInteract(), Is.True);
             Assert.That(door.IsOpen, Is.True);
             Assert.That(doorLock.IsLocked, Is.False);
@@ -89,12 +91,13 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator StorageStaysLockedUntilTheStoneAgeKeycardIsTaken()
+        public IEnumerator StorageIsOpenButItsBackDoorsWaitForTheStoneAgeKeycard()
         {
             ExpectMissingExteriorPrefab();
             EditorSceneManager.LoadSceneInPlayMode("Assets/_Project/Scenes/Museum/Museum_Main.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             foreach (var shooting in Object.FindObjectsByType<EnemyShooting>(FindObjectsInactive.Exclude)) shooting.enabled = false;
+            foreach (var senses in Object.FindObjectsByType<GuardSenses>(FindObjectsInactive.Exclude)) senses.enabled = false;
             var player = Object.FindAnyObjectByType<FirstPersonController>();
             var interaction = player.GetComponent<PlayerInteraction>();
             player.CaptureCursor();
@@ -102,13 +105,18 @@ namespace Lockdown.Tests
             var hammer = Object.FindAnyObjectByType<HammerPickup>();
             var storage = new Bounds(new Vector3(9.5f, 1f, 1f), new Vector3(9f, 3f, 8f));
             Assert.That(storage.Contains(hammer.transform.position), Is.True, "The hammer waits inside the Storage room.");
+            var front = DoorNamed(FrontDoor);
+            Assert.That(front.GetComponent<DoorLock>(), Is.Null, "Storage is open from Central Hall.");
+            yield return Face(player, interaction, front);
+            Assert.That(front.InteractionLabel, Is.EqualTo("Open door"));
+            Assert.That(interaction.TryInteract(), Is.True);
 
-            foreach (var name in StorageDoors)
+            foreach (var name in BackDoors)
             {
                 var door = DoorNamed(name);
                 Assert.That(door.GetComponent<DoorLock>().IsLocked, Is.True, name + " starts locked.");
                 yield return Face(player, interaction, door);
-                Assert.That(door.InteractionLabel, Is.EqualTo("Locked. Needs the Storage keycard"));
+                Assert.That(door.InteractionLabel, Is.EqualTo("Locked. Needs the staff keycard"));
                 Assert.That(interaction.TryInteract(), Is.False);
                 Assert.That(door.IsOpen, Is.False, name + " must not open without the keycard.");
             }
@@ -124,16 +132,16 @@ namespace Lockdown.Tests
             yield return null;
             Physics.SyncTransforms();
             Assert.That(interaction.CurrentTarget, Is.SameAs(keycard));
-            Assert.That(keycard.InteractionLabel, Is.EqualTo("Take the Storage keycard"));
+            Assert.That(keycard.InteractionLabel, Is.EqualTo("Take the staff keycard"));
             Assert.That(interaction.TryInteract(), Is.True);
             Assert.That(player.GetComponent<PlayerKeys>().Has(KeyId), Is.True);
             Assert.That(keycard.gameObject.activeSelf, Is.False);
 
-            foreach (var name in StorageDoors)
+            foreach (var name in BackDoors)
             {
                 var door = DoorNamed(name);
                 yield return Face(player, interaction, door);
-                Assert.That(door.InteractionLabel, Is.EqualTo("Unlock with the Storage keycard"));
+                Assert.That(door.InteractionLabel, Is.EqualTo("Unlock with the staff keycard"));
                 Assert.That(interaction.TryInteract(), Is.True);
                 Assert.That(door.IsOpen, Is.True, name + " opens with the keycard.");
                 Assert.That(door.GetComponent<DoorLock>().IsLocked, Is.False);

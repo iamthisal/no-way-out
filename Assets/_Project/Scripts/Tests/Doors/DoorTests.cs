@@ -177,12 +177,9 @@ namespace Lockdown.Tests
                 foreach (var shooting in root.GetComponentsInChildren<Lockdown.Enemies.EnemyShooting>(true)) shooting.enabled = false;
                 foreach (var otherPlayer in root.GetComponentsInChildren<FirstPersonController>(true)) otherPlayer.gameObject.SetActive(false);
             }
-            // Mission locks: this sweep checks how doors move, so carry the Storage keycard and smash the
-            // Security room's breakable locks first.
-            PlayerKeys.For(player.gameObject).Add("StorageKeycard");
+            // This sweep checks how doors move, so release the mission locks first.
             foreach (var root in museum.GetRootGameObjects())
-                foreach (var doorLock in root.GetComponentsInChildren<DoorLock>(true))
-                    if (doorLock.IsBreakable) doorLock.TakeDamage(float.MaxValue);
+                foreach (var doorLock in root.GetComponentsInChildren<DoorLock>(true)) doorLock.Unlock();
             int count = 0;
             foreach (var root in museum.GetRootGameObjects())
             {
