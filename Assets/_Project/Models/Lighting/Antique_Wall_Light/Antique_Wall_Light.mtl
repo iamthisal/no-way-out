@@ -1,0 +1,10 @@
+# Unity-compatible OBJ material. Extended maps are included for use with URP Lit.
+newmtl Antique_Wall_Light
+Ka 1.0000 1.0000 1.0000
+Kd 1.0000 1.0000 1.0000
+Ks 0.2500 0.2500 0.2500
+Ns 45.000
+illum 2
+map_Kd WallLight_BaseColor.png
+# Optional emission map; automatic import depends on material importer.
+map_Ke WallLight_Emission.png
