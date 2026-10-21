@@ -74,7 +74,7 @@ namespace Lockdown.Editor
                     PursuerAIBuilder.Connect();
                 }
                 if (command == "stop-play") EditorApplication.isPlaying = false;
-                if (command == "update-pursuer-tactics")
+                if (command == "update-pursuer-tactics" || command == "update-pursuer-search")
                 {
                     if (EditorApplication.isPlayingOrWillChangePlaymode) { EditorApplication.isPlaying = false; return; }
                     if (scene.path != "Assets/_Project/Scenes/Museum/Museum_Main.unity" || scene.isDirty)
@@ -83,13 +83,14 @@ namespace Lockdown.Editor
                     try
                     {
                         var tactics = tacticsPrefab.GetComponent<PursuerAgent>().Settings;
+                        if (command == "update-pursuer-search") { tactics.searchDuration = 18f; tactics.searchRadius = 4f; }
                         if (tactics.arrestDuration <= 0f || tactics.arrestRange <= 0f || tactics.approachSpeed <= 0f)
                             throw new InvalidOperationException("Arrest settings were not initialized.");
                         PrefabUtility.SaveAsPrefabAsset(tacticsPrefab, PursuerAIBuilder.PrefabPath);
                     }
                     finally { PrefabUtility.UnloadPrefabContents(tacticsPrefab); }
                     scene = EditorSceneManager.OpenScene(scene.path);
-                    state.action = "Updated pursuer prefab with arrest, route prediction and retaliation settings.";
+                    state.action = "Updated pursuer prefab with arrest, route prediction, retaliation and persistent corner-search settings.";
                 }
                 if (command == "separate-controller")
                 {

@@ -14,7 +14,8 @@ namespace Lockdown.Editor
             EditorGUILayout.HelpBox("State: " + agent.State + "\nDecision: " + agent.DecisionReason
                 + "\nPlayer visible: " + agent.IsPlayerVisible + "\nLast confirmed position: " + agent.LastKnownPlayerPosition
                 + "\nReturning fire: " + agent.IsRetaliating + "\nArrest progress: " + agent.ArrestProgress.ToString("P0")
-                + "\nIntercept prediction: " + agent.InterceptPoint, MessageType.Info);
+                + "\nIntercept prediction: " + agent.InterceptPoint
+                + "\nSearch destination: " + agent.SearchDestination + "\nSearch area reached: " + agent.HasReachedSearchArea, MessageType.Info);
             Repaint();
         }
     }

@@ -25,6 +25,7 @@ namespace Lockdown.Editor
         private static GameObject probe, wall, coverWall;
         private static Vector3 spawn, phaseStart, lastSeen;
         private static Vector3 interceptStart, interceptVelocity;
+        private static Vector3 cornerLastSeen, cornerVelocity, confirmedBeforeHiding, cornerSearchGoal;
         private static double movingAt;
         private static bool sawIntercept;
         private static Quaternion rotation;
@@ -67,6 +68,7 @@ namespace Lockdown.Editor
                 previousBackground = Application.runInBackground; Application.runInBackground = true;
                 brain.Settings.searchDuration = 1.5f;
                 brain.Settings.inspectionDuration = 0.3f;
+                brain.Settings.lostTravelTimeout = 2.5f;
                 probe = new GameObject("Pursuer_TestTarget"); probe.transform.position = spawn + Vector3.right * 1000f;
                 Assign(probe.transform);
                 brain.enabled = false; brain.enabled = true;
@@ -106,6 +108,19 @@ namespace Lockdown.Editor
             {
                 probe.transform.position = interceptStart + interceptVelocity * (float)(Time.timeAsDouble - movingAt);
                 sawIntercept |= brain.State == PursuerAgent.PursuerState.Intercept;
+            }
+            if (phase == 55)
+                probe.transform.position = cornerLastSeen - cornerVelocity * 0.3f + cornerVelocity * (float)(Time.timeAsDouble - movingAt);
+            if (phase == 57 && brain.State == PursuerAgent.PursuerState.Search && brain.HasReachedSearchArea)
+            {
+                try
+                {
+                    Require(Vector3.Distance(phaseStart, brain.transform.position) > 0.5f, "Guard actually travels around the museum corner to inspect its hypothesis");
+                    Require(Vector3.Distance(brain.transform.position, cornerSearchGoal) < 0.8f, "Guard reaches the selected occluded corner rather than merely falling back to the old location");
+                    Require(Vector3.Distance(brain.LastKnownPlayerPosition, confirmedBeforeHiding) < 0.01f, "Corner pursuit never reads the hidden target's new position");
+                    Capture("PursuerCornerSearch"); Next(58, 0.6f);
+                }
+                catch (Exception error) { Finish(error); return; }
             }
             if (Time.timeAsDouble < deadline) return;
             try
@@ -148,11 +163,41 @@ namespace Lockdown.Editor
                         Next(4, brain.Settings.sightMemoryDuration + 0.25f); break;
                     case 4:
                         Require(brain.State == PursuerAgent.PursuerState.Search, "Loss of contact transitions to a timed Search");
+                        Require(!brain.HasReachedSearchArea, "Guard keeps travelling after sight memory expires; inspection budget has not started");
                         Require(Vector3.Distance(brain.LastKnownPlayerPosition, lastSeen) < 0.01f, "Hidden target movements never update visual memory");
                         Object.DestroyImmediate(wall); wall = null; nav.updatePosition = true; Warp();
-                        Next(5, 2f); break;
+                        Next(5, brain.Settings.lostTravelTimeout + brain.Settings.searchDuration + 0.5f); break;
                     case 5:
                         Require(brain.State == PursuerAgent.PursuerState.Return || brain.State == PursuerAgent.PursuerState.Patrol, "Search expires and returns toward patrol");
+                        brain.enabled = false; brain.enabled = true; Warp(); FindCornerScenario();
+                        brain.Settings.lostTravelTimeout = 6f;
+                        nav.updatePosition = false;
+                        probe.transform.position = cornerLastSeen - cornerVelocity * 0.3f;
+                        brain.transform.rotation = Quaternion.LookRotation(probe.transform.position - spawn);
+                        movingAt = Time.timeAsDouble; Next(55, 0.3f); break;
+                    case 55:
+                        Require(brain.IsPlayerVisible && brain.ObservedVelocity.magnitude > 1.2f, "Guard observes actual motion toward a museum corner before hiding");
+                        confirmedBeforeHiding = brain.LastKnownPlayerPosition;
+                        probe.transform.position = spawn + Vector3.right * 1000f;
+                        Next(56, 0.2f); break;
+                    case 56:
+                        Require(!brain.IsPlayerVisible && brain.State == PursuerAgent.PursuerState.Intercept,
+                            "Loss of sight preserves a forward/corner hypothesis instead of discarding it");
+                        Require(brain.GetComponent<PursuerNavigation>().IsScreened(confirmedBeforeHiding, brain.SearchDestination),
+                            "Predicted search area is behind actual corner geometry, not just the old visible point");
+                        Require(brain.GetComponent<PursuerController>().TryRouteLength(spawn, brain.SearchDestination, out float cornerRoute),
+                            "Guard chooses a complete navigation route to the hidden corner area");
+                        cornerSearchGoal = brain.SearchDestination;
+                        phaseStart = brain.transform.position; nav.updatePosition = true;
+                        Next(57, brain.Settings.sightMemoryDuration + brain.Settings.lostTravelTimeout + 1f); break;
+                    case 57:
+                        throw new InvalidOperationException("Guard did not reach a predicted corner search area before its bounded travel timeout");
+                    case 58:
+                        Require(brain.State == PursuerAgent.PursuerState.Search, "Guard keeps inspecting after arrival instead of immediately returning to patrol");
+                        Next(59, brain.Settings.searchDuration + 0.3f); break;
+                    case 59:
+                        Require(brain.State == PursuerAgent.PursuerState.Return || brain.State == PursuerAgent.PursuerState.Patrol,
+                            "Corner search eventually gives up after a full inspection budget");
                         brain.enabled = false; brain.enabled = true; Warp();
                         HoundNoiseBus.Emit(spawn, HoundSoundKind.Distraction);
                         Next(6, 0.2f); break;
@@ -334,6 +379,28 @@ namespace Lockdown.Editor
                 interceptStart = start; interceptVelocity = velocity; return;
             }
             throw new InvalidOperationException("No visible reachable interception scenario near museum spawn");
+        }
+        private static void FindCornerScenario()
+        {
+            var actions = brain.GetComponent<PursuerController>();
+            var navigation = brain.GetComponent<PursuerNavigation>();
+            var settings = new PursuerSettings();
+            for (int ring = 2; ring <= 8; ring += 2)
+            for (int direction = 0; direction < 16; direction++)
+            for (int travel = 0; travel < 8; travel++)
+            {
+                float angle = direction * Mathf.PI / 8f, heading = travel * Mathf.PI / 4f;
+                Vector3 last = spawn + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * ring;
+                Vector3 velocity = new Vector3(Mathf.Cos(heading), 0f, Mathf.Sin(heading)) * 4f;
+                if (!navigation.HasClearLine(spawn + Vector3.up * 1.2f, last + Vector3.up * 1.2f)
+                    || !navigation.HasClearLine(spawn + Vector3.up * 1.2f, last - velocity * 0.3f + Vector3.up * 1.2f)
+                    || !actions.TryRouteLength(spawn, last, out _)) continue;
+                var areas = PursuerCornerSearch.Build(spawn, last, velocity, settings, actions.TryRouteLength, actions.IsScreened);
+                if (!actions.IsScreened(last, areas[0]) || !actions.IsScreened(spawn, areas[0])
+                    || !actions.TryRouteLength(spawn, areas[0], out float length) || length > 12f) continue;
+                cornerLastSeen = last; cornerVelocity = velocity; return;
+            }
+            throw new InvalidOperationException("No reachable occluded museum corner for lost-contact verification");
         }
         private static void Require(bool condition, string message)
         {
