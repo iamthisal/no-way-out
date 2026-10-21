@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Lockdown.AI.Agents;
+using Lockdown.Agents.Pursuer;
 using Lockdown.AI.Core.Hound;
 using Lockdown.Combat;
 using Lockdown.Enemies;
@@ -49,6 +50,7 @@ namespace Lockdown.Editor
             {
                 brain = Object.FindAnyObjectByType<PursuerAgent>();
                 Require(brain != null, "Pursuer FSM exists in Museum_Main");
+                Require(brain.GetComponent<PursuerController>() != null, "Separate runtime controller is connected to the pursuer brain");
                 nav = brain.GetComponent<NavMeshAgent>();
                 Require(nav.isOnNavMesh, "Pursuer is bound to the baked museum NavMesh");
                 var data = new SerializedObject(brain);

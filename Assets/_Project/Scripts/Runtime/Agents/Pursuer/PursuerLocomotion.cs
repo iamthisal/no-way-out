@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Scripting.APIUpdating;
 
-namespace Lockdown.AI.Agents
+namespace Lockdown.Agents.Pursuer
 {
     /// <summary>Drives the imported character's in-place animation from actual navigation velocity.</summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
+    [MovedFrom(true, "Lockdown.AI.Agents", "Lockdown.AI.Agents", "PursuerLocomotion")]
     public sealed class PursuerLocomotion : MonoBehaviour
     {
         [SerializeField] private Animator animator;

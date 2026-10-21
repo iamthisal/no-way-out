@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Lockdown.AI.Agents;
+using Lockdown.Agents.Pursuer;
 using Lockdown.Player;
 using Lockdown.Combat;
 using Lockdown.Enemies;

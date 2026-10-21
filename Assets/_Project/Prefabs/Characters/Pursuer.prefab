@@ -369,6 +369,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7609566617747741245, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8052369610086918277}
+    - targetCorrespondingSourceObject: {fileID: 7609566617747741245, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 407399408966866585}
   m_SourcePrefab: {fileID: 100100000, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
 --- !u!95 &2710987325068400294 stripped
 Animator:
@@ -432,7 +435,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1c46b930f1015944a80702dc343756e, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.PursuerNavigation
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerNavigation
   solidMask:
     serializedVersion: 2
     m_Bits: 4294967291
@@ -506,7 +509,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b65223df32f38d94cb9c3225279d69dd, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.PursuerLocomotion
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerLocomotion
   animator: {fileID: 2710987325068400294}
 --- !u!114 &6045782623727410699
 MonoBehaviour:
@@ -519,7 +522,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9390e17dfebb384dbb2eebe8105966f, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.PursuerPresentation
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerPresentation
   animator: {fileID: 2710987325068400294}
   warningSound: {fileID: 8300000, guid: 4a5cf179883520f4085369ca399ce842, type: 3}
 --- !u!82 &4433022354138311091
@@ -641,6 +644,18 @@ MonoBehaviour:
   shotInterval: 0.16
   firstShotDelay: 0
   controlledByAI: 1
+--- !u!114 &407399408966866585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5094787623963269799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd29ddc484f24db1bdd5562e7c97543a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerController
 --- !u!4 &6417361383882650462 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8512299114745508804, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}

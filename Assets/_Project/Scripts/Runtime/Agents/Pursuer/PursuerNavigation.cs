@@ -1,13 +1,14 @@
-using Lockdown.AI.Core.Hound;
 using Lockdown.Combat;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Scripting.APIUpdating;
 
-namespace Lockdown.AI.Agents
+namespace Lockdown.Agents.Pursuer
 {
     public enum PursuerRouteStatus { Unavailable, Idle, Moving, Arrived, Blocked }
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
+    [MovedFrom(true, "Lockdown.AI.Agents", "Lockdown.AI.Agents", "PursuerNavigation")]
     public sealed class PursuerNavigation : MonoBehaviour
     {
         [SerializeField] private LayerMask solidMask = Physics.DefaultRaycastLayers;
@@ -66,8 +67,7 @@ namespace Lockdown.AI.Agents
         private bool TryPath(Vector3 point, out Vector3 snapped)
         {
             snapped = point;
-            if (!IsReady || !HoundSound.IsFinite(point.x) || !HoundSound.IsFinite(point.y)
-                || !HoundSound.IsFinite(point.z)) return false;
+            if (!IsReady || !IsFinite(point.x) || !IsFinite(point.y) || !IsFinite(point.z)) return false;
             if (!NavMesh.SamplePosition(point, out var hit, sampleRadius, Filter)
                 || Mathf.Abs(hit.position.y - point.y) > sampleRadius) return false;
             // Sampling alone can select the wrong side of a thin wall. Check the short connection too.
@@ -158,6 +158,7 @@ namespace Lockdown.AI.Agents
             return false;
         }
 
+        private static bool IsFinite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
         private PursuerRouteStatus FailRoute() { Stop(); failed = true; return PursuerRouteStatus.Blocked; }
 
         public void Stop()

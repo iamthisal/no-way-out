@@ -1,9 +1,11 @@
 using Lockdown.Combat;
 using Lockdown.Enemies;
 using UnityEngine;
-namespace Lockdown.AI.Agents
+using UnityEngine.Scripting.APIUpdating;
+namespace Lockdown.Agents.Pursuer
 {
     [DisallowMultipleComponent]
+    [MovedFrom(true, "Lockdown.AI.Agents", "Lockdown.AI.Agents", "PursuerPresentation")]
     public sealed class PursuerPresentation : MonoBehaviour
     {
         [SerializeField] private Animator animator;

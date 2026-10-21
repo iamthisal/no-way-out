@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Lockdown.AI.Agents;
+using Lockdown.Agents.Pursuer;
 using UnityEngine.AI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -40,6 +41,7 @@ namespace Lockdown.Editor
             public bool playerVisible;
             public int patrolPoints;
             public int wanderingEnemies;
+            public bool runtimeController;
         }
 
         private static void CheckRequest()
@@ -72,6 +74,25 @@ namespace Lockdown.Editor
                     PursuerAIBuilder.Connect();
                 }
                 if (command == "stop-play") EditorApplication.isPlaying = false;
+                if (command == "separate-controller")
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode) { EditorApplication.isPlaying = false; return; }
+                    if (scene.path != "Assets/_Project/Scenes/Museum/Museum_Main.unity" || scene.isDirty)
+                        throw new InvalidOperationException("Controller migration requires a clean Museum_Main in Edit mode.");
+                    var prefab = PrefabUtility.LoadPrefabContents(PursuerAIBuilder.PrefabPath);
+                    try
+                    {
+                        if (prefab.GetComponent<PursuerController>() == null) prefab.AddComponent<PursuerController>();
+                        PrefabUtility.SaveAsPrefabAsset(prefab, PursuerAIBuilder.PrefabPath);
+                    }
+                    finally { PrefabUtility.UnloadPrefabContents(prefab); }
+                    scene = EditorSceneManager.OpenScene(scene.path);
+                    foreach (var agentBrain in scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<PursuerAgent>(true)))
+                        if (agentBrain.GetComponent<PursuerController>() == null) Undo.AddComponent<PursuerController>(agentBrain.gameObject);
+                    EditorSceneManager.MarkSceneDirty(scene);
+                    EditorSceneManager.SaveScene(scene);
+                    state.action = "Connected separate runtime controller while preserving the pursuer prefab and scene references.";
+                }
                 if (command == "remove-wanderer")
                 {
                     if (EditorApplication.isPlayingOrWillChangePlaymode) { EditorApplication.isPlaying = false; return; }
@@ -121,6 +142,7 @@ namespace Lockdown.Editor
                 state.dirty = scene.isDirty;
                 var visual = scene.GetRootGameObjects().FirstOrDefault(root => root.name == "Pursuer_VisualOnly" || root.name == "Pursuer");
                 state.present = visual != null;
+                state.runtimeController = visual != null && visual.GetComponent<PursuerController>() != null;
                 state.renderers = visual != null ? visual.GetComponentsInChildren<Renderer>().Length : 0;
                 state.missingMeshes = visual != null ? visual.GetComponentsInChildren<SkinnedMeshRenderer>().Count(renderer => renderer.sharedMesh == null) : 0;
                 state.position = visual != null ? visual.transform.position : Vector3.zero;
