@@ -14,8 +14,8 @@ The museum heist runs as a chain of missions, built one small step at a time on
    that hunt by sound and fire lasers. A guard who spots you whistles and chases
    you briefly with a cap rifle, then goes back to patrolling. Breaking glass
    always brings the guard over to look.
-3. **Security room.** From the Staff Corridor, break the Security room lock with
-   the hammer; its lobby door is sealed. The computer switches the alarm system
+3. **Security room.** Open its lobby door with the staff keycard, or break in
+   from the Staff Corridor with the hammer. The computer switches the alarm system
    off for good, which sends the robots back to their chargers. After that,
    breaking glass brings only the guard and the hounds, never the robots. The gun
    from the Security room locker defeats the guard.
@@ -38,7 +38,7 @@ to run again.
 | D06 | Central Hall and Storage | None |
 | D07, D08 | Storage and Staff Corridor | Staff keycard |
 | D09 | Staff Corridor and Security | Breaks with the hammer |
-| D10 | Lobby and Security | Sealed |
+| D10 | Lobby and Security | Staff keycard |
 
 - **Prompts.** "Locked. Needs the staff keycard", then "Unlock with the staff
   keycard" once you carry it. A breakable lock reads "Locked. Break the lock with
@@ -150,9 +150,9 @@ destination.
 
 ## Step 3: the Security room
 
-- **Getting in.** Reach the Security room from the Staff Corridor through D09 and
-  break its lock with one hammer blow. Breaking it is quiet. D10 from the lobby is
-  sealed.
+- **Getting in.** Open D10 from the lobby with the staff keycard, or reach D09
+  from the Staff Corridor and break its lock with one hammer blow. Breaking it is
+  quiet.
 - **The computer.** It is the desk computer (`AlarmConsole` on
   `P_Security_DeskMonitor`). Its screen shows blue while the system is armed and
   red during the alarm.
@@ -174,8 +174,8 @@ destination.
 
 - **Lock rules:** a breakable lock gives way to one hammer blow but not to a pistol
   shot. Keycard and sealed locks ignore damage.
-- **Getting in:** in the museum the hammer quietly breaks D09's lock, but D10 stays
-  sealed.
+- **Getting in:** in the museum the hammer quietly breaks D09's lock. D10 ignores
+  the hammer but opens and closes with the staff keycard.
 - **The computer:** it switches the alarm off for good, so neither the guard nor
   glass can raise it again.
 - **Glass:** breaking display glass raises the alarm. Once the alarm is off, glass
@@ -204,18 +204,17 @@ museum tests that shoot (`EnemyShootingTests`, `WanderingEnemyTests`,
 
 ## Step 5: the security robots
 
-Two small robots that roll on their sphere bellies rest on glowing chargers in the
-Security room, beside the sealed lobby door (D10). That door is their bay door.
+Two small robots that roll on their sphere bellies rest on glowing chargers in
+far-apart corners of the museum: the north-west corner of the Art Gallery and the
+north-west corner of Asian Heritage.
 
-- **Waking up.** When the alarm sounds they light up red, chirp and power up for
-  a second. Then they roll out through D10, which swings open for them.
-- **The bay door.** While any robot is out, D10 stays open, with an invisible
-  barrier in the doorway that keeps the player out. The barrier is on the Ignore
-  Raycast layer, so shots and sight pass through it.
-- **Hunting by sound.** The alarm reports where each noise or sighting happened:
-  the broken glass, or where the guard spotted you. The robots roll there at
-  2.6 m/s and search the area around it. Each new report sends them to the new
-  place.
+- **Waking up.** When the alarm sounds, from broken glass or the guard's whistle,
+  their eyes turn red. After a 0.2 s chirp they head straight for where you are at
+  that moment, not for the broken case, so they close in from opposite ends of the
+  museum.
+- **Hunting.** They roll at 2.6 m/s, which is slower than your walk, and search
+  around the spot they were sent to. Every new alarm report sends them to where
+  you are again.
 - **The laser.** They see 12 m in a 160-degree cone. On sight they close to about
   6 m and fire an eye laser that does 8 damage, every 1.3 s. Before each shot the
   eye glows white for 0.45 s with its aim locked, so stepping aside makes it miss.
@@ -223,24 +222,29 @@ Security room, beside the sealed lobby door (D10). That door is their bay door.
 - **Losing you.** If they lose sight of you for 1.5 s, they hunt your last known
   position.
 - **Going home.** When the Security computer switches the alarm off, they roll
-  home and dock. D10 closes behind them, and since the alarm can never ring again,
-  they stay docked.
+  back to their own corners. Since the alarm can never ring again, they stay
+  docked.
 - **Fighting back.** Each robot has 75 health: three pistol shots or one hammer
-  blow. A destroyed robot slumps, its eye goes dark, and it stays down.
+  blow. A destroyed robot slumps, its eye goes dark, and it stays down. You can
+  also catch them on their chargers before the alarm ever sounds.
 
-**How it's built.** `SecurityRobot` is the robot's states, movement and sight, and
-`RobotLaser` is the telegraphed shot. `RobotBay` opens D10 and switches the
-barrier on while any robot is away. The guard and the robots share `PlayerSight`
-for cone and line-of-sight checks. `MuseumAlarm.Alerted` carries the location of
-each report. `Door.SetOpen` lets a script move a door without touching its lock.
+**How it's built.**
+
+- **`SecurityRobot`:** the robot's states, movement and sight.
+- **`RobotLaser`:** the telegraphed shot.
+- **`PlayerSight`:** the cone and line-of-sight check shared by the guard and the
+  robots.
+- **Alarm reports:** each report comes through `MuseumAlarm.Alerted`, and the
+  robots answer it by heading for the player.
 
 **Building it.**
 
 - **Tools > Lockdown > Missions > Build Security Robot** builds the placeholder
   model: a white shell with orange bands that show it rolling, a dark dome head and
   a glowing eye.
-- **Tools > Lockdown > Missions > Place Security Robots** adds the chargers, the
-  robots, the barrier and the bay.
+- **Tools > Lockdown > Missions > Place Security Robots** puts a charger and a robot
+  at each corner in `MissionBuilder.RobotDocks`. It is safe to run again; adding a
+  row adds a robot.
 - `Blender/Missions/generate_audio.py` synthesises the hum, power-up, laser and
   breakdown sounds.
 
@@ -254,7 +258,7 @@ each report. `Door.SetOpen` lets a script move a door without touching its lock.
 - switching the alarm off sends it home to its charger, and it can't be woken
   again.
 
-In the museum it checks that both robots charge in the Security room and roll out
-through D10. It also checks that the barrier stops the player in the doorway, that
-both robots dock again once the alarm is off and the door closes, and that glass
-broken after the switch-off leaves them on their chargers.
+In the museum it checks that the robots wait in far-apart corners. When a distant
+case breaks, both set off at once toward the player rather than the case, and they
+dock again once the alarm is off. Glass broken after the switch-off leaves them on
+their chargers.
