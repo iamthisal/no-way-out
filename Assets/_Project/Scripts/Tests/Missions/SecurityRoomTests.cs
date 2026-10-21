@@ -19,7 +19,7 @@ namespace Lockdown.Tests
 {
     public sealed class SecurityRoomTests
     {
-        // From the Staff Corridor the hammer breaks in; the lobby door stays sealed.
+        // From the Staff Corridor the hammer breaks in; the lobby door takes the staff keycard.
         private const string CorridorDoor = "Door_D09_Security";
         private const string LobbyDoor = "Door_D10_Security";
         private bool previousBackground;
@@ -63,7 +63,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator HammerQuietlyBreaksTheCorridorLockButTheLobbyDoorStaysSealed()
+        public IEnumerator HammerQuietlyBreaksTheCorridorLockAndTheLobbyDoorTakesTheKeycard()
         {
             yield return LoadMuseum();
             var player = Object.FindAnyObjectByType<FirstPersonController>();
@@ -72,15 +72,20 @@ namespace Lockdown.Tests
             var hammer = player.GetComponentInChildren<FirstPersonHammer>(true);
 
             var lobbyDoor = GameObject.Find("Museum/Doors/" + LobbyDoor).GetComponentInChildren<Door>(true);
-            var seal = lobbyDoor.GetComponent<DoorLock>();
-            Assert.That(seal.IsLocked && !seal.IsBreakable, Is.True, "The lobby door into Security is sealed.");
+            var keyLock = lobbyDoor.GetComponent<DoorLock>();
+            Assert.That(keyLock.IsLocked && !keyLock.IsBreakable, Is.True, "The lobby door into Security is a keycard door.");
             yield return Face(player, interaction, lobbyDoor);
-            Assert.That(lobbyDoor.InteractionLabel, Is.EqualTo("This door is sealed"));
+            Assert.That(lobbyDoor.InteractionLabel, Is.EqualTo("Locked. Needs the staff keycard"));
             yield return new WaitForSeconds(0.7f);
             Assert.That(hammer.TrySwing(), Is.True);
             yield return new WaitForSeconds(0.4f);
-            Assert.That(seal.IsLocked, Is.True, "The hammer cannot open the sealed door.");
+            Assert.That(keyLock.IsLocked, Is.True, "The hammer cannot open a keycard door.");
             Assert.That(interaction.TryInteract(), Is.False);
+            PlayerKeys.For(player.gameObject).Add("StaffKeycard");
+            Assert.That(interaction.TryInteract(), Is.True);
+            Assert.That(lobbyDoor.IsOpen, Is.True, "The staff keycard opens it.");
+            Assert.That(interaction.TryInteract(), Is.True);
+            Assert.That(lobbyDoor.IsOpen, Is.False, "And the player can close it again.");
 
             var door = GameObject.Find("Museum/Doors/" + CorridorDoor).GetComponentInChildren<Door>(true);
             var doorLock = door.GetComponent<DoorLock>();

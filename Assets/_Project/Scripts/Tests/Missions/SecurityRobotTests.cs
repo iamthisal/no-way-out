@@ -111,42 +111,40 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator RobotsRollOutThroughTheirBayDoorWhileThePlayerIsKeptOut()
+        public IEnumerator BrokenGlassSendsRobotsFromTheirCornersStraightToThePlayer()
         {
             yield return LoadMuseum();
             var robots = Object.FindObjectsByType<SecurityRobot>(FindObjectsInactive.Exclude);
-            var bay = Object.FindAnyObjectByType<RobotBay>();
             Assert.That(robots.Length, Is.EqualTo(2));
-            var security = new Bounds(new Vector3(8f, 1f, -8.5f), new Vector3(6f, 3f, 5f));
+            Assert.That(Vector3.Distance(robots[0].DockPosition, robots[1].DockPosition), Is.GreaterThan(20f), "The robots wait in far-apart corners.");
+            foreach (var each in robots) Assert.That(each.State, Is.EqualTo(SecurityRobot.Mode.Docked));
+
+            // The player stands in the Exhibition while a case breaks at the far end of the museum.
+            Move(new Vector3(0f, 0f, 8f));
+            BreakableGlass farthest = null;
+            foreach (var glass in Object.FindObjectsByType<BreakableGlass>(FindObjectsInactive.Exclude))
+                if (farthest == null || Vector3.Distance(glass.transform.position, player.transform.position) > Vector3.Distance(farthest.transform.position, player.transform.position))
+                    farthest = glass;
+            farthest.GetComponent<Health>().TakeDamage(1000f);
+            yield return null;
             foreach (var each in robots)
             {
-                Assert.That(each.State, Is.EqualTo(SecurityRobot.Mode.Docked));
-                Assert.That(security.Contains(each.transform.position + Vector3.up), Is.True, "The robots charge in the Security room.");
+                Assert.That(each.IsAway, Is.True, "Breaking glass wakes every robot at once.");
+                Vector3 offset = each.Target - player.transform.position;
+                offset.y = 0f;
+                Assert.That(offset.magnitude, Is.LessThan(1f), "They head for where the player is, not for the broken case.");
             }
-            Assert.That(bay.BayDoor.IsOpen, Is.False);
-            var barrier = bay.GetComponentInChildren<BoxCollider>(true);
-            Assert.That(barrier.enabled, Is.False);
+            yield return new WaitForSeconds(2f);
+            foreach (var each in robots)
+                Assert.That(Vector3.Distance(each.transform.position, each.DockPosition), Is.GreaterThan(2f), each.name + " sets off at once.");
 
-            MuseumAlarm.Current.Raise("Test", new Vector3(0f, 0f, -8f));
-            yield return new WaitForSeconds(0.6f);
-            Assert.That(bay.BayDoor.IsOpen, Is.True, "Their door opens for them.");
-            Assert.That(barrier.enabled, Is.True);
-            Assert.That(barrier.gameObject.layer, Is.EqualTo(LayerMask.NameToLayer("Ignore Raycast")), "Shots and sight still pass the barrier.");
-
-            // Walk into the open doorway from the lobby: the barrier holds the player back.
-            var body = player.GetComponent<CharacterController>();
-            Move(new Vector3(3.6f, 0f, -8.5f));
-            for (int i = 0; i < 40; i++) { body.Move(Vector3.right * 0.05f); yield return null; }
-            Assert.That(player.transform.position.x, Is.LessThan(4.9f), "The player cannot slip into the Security room behind the robots.");
-
-            yield return WaitFor(() => System.Array.TrueForAll(robots, r => !security.Contains(r.transform.position + Vector3.up)), 8f);
-            Assert.That(System.Array.TrueForAll(robots, r => r.IsAway), Is.True, "Both robots have rolled out.");
             MuseumAlarm.Current.Disable();
-            yield return WaitFor(() => System.Array.TrueForAll(robots, r => r.State == SecurityRobot.Mode.Docked), 15f);
-            Assert.That(System.Array.TrueForAll(robots, r => r.State == SecurityRobot.Mode.Docked), Is.True, "Both robots are back on their chargers.");
-            yield return new WaitForSeconds(0.8f);
-            Assert.That(bay.BayDoor.IsOpen, Is.False);
-            Assert.That(barrier.enabled, Is.False);
+            yield return WaitFor(() => System.Array.TrueForAll(robots, r => r.State == SecurityRobot.Mode.Docked), 10f);
+            foreach (var each in robots)
+            {
+                Assert.That(each.State, Is.EqualTo(SecurityRobot.Mode.Docked), each.name + " goes back to its charger.");
+                Assert.That(Vector3.Distance(each.transform.position, each.DockPosition), Is.LessThan(0.6f));
+            }
         }
 
         [UnityTest]
@@ -158,7 +156,6 @@ namespace Lockdown.Tests
             yield return new WaitForSeconds(1.5f);
             foreach (var each in Object.FindObjectsByType<SecurityRobot>(FindObjectsInactive.Exclude))
                 Assert.That(each.State, Is.EqualTo(SecurityRobot.Mode.Docked));
-            Assert.That(Object.FindAnyObjectByType<RobotBay>().BayDoor.IsOpen, Is.False);
         }
 
         private IEnumerator LoadMuseum()
