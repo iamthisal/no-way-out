@@ -36,6 +36,21 @@ namespace Lockdown.Tests
             Assert.That(planner.Velocity, Is.EqualTo(Vector3.zero));
         }
         [Test]
+        public void FastFramesAccumulateVisibleMotionInsteadOfErasingVelocity()
+        {
+            var planner = new PursuerInterception(); planner.Observe(Vector3.zero, 0f);
+            for (int frame = 1; frame <= 200; frame++)
+            {
+                float now = frame * 0.0005f;
+                planner.Observe(Vector3.right * (4f * now), now);
+            }
+            Assert.That(planner.Velocity.x, Is.EqualTo(4f).Within(0.01f));
+            planner.Observe(Vector3.right * 0.402f, 0.1005f);
+            Assert.That(planner.Velocity.x, Is.EqualTo(4f).Within(0.01f), "A tiny follow-up frame must preserve the observed speed.");
+            planner.LoseSight(); planner.Observe(Vector3.right * 100f, 0.101f);
+            Assert.That(planner.Velocity, Is.EqualTo(Vector3.zero), "Reacquisition must still reject hidden movement.");
+        }
+        [Test]
         public void InterceptionChoosesACheaperRouteThatCanBeatThePlayer()
         {
             var planner = MovingPlayer();
