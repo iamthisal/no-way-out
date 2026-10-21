@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 669dbe494b1f43af8344f83bb2dc289e, type: 3}
+  m_Name: Museum_HoundSettings
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundSettings
+  memoryCapacity: 64
+  decayRate: 0.04
+  distanceScale: 5
+  memoryFloor: 0.08
+  maximumMemoryAge: 45
+  trackingThreshold: 0.9
+  targetSwitchRatio: 1.3
+  decisionInterval: 0.5
+  obstructedSoundMultiplier: 0
+  wanderSpeed: 2.4
+  trackingSpeed: 4.8
+  wanderRadius: 6
+  wanderPause: 1.2
+  sniffDuration: 3
+  searchDuration: 6
+  searchRadius: 2.5
+  stuckTimeout: 2.5
+  biteRange: 1.45
+  biteDamage: 12
+  biteCooldown: 1.2
