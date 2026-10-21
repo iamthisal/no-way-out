@@ -18,7 +18,7 @@ The museum heist runs as a chain of missions, built one small step at a time on
    the hammer; its lobby door is sealed. The computer switches the alarm system
    off for good, which sends the robots back to their chargers. After that,
    breaking glass brings only the guard and the hounds, never the robots. The gun
-   in the Security room defeats the guard.
+   from the Security room locker defeats the guard.
 4. **Dinosaur room.** Looting Natural History wakes two skeletons. Defeating them
    reveals a skeleton key that opens the barred gates into Egypt.
 5. **Egypt.** Complete the mummy curse. The goal is the four necklaces, and the
@@ -181,3 +181,23 @@ destination.
 - **Glass:** breaking display glass raises the alarm. Once the alarm is off, glass
   brings the guard over to look.
 - **The archer:** it is gone.
+
+## Step 4: the pistol
+
+- **Where it is.** The pistol waits in the Security room locker (`P_Security_Locker`).
+  The museum's player starts without it, so **2** does nothing until it is found.
+- **Taking it.** Look at the locker and press **E** ("Take the pistol (2 to
+  equip)"). The pistol goes straight into your hands, and the locker has nothing
+  more to offer.
+- **How it works.** `PlayerEquipment.ownsPistol` is on by default, so the player
+  prefab and any test arena still start with a pistol. The museum's player turns
+  it off. `PistolPickup` calls `TryCollectPistol`.
+- **Building it.** **Tools > Lockdown > Missions > Place Pistol Locker** adds the
+  pickup and takes the pistol off the museum's player.
+
+### Testing (step 4)
+
+`SecurityRoomTests` checks that the player starts unarmed, that the locker hands
+over the pistol and equips it, and that the empty locker offers nothing more. The
+museum tests that shoot (`EnemyShootingTests`, `WanderingEnemyTests`,
+`LootPickupTests`, `PlayerEquipmentTests`) collect the locker pistol first.
