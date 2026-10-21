@@ -209,6 +209,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6154703433303177814, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2121651}
+    - targetCorrespondingSourceObject: {fileID: 6154703433303177814, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2121656}
   m_SourcePrefab: {fileID: 100100000, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
 --- !u!4 &2121645 stripped
 Transform:
@@ -345,6 +348,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 20e21d49bda986144b04451b4d9c11d3, type: 2}
+--- !u!114 &2121656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2121647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e1c734494e6cb8dd608151b48e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNoiseEmitter
+  kind: 5
+  emitOnCollision: 0
+  minimumImpactSpeed: 2
+  cooldown: 0.5
 --- !u!1 &4102042
 GameObject:
   m_ObjectHideFlags: 0
@@ -22271,6 +22290,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6296757963221301697, guid: 5589ad3090eded24899294a4c29b9d3a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 424900918}
+    - targetCorrespondingSourceObject: {fileID: 6296757963221301697, guid: 5589ad3090eded24899294a4c29b9d3a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 424900923}
     - targetCorrespondingSourceObject: {fileID: 6689547149406642200, guid: 5589ad3090eded24899294a4c29b9d3a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1971637415}
@@ -22429,6 +22451,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 20e21d49bda986144b04451b4d9c11d3, type: 2}
+--- !u!114 &424900923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424900913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e1c734494e6cb8dd608151b48e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNoiseEmitter
+  kind: 5
+  emitOnCollision: 0
+  minimumImpactSpeed: 2
+  cooldown: 0.5
 --- !u!1001 &428976379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24150,8 +24188,6 @@ MonoBehaviour:
   - {fileID: 758853594}
   entryPoints:
   - {fileID: 1228545616}
-  - {fileID: 217237970}
-  - {fileID: 1186643706}
   arrivalInterval: 0.65
 --- !u!4 &479483913
 Transform:
@@ -24422,6 +24458,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.9469388, y: 0.66733164, z: 0.9215492}
   m_Center: {x: 0, y: 0.13790521, z: 0.013406187}
+--- !u!114 &484307487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484307480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e1c734494e6cb8dd608151b48e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNoiseEmitter
+  kind: 5
+  emitOnCollision: 0
+  minimumImpactSpeed: 2
+  cooldown: 0.5
 --- !u!1 &486323184
 GameObject:
   m_ObjectHideFlags: 0
@@ -29567,6 +29619,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6103193641369159042, guid: c737cf4dbf106f44dad1f96b504b819e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 621904262}
+    - targetCorrespondingSourceObject: {fileID: 6103193641369159042, guid: c737cf4dbf106f44dad1f96b504b819e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 621904267}
     - targetCorrespondingSourceObject: {fileID: 7549871753501974169, guid: c737cf4dbf106f44dad1f96b504b819e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1652784357}
@@ -29725,6 +29780,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 20e21d49bda986144b04451b4d9c11d3, type: 2}
+--- !u!114 &621904267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621904257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e1c734494e6cb8dd608151b48e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNoiseEmitter
+  kind: 5
+  emitOnCollision: 0
+  minimumImpactSpeed: 2
+  cooldown: 0.5
 --- !u!1 &626037359
 GameObject:
   m_ObjectHideFlags: 0
@@ -31495,8 +31566,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5330627581561011299, guid: a92d752cd85e30644b179dec35b04f0d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 685157699}
   m_SourcePrefab: {fileID: 100100000, guid: a92d752cd85e30644b179dec35b04f0d, type: 3}
+--- !u!1 &685157698 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5330627581561011299, guid: a92d752cd85e30644b179dec35b04f0d, type: 3}
+  m_PrefabInstance: {fileID: 685157697}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &685157699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685157698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4a044def5b44a5cbcf8db0afaa239fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundPlayerNoise
+  sprintThreshold: 5
+  crouchHeight: 1.4
 --- !u!1001 &686011348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35123,6 +35216,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8892644343234213027, guid: 262fd1519c358f749a165c4e2b186deb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 758853594}
+    - targetCorrespondingSourceObject: {fileID: 8892644343234213027, guid: 262fd1519c358f749a165c4e2b186deb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 758853599}
     - targetCorrespondingSourceObject: {fileID: 5467580799559543255, guid: 262fd1519c358f749a165c4e2b186deb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 89361756}
@@ -35281,6 +35377,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 20e21d49bda986144b04451b4d9c11d3, type: 2}
+--- !u!114 &758853599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758853589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e1c734494e6cb8dd608151b48e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNoiseEmitter
+  kind: 5
+  emitOnCollision: 0
+  minimumImpactSpeed: 2
+  cooldown: 0.5
 --- !u!1 &762478546
 GameObject:
   m_ObjectHideFlags: 0
@@ -49693,13 +49805,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1055813078}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 2.5, y: 3.593, z: -10.317}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.777, y: 3.241, z: -10.642}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2019384873}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1055813080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55453,6 +55565,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6154703433303177814, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 484307484}
+    - targetCorrespondingSourceObject: {fileID: 6154703433303177814, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 484307487}
   m_SourcePrefab: {fileID: 100100000, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
 --- !u!4 &1170860758 stripped
 Transform:
@@ -62313,13 +62428,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1330850333}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.76604444, y: 0, z: 0, w: 0.64278764}
-  m_LocalPosition: {x: -2.5, y: 3.451, z: -6.5}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -2.5, y: 3.205, z: -6.583}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2019384873}
-  m_LocalEulerAnglesHint: {x: 100, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &1330850335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65009,7 +65124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7957461911419244850, guid: 091d312572d86054aafca43db5e7b531, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.379
       objectReference: {fileID: 0}
     - target: {fileID: 7957461911419244850, guid: 091d312572d86054aafca43db5e7b531, type: 3}
       propertyPath: m_LocalPosition.z
@@ -71458,6 +71573,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7431134488165843111, guid: 93cd530ee6466cd4d84590aa350ba247, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1576411429}
+    - targetCorrespondingSourceObject: {fileID: 7431134488165843111, guid: 93cd530ee6466cd4d84590aa350ba247, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1576411434}
     - targetCorrespondingSourceObject: {fileID: 8399562231970239433, guid: 93cd530ee6466cd4d84590aa350ba247, type: 3}
       insertIndex: -1
       addedObject: {fileID: 653912693}
@@ -71605,6 +71723,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 20e21d49bda986144b04451b4d9c11d3, type: 2}
+--- !u!114 &1576411434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576411425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e1c734494e6cb8dd608151b48e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNoiseEmitter
+  kind: 5
+  emitOnCollision: 0
+  minimumImpactSpeed: 2
+  cooldown: 0.5
 --- !u!1 &1577031858
 GameObject:
   m_ObjectHideFlags: 0
@@ -102563,6 +102697,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6154703433303177814, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1828180901309465018}
+    - targetCorrespondingSourceObject: {fileID: 6154703433303177814, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1828180901309465023}
   m_SourcePrefab: {fileID: 100100000, guid: a6d7cf7db8dd194498566603f64c9b2f, type: 3}
 --- !u!23 &1828180901309465013 stripped
 MeshRenderer:
@@ -102694,6 +102831,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 20e21d49bda986144b04451b4d9c11d3, type: 2}
+--- !u!114 &1828180901309465023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828180901309465014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e1c734494e6cb8dd608151b48e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNoiseEmitter
+  kind: 5
+  emitOnCollision: 0
+  minimumImpactSpeed: 2
+  cooldown: 0.5
 --- !u!4 &2080160832002064585
 Transform:
   m_ObjectHideFlags: 0

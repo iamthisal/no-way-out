@@ -1,5 +1,6 @@
 using Lockdown.AI.Core.Hound;
 using Lockdown.Combat;
+using Lockdown.Enemies;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,6 +20,7 @@ namespace Lockdown.AI.Agents
         private HoundHearing hearing;
         private HoundNavigation navigation;
         private Health health;
+        private HoundInvestigator investigator;
         private HoundDecision decision;
         private Vector3 home;
         private double nextIdleMove;
@@ -39,6 +41,7 @@ namespace Lockdown.AI.Agents
             hearing = GetComponent<HoundHearing>();
             navigation = GetComponent<HoundNavigation>();
             health = GetComponent<Health>();
+            investigator = GetComponent<HoundInvestigator>();
             if (settings == null) settings = hearing.Settings;
             decision = settings != null ? settings.CreateDecision(hearing.Memory) : new HoundDecision(hearing.Memory);
             navigation.StuckTimeout = settings != null ? settings.stuckTimeout : 2.5f;
@@ -47,6 +50,7 @@ namespace Lockdown.AI.Agents
         private void OnEnable()
         {
             health.OnDeath.AddListener(Die);
+            if (investigator != null) investigator.InvestigationRequested += InvestigateReportedBreak;
             decision.Reset();
             home = transform.position;
             followingClue = 0;
@@ -57,9 +61,19 @@ namespace Lockdown.AI.Agents
         private void OnDisable()
         {
             health.OnDeath.RemoveListener(Die);
+            if (investigator != null) investigator.InvestigationRequested -= InvestigateReportedBreak;
             navigation.Stop();
             decision.Reset();
             followingClue = 0;
+        }
+
+        private void InvestigateReportedBreak(Vector3 position)
+        {
+            if (health.IsDead) return;
+            // The museum dispatcher already knows a real case broke, including for newly spawned
+            // dogs that did not exist when the original sound was broadcast. Still use utility + A*.
+            hearing.Memory.Remember(HoundSoundProfiles.Create(HoundSoundKind.Distraction,
+                position, Time.timeAsDouble), Time.timeAsDouble);
         }
 
         private void Update()
