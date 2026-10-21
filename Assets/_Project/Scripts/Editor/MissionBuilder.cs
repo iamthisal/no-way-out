@@ -303,6 +303,28 @@ namespace Lockdown.Editor
             Debug.Log("The Security desk computer now switches the alarm system off for good. Save the scene.");
         }
 
+        // The pistol waits in the Security room locker; the museum's player starts without it.
+        [MenuItem("Tools/Lockdown/Missions/Place Pistol Locker")]
+        public static void PlacePistolLocker()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != ScenePath)
+                throw new InvalidOperationException("Open Museum_Main in Edit mode first.");
+            var locker = GameObject.Find("Museum/FixedCover/Props_Security/P_Security_Locker")
+                ?? throw new InvalidOperationException("The Security room's locker is missing.");
+            if (locker.GetComponent<Collider>() == null) throw new InvalidOperationException("The locker needs a collider to be looked at.");
+            if (locker.GetComponent<PistolPickup>() == null) Undo.AddComponent<PistolPickup>(locker);
+            var players = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Lockdown.Player.PlayerEquipment>(true)).ToArray();
+            if (players.Length != 1) throw new InvalidOperationException("Expected one player in the museum, found " + players.Length + ".");
+            var equipment = new SerializedObject(players[0]);
+            equipment.FindProperty("ownsPistol").boolValue = false;
+            equipment.FindProperty("startWithPistol").boolValue = false;
+            equipment.ApplyModifiedProperties();
+            EditorSceneManager.MarkSceneDirty(scene);
+            Selection.activeGameObject = locker;
+            Debug.Log("The pistol now waits in the Security room locker. Save the scene.");
+        }
+
         private static AudioClip Clip(string name)
         {
             var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(AudioFolder + "/" + name + ".wav");
