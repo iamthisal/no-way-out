@@ -150,7 +150,8 @@ namespace Lockdown.Tests
             var shards = jar.GetComponentsInChildren<Rigidbody>();
             Assert.That(shards.All(s => !s.isKinematic), Is.True);
             yield return new WaitForSeconds(1.5f);
-            Assert.That(shards.Count(s => s.position.y < 0.5f), Is.GreaterThan(10), "The pieces fall to the floor.");
+            // A piece knocked back toward the plinth, or the base disk, can come to rest on the plinth top.
+            Assert.That(shards.Count(s => s.position.y < 0.5f), Is.GreaterThan(shards.Length / 2), "Most pieces fall to the floor.");
         }
 
         [UnityTest]
