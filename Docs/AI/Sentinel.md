@@ -1,88 +1,86 @@
 # Sentinel / Pursuer
 
-The Unity museum pursuer implements a finite-state machine with **Patrol, Investigate, Chase, Attack, Search, Return and Dead** states. Its inputs are sight, sound snapshots, ally alerts, navigation status, elapsed time, target health and its own health. The HTML [Pursuer](../../game_html/src/enemy-ai.js) remains the behavior reference.
+The Unity museum pursuer is an **arrest-first guard**. It approaches a thief without firing, attempts handcuffs at close range, and chases/intercepts a fleeing thief. Only an attributed player hit authorizes armed retaliation. Once attacked, it advances while firing and may briefly use nearby forward cover. The HTML prototype is an earlier reference and does not implement this Unity arrest policy.
 
 ## Code ownership and review map
 
-Decision-making lives in [`Scripts/AI/Agents/Pursuer`](../../Assets/_Project/Scripts/AI/Agents/Pursuer):
+Decision-making lives in [`Scripts/AI/Agents/Pursuer`](../../Assets/_Project/Scripts/AI/Agents/Pursuer), assembly `Lockdown.AI.Agents`:
 
 | File | Responsibility |
 |---|---|
-| `PursuerAgent.cs` | FSM, priorities, remembered sightings and choosing actions. |
+| `PursuerAgent.cs` | FSM, priorities, evidence memory and choosing actions. |
 | `PursuerPerception.cs` | Sight, hearing, clue memory and ally alerts. |
+| `PursuerArrest.cs` | Continuous-contact arrest timing and cancellation. |
+| `PursuerInterception.cs` | Visible motion observations, expiring predictions and route-cost comparison. |
+| `PursuerAdvanceCover.cs` | Bounded selection of reachable forward cover after a hit. |
 | `PursuerInvestigation.cs`, `PursuerSearch.cs` | Investigation timing and bounded search candidates. |
 | `PursuerAttackCycle.cs` | Warning, burst and cooldown decisions. |
-| `PursuerFormation.cs` | Selecting distinct reachable approach positions. |
+| `PursuerFormation.cs` | Selecting distinct reachable approach positions during retaliation. |
 | `PursuerSettings.cs` | Configurable decision parameters. |
-| `PursuerStimulusRelay.cs` | Gameplay integration: translates weapon, movement and glass events into AI inputs. |
+| `PursuerStimulusRelay.cs` | Gameplay integration: weapon, movement and glass events become AI inputs. |
 
 Execution lives in [`Scripts/Runtime/Agents/Pursuer`](../../Assets/_Project/Scripts/Runtime/Agents/Pursuer), namespace `Lockdown.Agents.Pursuer`:
 
 | File | Responsibility |
 |---|---|
-| `PursuerController.cs` | Command boundary: move, stop, turn, fire, warning feedback and body shutdown. |
-| `PursuerNavigation.cs` | NavMesh paths, stopping distance, physical obstacle checks and movement progress. |
-| `PursuerLocomotion.cs` | Drives animation from actual velocity. |
-| `PursuerPresentation.cs` | Warning sound and shot, hit and death animation feedback. |
+| `PursuerController.cs` | Move, stop, turn, fire, arrest reach/capture, feedback, attributed-hit events and body shutdown. |
+| `PursuerNavigation.cs` | NavMesh path queries, movement, physical obstacle checks and progress. |
+| `PursuerLocomotion.cs` | Animation from actual velocity. |
+| `PursuerPresentation.cs` | Warning sound, arrest/status HUD, shot/hit/death animation feedback. |
 
-The dependency is `Lockdown.AI.Agents` → `Lockdown.Runtime`. Runtime controls do not reference the AI assembly or choose FSM states. The brain asks the controller to act and reads execution results. Shared `Runtime/Enemies/EnemyShooting.cs` and `Runtime/Combat/Health.cs` remain reusable execution components. Editor builders and verification stay in `Scripts/Editor`; they are not gameplay decision code.
+Dependencies point from AI to Runtime. Runtime never references the AI assembly or chooses FSM states. Shared `Runtime/Enemies/EnemyShooting.cs` and `Runtime/Combat/Health.cs` execute shooting and damage. `Runtime/Player/PlayerVitals.cs` owns capture, control lock and restart. `FirstPersonWeapon.cs` supplies the actual player as damage instigator; other `IDamageable` implementations keep their existing damage API. Builders and verification remain under `Scripts/Editor`.
 
-Existing script GUIDs are preserved and moved components declare their previous namespace/assembly for Unity serialization. The gameplay prefab contains the controller explicitly. This separation changes code ownership, not gunshot/damage reaction policies.
+Script GUIDs and original enum values are preserved. New states are appended for serialized compatibility. The gameplay prefab explicitly contains its runtime controller.
 
 ## Decisions and transitions
 
 | State | Behavior | Exit condition |
 |---|---|---|
-| Patrol | Loop through the four assigned reachable waypoints at 2 m/s. | Sight starts pursuit/combat; a noise or alert starts investigation. |
-| Investigate | Walk to the clue location, then inspect for 1.5 seconds. | A sighting interrupts it; arrival/timeout or a blocked route starts a local search. |
-| Chase | Run at 4 m/s toward the visible player, a validated flank position, or the last confirmed position. | A clear firing opportunity starts Attack; three seconds without sight starts Search. |
-| Attack | Stop, face the target, warn for 0.65 seconds, fire up to three shots at 0.18-second intervals, then cool down for 1.5 seconds. | Lost sight cancels the burst; leaving firing conditions resumes Chase. |
-| Search | Check up to 17 reachable positions around the clue/last sighting within a 3 m radius; scan when candidates are exhausted. | A sighting interrupts it; the 14-second search budget ends in Return. |
-| Return | Navigate toward the nearest reachable patrol waypoint. | Reaching the route resumes Patrol; new evidence may interrupt. |
-| Dead | Stop navigation and shooting, disable colliders, release the formation slot, and play death animation. | Terminal for this spawned character; restarting the encounter creates a fresh instance. |
+| Patrol | Loop through the four reachable waypoints at 2 m/s. | Sight starts Approach; noise/alert starts Investigate. |
+| Approach | Close at 2.8 m/s with an arrest warning; never fire. | Clear reach starts Arrest; observed fleeing starts Chase/Intercept; an attributed hit authorizes retaliation. |
+| Arrest | Stop within 1.6 m and maintain unobstructed reach for 1.5 seconds; show an escape warning and progress bar. | Leaving reach or breaking sight cancels progress; completion captures the actual player; a hit interrupts arrest. |
+| Chase | Run at 4 m/s toward the last confirmed location. Running alone never authorizes fire. | Useful prediction starts Intercept; clear reach starts Arrest; three seconds without evidence starts Search. |
+| Intercept | Navigate to a predicted ahead position using a complete NavMesh route. | Replan from visible movement; fall back to Chase when no useful shortcut exists; unseen prediction expires after two seconds. |
+| Attack | After a player hit, close at 2.8 m/s to a 2.8 m standoff while firing warned three-shot bursts. | Lost sight cancels fire; range or obstacles require pursuit. |
+| AdvanceCover | After a hit, use a reachable forward cover position for at most 1.1 seconds; fire only with a clear shot. | Resume armed pressure; six-second selection cooldown; no retreat positions. |
+| Investigate | Walk to a clue snapshot, then inspect for 1.5 seconds. | Sight interrupts; arrival/timeout or blocked route starts Search. |
+| Search | Check up to 17 reachable positions within 3 m of the last evidence. | Sight interrupts; 14-second budget ends in Return. |
+| Return | Navigate to the nearest reachable patrol waypoint. | Reaching the route resumes Patrol; evidence can interrupt. |
+| Caught | Stop pursuing the captured thief; player controls are disabled without lethal damage. | Player restarts the encounter. |
+| Dead | Stop navigation/fire, disable colliders, release formation slot and play death animation. | Terminal for this instance. |
 
-Death has highest priority. Direct sight overrides clues. Pursuit and search are not redirected by lower-priority sounds. No utility scoring is required for these explicit FSM decisions.
+Death has highest priority. Sight overrides clues. A confirmed player hit interrupts arrest and enables retaliation for this guard's lifetime. Fleeing, merely equipping a gun, shooting elsewhere, and unattributed environmental damage do not authorize shooting. Restart creates a fresh non-hostile guard.
 
-## Perception, memory and communication
+## Interception and aggressive cover
 
-- A new player is acquired within 20 m and a 100-degree horizontal cone. While pursuing, navigation turns do not discard an unobstructed target.
-- Solid colliders block sight. Trigger colliders and the two characters' own colliders are ignored. An inactive or dead target is not visible.
-- Only confirmed sightings update the remembered player position. The pursuer follows that snapshot for three seconds after losing sight; it cannot follow unseen movements through a wall.
-- One `PursuerStimulusRelay` connects broken glass, player footsteps/sprinting and fired pistol shots to the existing `HoundNoiseBus`. Audio playback alone is not a clue.
-- Hearing respects the sound's radius, a 24 m maximum range, age, and wall attenuation. Gunshots outrank distractions, which outrank footsteps.
-- Confirmed sightings broadcast position snapshots to nearby allies, at most once per second. Recipients investigate without rebroadcasting, preventing alert loops.
+`PursuerInterception` estimates planar velocity from consecutive visible positions. Reacquisition after hidden movement, large observation gaps and teleports reset the estimate. Every 0.5 seconds, and immediately when fleeing begins, it compares three ahead positions up to 1.5 seconds ahead. It measures complete route lengths from guard to player, player to prediction and guard to prediction. A candidate must save at least 0.6 m against following the player's route and have a plausible arrival time (no more than 0.75 seconds late). The score penalizes late arrival. Unreachable or unhelpful predictions fall back to direct pursuit.
 
-## Movement and cooperation
+Predictions are guesses, not guaranteed exit choices. They expire after two seconds without replanning from visible motion. Hidden player transforms never update the prediction. This is a custom interception decision over Unity's built-in NavMesh pathfinding, not a separately implemented A* algorithm.
 
-`PursuerNavigation` validates complete baked-NavMesh paths and samples nearby walkable destinations. Physical capsule sweeps stop movement at newly closed solid doors while obstacle carving catches up. Routes can fail or time out instead of repeatedly pushing through geometry.
+Cover candidates must move at least 0.3 m closer to the threat, have a complete route of at most 4.5 m, and be screened by solid geometry. No suitable candidate means keep advancing. Brief cover and a cooldown prevent persistent hiding. Additional guards may reserve distinct reachable flank slots during retaliation; the museum currently has one guard.
 
-The direct pursuer can attack as soon as firing conditions are met. Additional pursuers sharing a target select distinct flank slots, subject to complete-path and clear-shot validation. Unreachable flanks fall back to direct pursuit. Disable/death removes the character from formation membership.
+`PursuerNavigation` validates complete baked-NavMesh routes and nearby walkable samples. Physical capsule sweeps stop at solid doors while carving catches up. Routes can fail or time out instead of repeatedly pushing through geometry.
 
-The museum currently contains one pursuer. Distinct formation slots and unreachable-slot fallback are covered by automated component tests; a large-pack performance benchmark has not been performed.
+## Evidence and combat
 
-## Weapon, damage and presentation
+Sight acquires a target within 20 m and a 100-degree horizontal cone. Tracking an established contact ignores the acquisition cone; walls still block sight. Trigger colliders and the characters' own colliders are ignored. Inactive/dead targets are not visible. A player hit supplies one impact-time attacker-position snapshot, including a hit from behind; it never grants later access to hidden movement. Confirmed evidence is retained for three seconds before searching.
 
-The existing `EnemyShooting` component runs in explicit AI-controlled mode on this prefab. The FSM owns warning, burst and cooldown timing; the weapon executes hits, tracers, muzzle flashes and sound. The legacy wandering enemy has been removed from Museum_Main; its reusable prefab retains autonomous shooting for regression fixtures.
+The existing sound relay and hearing code remain: glass, footsteps and pistol shots publish snapshots; hearing applies range, age and wall attenuation. Active pursuit/search do not redirect to lower-priority noise. **Player-reported unreliable gunshot hearing remains a separate unresolved issue.** Retaliation uses attributed bullet damage and does not depend on that hearing path. Nearby confirmed sightings broadcast snapshots without recursive alert loops.
 
-Shots check both body visibility and the muzzle-to-player line; solid blockers and other characters can block damage. Each successful pursuer shot deals 10 damage. The pursuer uses the shared 100-health `Health` component and can be killed with the player's weapons.
+`EnemyShooting` is explicitly controlled by the brain through `PursuerController`. After provocation, a 0.65-second warning precedes up to three 10-damage shots spaced 0.18 seconds apart, with a 1.5-second cooldown. Both body and muzzle sightlines must be clear. Losing sight cancels the burst. The guard has 100 health. The legacy wandering enemy is absent from Museum_Main; its prefab remains for regression fixtures.
 
-Imported animations cover idle, walk, armed run, shots, hit reactions and death. A warning tone precedes firing. Root motion is disabled; navigation owns movement. The Inspector shows the current state, decision reason, visibility and last confirmed position in Play Mode.
+Capture shows **Caught - handcuffed**, releases the cursor, and disables movement, equipment and weapons. Restart reloads the encounter with restored health, controls and a non-hostile guard. The arrest attempt is represented by a timed HUD; a dedicated handcuff animation/prop has not been authored. Existing imported locomotion, firing, hit and death animations remain.
 
 ## Setup and validation
 
-Open `Museum_Main` in Edit mode and use **Tools > Lockdown > Connect Pursuer AI in Museum** to rebuild the gameplay prefab, reconnect the actual player, validate four patrol waypoints, and add the scene's single gameplay-signal relay. A dirty scene is copied to `Assets/_Recovery` before setup saves it. The presentation-only prefab remains separate.
+Open Museum_Main in Edit mode. **Tools > Lockdown > Connect Pursuer AI in Museum** rebuilds the gameplay prefab, assigns the actual player and four patrol points, and connects the existing signal relay. Dirty scene work is backed up under `Assets/_Recovery`. Routine tactics updates preserve prefab/scene references rather than rebuilding the environment.
 
-Tune the serialized `PursuerSettings` on the agent. The gameplay prefab requires a player target and patrol points when instantiated outside the museum setup.
+Tune `PursuerSettings` on the brain. The gameplay prefab needs a player target and patrol points outside museum setup. The Inspector exposes state, decision reason, visibility, last confirmed position, retaliation, arrest progress and the interception prediction.
 
-- Nine NUnit Edit Mode tests cover warning/burst timing, cancellation, failed shots, investigation timing, bounded search, sight/occlusion, and formation slots.
-- Legacy combat tests instantiate their own wandering-guard prefab and isolate the pursuer. The saved museum contains only the pursuer.
-- The editor-only `PursuerAIVerification` exercises the actual museum: patrol, chase, turning, occlusion, memory, search/return, noise investigation, real player damage, blocked shots, death cleanup and animation.
-- Runtime checks temporarily shorten inspection/search timers for speed; the saved prefab retains 1.5-second inspection and 14-second search defaults. Test objects and player movements are never saved.
-- Decision timing is recorded with `Pursuer.Decision`. See [the performance log](../AIPerformanceLog.md) and [verification report](../Characters/PursuerAIVerification.txt).
-- Repeat the museum check with `-executeMethod Lockdown.Editor.PursuerAIVerification.RunBatch` in a Unity batch session, without `-quit`; the verifier exits with the result.
+The decision suite covers attack timing, investigation, bounded search, sight, formations, continuous arrest cancellation, observed-motion validity, route savings/arrival feasibility and forward-only cover. The museum verifier exercises actual NavMesh interception, no-fire first contact, arrest/escape, a real player pistol hit from behind, retaliation, pressure, wall blocking, death, capture and restart. Temporary shortened timers and test objects are never saved. Legacy combat tests instantiate test-only guards.
+
+Results and mixed-scenario decision timings are recorded in [the encounter report](../Characters/PursuerAIVerification.txt), [NUnit results](../Characters/PursuerDecisionTests.xml) and [performance log](../AIPerformanceLog.md). These samples are not a steady-state or multi-agent benchmark. Run the museum verifier via the editor request hook or `-executeMethod Lockdown.Editor.PursuerAIVerification.RunBatch` in a separate Unity batch session, without `-quit`.
 
 ## Scope limits
 
-This completes the planned pursuer FSM and its game integration. It does not implement melee, opening doors, adaptive learning, or dynamic spawning. Spawning remains a separate agent's responsibility. Firing uses the existing hitscan weapon rather than the HTML prototype's flying bolts; it does not reproduce that projectile-dodging model or its locked-aim window. The Unity investigation/chase timings are configurable and differ from the HTML reference's two-second loss timer.
-
-A hierarchical FSM, behavior tree, utility-scoring pursuer, or learned policy must not be reported as implemented. The architecture here is an explicit FSM with perception, short-term memory, prioritized evidence, bounded local search and coordinated approach selection.
+No punching/melee attack, door opening, adaptive learning, dynamic spawning, bespoke handcuff animation, or reliable player gunshot-hearing fix is claimed. This is an explicit FSM with evidence memory, bounded search, route-based prediction and tactical forward-cover selection. It is not a behavior tree, hierarchical FSM, learned policy or general utility-scoring system. Interception does not guarantee catching a sprinting player and does not know their intended destination.
