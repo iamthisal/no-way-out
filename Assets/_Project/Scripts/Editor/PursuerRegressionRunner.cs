@@ -24,7 +24,7 @@ namespace Lockdown.Editor
             SessionState.SetString(ResultFile, "Logs/PursuerWandererRegression.xml");
             Runner.Execute(new ExecutionSettings(new Filter {
                 testMode = TestMode.PlayMode,
-                testNames = new[] { "Lockdown.Tests.EnemyShootingTests" }
+                testNames = new[] { "Lockdown.Tests.EnemyShootingTests", "Lockdown.Tests.WanderingEnemyTests" }
             }));
         }
         [MenuItem("Tools/Lockdown/Verify Pursuer Decision Tests")]

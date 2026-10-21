@@ -39,6 +39,7 @@ namespace Lockdown.Editor
             public bool onNavMesh;
             public bool playerVisible;
             public int patrolPoints;
+            public int wanderingEnemies;
         }
 
         private static void CheckRequest()
@@ -71,6 +72,25 @@ namespace Lockdown.Editor
                     PursuerAIBuilder.Connect();
                 }
                 if (command == "stop-play") EditorApplication.isPlaying = false;
+                if (command == "remove-wanderer")
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode) { EditorApplication.isPlaying = false; return; }
+                    if (scene.path != "Assets/_Project/Scenes/Museum/Museum_Main.unity")
+                        throw new InvalidOperationException("Removal requires Museum_Main in Edit mode.");
+                    if (scene.isDirty)
+                    {
+                        Directory.CreateDirectory("Assets/_Recovery");
+                        EditorSceneManager.SaveScene(scene, "Assets/_Recovery/BeforeWandererRemoval_" + DateTime.UtcNow.ToString("yyyyMMdd_HHmmss") + ".unity", true);
+                    }
+                    var enemies = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<Lockdown.Enemies.WanderingEnemy>(true)).ToArray();
+                    foreach (var enemy in enemies) Undo.DestroyObjectImmediate(enemy.gameObject);
+                    if (enemies.Length > 0)
+                    {
+                        EditorSceneManager.MarkSceneDirty(scene);
+                        EditorSceneManager.SaveScene(scene);
+                    }
+                    state.action = "Removed " + enemies.Length + " legacy wandering enemies from the museum.";
+                }
                 if (command == "connect-ai") PursuerAIBuilder.Connect();
                 if (command == "verify-ai") PursuerAIVerification.Start();
                 if (command == "sync")
@@ -97,6 +117,7 @@ namespace Lockdown.Editor
                     }
                 }
                 state.scenePath = scene.path;
+                state.wanderingEnemies = scene.GetRootGameObjects().Sum(root => root.GetComponentsInChildren<Lockdown.Enemies.WanderingEnemy>(true).Length);
                 state.dirty = scene.isDirty;
                 var visual = scene.GetRootGameObjects().FirstOrDefault(root => root.name == "Pursuer_VisualOnly" || root.name == "Pursuer");
                 state.present = visual != null;
