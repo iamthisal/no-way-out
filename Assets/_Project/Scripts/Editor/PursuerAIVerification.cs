@@ -33,6 +33,9 @@ namespace Lockdown.Editor
         private static int phase, initialShots;
         private static float maximumTravel, maximumAnimation, playerHealth;
         private static bool previousBackground;
+        private static int previousTargetFrameRate, previousVSync;
+        private static float previousCaptureDelta;
+        private static bool ownsFrameTiming;
         private static ProfilerRecorder decisionRecorder;
         private static readonly List<string> checks = new List<string>();
         private static readonly string Report = Path.GetFullPath("Logs/PursuerAIVerification.txt");
@@ -66,6 +69,9 @@ namespace Lockdown.Editor
                 Require(Object.FindAnyObjectByType<PursuerStimulusRelay>() != null, "Gameplay noise relay is present");
                 spawn = brain.transform.position; rotation = brain.transform.rotation;
                 previousBackground = Application.runInBackground; Application.runInBackground = true;
+                previousTargetFrameRate = Application.targetFrameRate; previousVSync = QualitySettings.vSyncCount;
+                previousCaptureDelta = Time.captureDeltaTime; ownsFrameTiming = true;
+                Application.targetFrameRate = 60; QualitySettings.vSyncCount = 0; Time.captureDeltaTime = 0f;
                 brain.Settings.searchDuration = 1.5f;
                 brain.Settings.inspectionDuration = 0.3f;
                 brain.Settings.lostTravelTimeout = 2.5f;
@@ -83,7 +89,15 @@ namespace Lockdown.Editor
         private static void Entered(PlayModeStateChange state)
         {
             if (state != PlayModeStateChange.EnteredPlayMode) return;
-            EditorApplication.playModeStateChanged -= Entered; EditorApplication.delayCall += Start;
+            EditorApplication.playModeStateChanged -= Entered;
+            EditorApplication.update -= StartWhenReady;
+            EditorApplication.update += StartWhenReady;
+        }
+        private static void StartWhenReady()
+        {
+            if (!EditorApplication.isPlaying || EditorApplication.isCompiling || EditorApplication.isUpdating) return;
+            EditorApplication.update -= StartWhenReady;
+            Start();
         }
         private static void Assign(Transform target)
         {
@@ -147,7 +161,9 @@ namespace Lockdown.Editor
                         phaseStart = spawn; Next(1, 0.65f); break;
                     case 1:
                         Require((brain.State == PursuerAgent.PursuerState.Approach || brain.State == PursuerAgent.PursuerState.Arrest) && brain.IsPlayerVisible, "First sight approaches for arrest instead of shooting");
-                        Require(nav.speed == brain.Settings.approachSpeed && Vector3.Distance(phaseStart, brain.transform.position) > 0.15f, "Approach moves at configured speed");
+                        Require(nav.speed == brain.Settings.approachSpeed && Vector3.Distance(phaseStart, brain.transform.position) > 0.15f,
+                            "Approach moves at configured speed [speed=" + nav.speed + ", travelled=" + Vector3.Distance(phaseStart, brain.transform.position)
+                            + ", route=" + brain.GetComponent<PursuerController>().RouteStatus() + ", position=" + brain.transform.position + "]");
                         Require(!brain.IsRetaliating && brain.GetComponent<EnemyShooting>().ShotsFired == 0, "Unarmed contact never authorizes weapon fire");
                         nav.updateRotation = false;
                         brain.transform.rotation = Quaternion.LookRotation(brain.transform.position - probe.transform.position);
@@ -414,6 +430,11 @@ namespace Lockdown.Editor
             if (wall != null) Object.DestroyImmediate(wall);
             if (coverWall != null) Object.DestroyImmediate(coverWall);
             Application.runInBackground = previousBackground;
+            if (ownsFrameTiming)
+            {
+                Application.targetFrameRate = previousTargetFrameRate; QualitySettings.vSyncCount = previousVSync;
+                Time.captureDeltaTime = previousCaptureDelta; ownsFrameTiming = false;
+            }
             if (decisionRecorder.Valid)
             {
                 var samples = decisionRecorder.ToArray();
