@@ -5,16 +5,20 @@ The museum heist runs as a chain of missions, built one small step at a time on
 
 ## The plan
 
-1. **Hammer.** Start in the lobby. Sneak past the toy soldier guard, take the
-   keycard from the back of Stone Age, and sneak back to unlock the Storage room,
-   where the hammer waits on the workbench.
+1. **Hammer and keycard.** Start in the lobby. Storage is open from Central Hall,
+   and the hammer waits on its workbench. Sneak past the toy soldier guard to the
+   back of Stone Age for the staff keycard. It opens Storage's back doors into the
+   Staff Corridor.
 2. **Alarm.** Breaking glass, or being spotted by the guard, sets off the alarm.
-   Glass still calls the security hounds, and the alarm also sends two rolling
-   robots that hunt by sound and fire lasers. A guard who spots you whistles and
-   chases you briefly with a cap rifle, then goes back to patrolling.
-3. **Security room.** Break the Security room lock with the hammer. Its computer
-   turns the alarm off, which sends the robots back to their chargers. The gun in
-   the Security room defeats the guard.
+   Glass also calls the security hounds, and the alarm sends two rolling robots
+   that hunt by sound and fire lasers. A guard who spots you whistles and chases
+   you briefly with a cap rifle, then goes back to patrolling. Breaking glass
+   always brings the guard over to look.
+3. **Security room.** From the Staff Corridor, break the Security room lock with
+   the hammer; its lobby door is sealed. The computer switches the alarm system
+   off for good, which sends the robots back to their chargers. After that,
+   breaking glass brings only the guard and the hounds, never the robots. The gun
+   in the Security room defeats the guard.
 4. **Dinosaur room.** Looting Natural History wakes two skeletons. Defeating them
    reveals a skeleton key that opens the barred gates into Egypt.
 5. **Egypt.** Complete the mummy curse. The goal is the four necklaces, and the
@@ -23,35 +27,54 @@ The museum heist runs as a chain of missions, built one small step at a time on
 Dying sends you back to the lobby with every finished mission's items and your
 loot, with the alarm off.
 
-## Step 1: the Storage keycard
+## Mission doors
 
-- **Locked doors.** All three Storage doors (D06 from Central Hall, D07 and D08
-  from the Staff Corridor) start locked. While locked, the prompt reads
-  "Locked. Needs the Storage keycard" and the door does not move.
-- **Card readers.** Each door has a card reader whose light shows red while locked
-  and green once unlocked. Placement reuses the readers the World Builder already
-  mounted by D07 and D08, and adds readers outside D06 and D07.
-- **The keycard.** It stands on a walnut plinth in the north-west nook of Stone
-  Age, between the west wall and the wall case. It is hidden from the Greece / Rome
-  doorway by the standing stones. Press **E** to take it.
-- **Unlocking.** With the keycard, the prompt reads "Unlock with the Storage
-  keycard". Pressing **E** unlocks the door and opens it, and it then behaves like
-  any other door.
-- **The hammer.** It stays on the Storage workbench.
-- **How it works.** `DoorLock` sits on a door's hinge beside `Door`, and `Door`
-  asks it before moving. Keys are ids held by `PlayerKeys` on the player.
-  `KeyPickup` adds its id when taken.
-- **Building it.** **Tools > Lockdown > Missions > Build Storage Keycard** builds
-  the prefab. **Tools > Lockdown > Missions > Place Storage Keycard and Locks**
-  adds the `Missions` root, the keycard, the readers and the locks.
+`MissionBuilder.DoorLocks` lists every mission door. **Tools > Lockdown > Missions >
+Place Staff Keycard and Door Locks** brings the scene in line with it, and is safe
+to run again.
+
+| Door | Between | Lock |
+|---|---|---|
+| D06 | Central Hall and Storage | None |
+| D07, D08 | Storage and Staff Corridor | Staff keycard |
+| D09 | Staff Corridor and Security | Breaks with the hammer |
+| D10 | Lobby and Security | Sealed |
+
+- **Prompts.** "Locked. Needs the staff keycard", then "Unlock with the staff
+  keycard" once you carry it. A breakable lock reads "Locked. Break the lock with
+  the hammer". A sealed door reads "This door is sealed".
+- **Card readers.** Each locked door has a reader on the side you come from. It
+  shows red while locked, green once unlocked, and goes dark when smashed.
+  Placement reuses the World Builder's readers and adds one only where that side
+  has none.
+- **How it works.**
+  - `DoorLock` sits on the door's hinge beside `Door`, and `Door` asks it before
+    moving.
+  - Keys are ids held by `PlayerKeys` on the player.
+  - A breakable lock takes damage from blows to the door leaf: one hammer blow
+    (100), or four pistol shots.
+  - `Unlock()` releases any lock from a script.
+
+## Step 1: the staff keycard
+
+- **Where it is.** The keycard stands on a walnut plinth in the north-west nook of
+  Stone Age, between the west wall and the wall case. The standing stones hide it
+  from the Greece / Rome doorway.
+- **Taking it.** Press **E**. `KeyPickup` adds `StaffKeycard` to the player's keys.
+- **The hammer.** It stays on the Storage workbench, open to anyone.
+- **Building it.** **Tools > Lockdown > Missions > Build Staff Keycard** builds the
+  prefab.
 
 ### Testing (step 1)
 
-`Lockdown.Tests.Missions` checks that a lock opens only for its own key and that
-its reader light changes colour. In the museum it checks that all three Storage
-doors refuse to open, that the keycard in Stone Age can be taken, that each door
-then opens, and that the hammer is still inside. `DoorTests` gives its test player
-the keycard, so its sweep of every interior door still covers Storage.
+`StaffKeycardTests`:
+
+- a lock opens only for its own key, and its reader light changes colour;
+- in the museum, Storage opens from Central Hall and the hammer is inside;
+- the back doors refuse to open until the keycard in Stone Age is taken, then
+  open.
+
+`DoorTests` releases every mission lock before its sweep of every door.
 
 ## Step 2: the guard patrol and the alarm
 
@@ -69,8 +92,8 @@ placeholder model.
 At each stop he pauses for 2.5 s and sweeps his gaze 50 degrees left and right.
 
 - **Where he can't go.** He skips Egypt, which will be barred. Closed doors carve
-  the NavMesh, so the Storage and Security rooms are out of reach, and so are the
-  toilets once their doors are shut. A closed toilet makes a hiding place.
+  the NavMesh, so he can't pass any closed door. A shut toilet makes a hiding
+  place.
 - **His first move.** He starts in Central Hall and heads north, away from the
   player in the lobby. He can't spot anyone in the first 2 s.
 
@@ -88,9 +111,13 @@ glimpse of your head or chest counts, but walls and display cases block his view
 - **Giving up.** If he hasn't seen you for 8 s, he goes back to the nearest stop
   on his route.
 
+**His hearing.** Breaking glass within 30 m brings him hurrying over to the spot.
+He turns about, looking, for 5 s, then goes back to his route. If he sees you on
+the way, the usual "?" and chase follow.
+
 **The alarm.** `MuseumAlarm` sits on the `Missions` root. Once raised, it plays a
-siren loop and flashes **ALARM** on the HUD's top row. For now it stays on; in
-step 3 the Security computer turns it off, and breaking glass raises it too.
+siren loop and flashes **ALARM** on the HUD's top row. Breaking glass and the
+guard spotting you raise it.
 
 **How it's built.**
 
@@ -123,35 +150,34 @@ destination.
 
 ## Step 3: the Security room
 
-- **The locks.** Both Security doors (D09 from the Staff Corridor, D10 from the
-  lobby) have breakable locks. The prompt reads "Locked. Break the lock with the
-  hammer".
-- **Breaking in.** One hammer blow to the door breaks its lock, and the card
-  reader light goes dark. Pistol shots also count: four of them, at 25 damage each,
-  reach the lock's strength of 100. Breaking a lock is quiet and does not raise the
-  alarm. The door then opens normally with **E**.
-- **The computer.** The desk computer (`AlarmConsole` on `P_Security_DeskMonitor`)
-  shows a red screen while the alarm is on. Press **E** at it ("Turn off the
-  alarm") to turn the alarm off; the screen goes back to blue. When the alarm is
-  already off it reads "Security console: all quiet".
-- **Glass sets off the alarm.** Breaking any display glass now raises the alarm,
-  as well as calling the hounds. `MuseumAlarm` listens to every `BreakableGlass`.
+- **Getting in.** Reach the Security room from the Staff Corridor through D09 and
+  break its lock with one hammer blow. Breaking it is quiet. D10 from the lobby is
+  sealed.
+- **The computer.** It is the desk computer (`AlarmConsole` on
+  `P_Security_DeskMonitor`). Its screen shows blue while the system is armed and
+  red during the alarm.
+- **Switching off.** Press **E** at it ("Turn off the alarm", or "Switch off the
+  alarm system" before anything has gone off). The system goes offline for good
+  and the screen goes dark.
+- **After that.** `MuseumAlarm.Disable` keeps anything from raising the alarm
+  again. Breaking glass still calls the hounds and brings the guard over to look,
+  but never the robots.
 - **The skeleton archer is out.** It is removed from the museum for now; its code
   and prefab stay. The dinosaur-room step will bring skeletons back.
-- **Building it.** **Tools > Lockdown > Missions > Place Security Room Locks and
-  Console** adds the locks, reusing the World Builder's card readers by both
-  doors. It also wires the console and removes the archer.
+- **Building it.** **Tools > Lockdown > Missions > Place Security Console** wires
+  the computer and removes the archer. The door locks come from the mission door
+  table.
 
 ### Testing (step 3)
 
 `SecurityRoomTests`:
 
-- **Lock rules:** a breakable lock gives way to one hammer blow but not to one
-  pistol shot, and keycard locks ignore damage.
-- **Breaking in:** in the museum the hammer quietly breaks both Security locks and
-  the doors open.
-- **The computer:** it turns a raised alarm off.
-- **Glass:** breaking display glass raises the alarm.
+- **Lock rules:** a breakable lock gives way to one hammer blow but not to a pistol
+  shot. Keycard and sealed locks ignore damage.
+- **Getting in:** in the museum the hammer quietly breaks D09's lock, but D10 stays
+  sealed.
+- **The computer:** it switches the alarm off for good, so neither the guard nor
+  glass can raise it again.
+- **Glass:** breaking display glass raises the alarm. Once the alarm is off, glass
+  brings the guard over to look.
 - **The archer:** it is gone.
-
-`DoorTests` smashes the breakable locks before its sweep of every door.
