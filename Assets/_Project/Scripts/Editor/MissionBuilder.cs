@@ -73,7 +73,18 @@ namespace Lockdown.Editor
                 // A faint glow keeps the card readable in the dim corner it waits in.
                 { "Mission_Keycard", (new Color(0.86f, 0.87f, 0.88f), 0.55f, 0.35f) },
                 { "Mission_KeycardStripe", (new Color(0.10f, 0.45f, 0.95f), 0.6f, 3f) },
+                { "Mission_RobotShell", (new Color(0.82f, 0.84f, 0.86f), 0.7f, 0f) },
+                { "Mission_RobotTrim", (new Color(0.92f, 0.52f, 0.08f), 0.5f, 0f) },
+                { "Mission_RobotHead", (new Color(0.12f, 0.13f, 0.15f), 0.6f, 0f) },
+                { "Mission_RobotEye", (new Color(0.1f, 0.4f, 1f), 0.8f, 2f) },
+                { "Mission_RobotPad", (new Color(0.05f, 0.35f, 0.45f), 0.4f, 0.8f) },
             };
+
+        // Mission step 5: two security robots rest on chargers in the Security room, beside the sealed lobby
+        // door they use as their bay door. Both docks are clear of the inward swing of the corridor door.
+        public const string RobotPrefabPath = "Assets/_Project/Prefabs/Characters/SecurityRobot.prefab";
+        private const string BayDoor = "Door_D10_Security";
+        private static readonly Vector3[] RobotDocks = { new Vector3(6f, 0f, -7.3f), new Vector3(6f, 0f, -8.9f) };
 
         [MenuItem("Tools/Lockdown/Missions/Build Staff Keycard")]
         public static void BuildKeycard()
@@ -325,6 +336,170 @@ namespace Lockdown.Editor
             Debug.Log("The pistol now waits in the Security room locker. Save the scene.");
         }
 
+        [MenuItem("Tools/Lockdown/Missions/Build Security Robot")]
+        public static void BuildRobot()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Stop Play mode before building the robot.");
+            EnsureFolder(MaterialFolder);
+            var root = new GameObject("SecurityRobot");
+            try
+            {
+                var agent = root.AddComponent<NavMeshAgent>();
+                agent.radius = 0.32f;
+                agent.height = 0.95f;
+                agent.speed = 2.6f;
+                agent.angularSpeed = 300f;
+                agent.acceleration = 8f;
+                agent.stoppingDistance = 0.3f;
+                var health = root.AddComponent<Lockdown.Combat.Health>();
+                var serializedHealth = new SerializedObject(health);
+                // Three pistol shots (25 each), or one hammer blow.
+                serializedHealth.FindProperty("maxHealth").floatValue = 75f;
+                serializedHealth.ApplyModifiedPropertiesWithoutUndo();
+                var hitBox = root.AddComponent<SphereCollider>();
+                hitBox.center = new Vector3(0f, 0.45f, 0f);
+                hitBox.radius = 0.42f;
+
+                var belly = new GameObject("Belly").transform;
+                belly.SetParent(root.transform, false);
+                belly.localPosition = new Vector3(0f, 0.35f, 0f);
+                Slab(belly, "Shell", Vector3.zero, Vector3.one * 0.7f, MaterialFor("Mission_RobotShell"), PrimitiveType.Sphere);
+                // Two painted bands across the belly show it rolling.
+                Slab(belly, "BandA", Vector3.zero, new Vector3(0.712f, 0.02f, 0.712f), MaterialFor("Mission_RobotTrim"), PrimitiveType.Cylinder);
+                Slab(belly, "BandB", Vector3.zero, new Vector3(0.712f, 0.02f, 0.712f), MaterialFor("Mission_RobotTrim"), PrimitiveType.Cylinder)
+                    .transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                var head = new GameObject("Head").transform;
+                head.SetParent(root.transform, false);
+                head.localPosition = new Vector3(0f, 0.7f, 0f);
+                Slab(head, "Dome", Vector3.zero, new Vector3(0.46f, 0.3f, 0.46f), MaterialFor("Mission_RobotHead"), PrimitiveType.Sphere);
+                var eye = Slab(head, "Eye", new Vector3(0f, 0.04f, 0.2f), Vector3.one * 0.13f, MaterialFor("Mission_RobotEye"), PrimitiveType.Sphere);
+                var muzzle = new GameObject("Muzzle").transform;
+                muzzle.SetParent(head, false);
+                muzzle.localPosition = new Vector3(0f, 0.04f, 0.29f);
+                var beam = muzzle.gameObject.AddComponent<LineRenderer>();
+                beam.useWorldSpace = true;
+                beam.positionCount = 2;
+                beam.startWidth = beam.endWidth = 0.025f;
+                beam.sharedMaterial = LaserMaterial();
+                beam.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                beam.receiveShadows = false;
+                beam.enabled = false;
+
+                var laser = root.AddComponent<Lockdown.Enemies.RobotLaser>();
+                SetReferences(laser, ("muzzle", muzzle), ("beam", beam), ("eye", eye.GetComponent<Renderer>()),
+                    ("zap", Sound(root.transform, "Zap", "RobotLaser", false, 1f)));
+                var robot = root.AddComponent<Lockdown.Enemies.SecurityRobot>();
+                SetReferences(robot, ("belly", belly), ("head", head),
+                    ("hum", Sound(root.transform, "Hum", "RobotHum", true, 0.45f)),
+                    ("powerUp", Sound(root.transform, "PowerUp", "RobotPowerUp", false, 0.8f)),
+                    ("breakdown", Sound(root.transform, "Breakdown", "RobotBreakdown", false, 1f)));
+                EnsureFolder("Assets/_Project/Prefabs/Characters");
+                PrefabUtility.SaveAsPrefabAsset(root, RobotPrefabPath);
+            }
+            finally { Object.DestroyImmediate(root); }
+            AssetDatabase.SaveAssets();
+            Debug.Log("Security robot prefab built at " + RobotPrefabPath + ".");
+        }
+
+        [MenuItem("Tools/Lockdown/Missions/Place Security Robots")]
+        public static void PlaceRobots()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != ScenePath)
+                throw new InvalidOperationException("Open Museum_Main in Edit mode first.");
+            var missions = scene.GetRootGameObjects().FirstOrDefault(r => r.name == "Missions")
+                ?? throw new InvalidOperationException("Place the mission set-up and the alarm first.");
+            if (missions.GetComponentInChildren<MuseumAlarm>(true) == null) throw new InvalidOperationException("Place the guard patrol and alarm first.");
+            var existing = missions.transform.Find("RobotBay");
+            if (existing != null) { Selection.activeGameObject = existing.gameObject; return; }
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(RobotPrefabPath) == null) BuildRobot();
+            var doorRoot = GameObject.Find("Museum/Doors/" + BayDoor) ?? throw new InvalidOperationException("Missing door " + BayDoor + ".");
+            var door = doorRoot.GetComponentInChildren<Door>(true);
+
+            var bay = new GameObject("RobotBay");
+            Undo.RegisterCreatedObjectUndo(bay, "Place security robots");
+            bay.transform.SetParent(missions.transform, false);
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RobotPrefabPath);
+            var robots = new List<Lockdown.Enemies.SecurityRobot>();
+            for (int i = 0; i < RobotDocks.Length; i++)
+            {
+                if (!NavMesh.SamplePosition(RobotDocks[i], out var floor, 0.3f, NavMesh.AllAreas))
+                    throw new InvalidOperationException("Robot dock " + RobotDocks[i] + " is off the NavMesh.");
+                // The NavMesh floats a little above the floor; the charger sits on the floor itself.
+                Slab(bay.transform, "Charger_" + (i + 1), new Vector3(RobotDocks[i].x, 0.011f, RobotDocks[i].z), new Vector3(0.8f, 0.01f, 0.8f),
+                    MaterialFor("Mission_RobotPad"), PrimitiveType.Cylinder);
+                var robot = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
+                robot.name = "SecurityRobot_" + (i + 1);
+                robot.transform.SetParent(bay.transform, true);
+                // Facing the bay door, ready to roll out.
+                robot.transform.SetPositionAndRotation(floor.position, Quaternion.LookRotation(Vector3.left));
+                robots.Add(robot.GetComponent<Lockdown.Enemies.SecurityRobot>());
+            }
+
+            // A barrier in the doorway keeps the player out while the door stands open for the robots.
+            var leaf = LeafBounds(door);
+            var barrier = new GameObject("RobotBarrier");
+            barrier.layer = LayerMask.NameToLayer("Ignore Raycast");
+            barrier.transform.SetParent(bay.transform, false);
+            barrier.transform.position = new Vector3(leaf.center.x, 1.2f, leaf.center.z);
+            var block = barrier.AddComponent<BoxCollider>();
+            block.size = leaf.size.z > leaf.size.x ? new Vector3(0.3f, 2.4f, leaf.size.z) : new Vector3(leaf.size.x, 2.4f, 0.3f);
+            block.enabled = false;
+
+            var robotBay = bay.AddComponent<Lockdown.Enemies.RobotBay>();
+            var serialized = new SerializedObject(robotBay);
+            serialized.FindProperty("door").objectReferenceValue = door;
+            serialized.FindProperty("barrier").objectReferenceValue = block;
+            var list = serialized.FindProperty("robots");
+            list.arraySize = robots.Count;
+            for (int i = 0; i < robots.Count; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = robots[i];
+            serialized.ApplyModifiedProperties();
+            EditorSceneManager.MarkSceneDirty(scene);
+            Selection.activeGameObject = bay;
+            Debug.Log("Two security robots wait on their chargers in the Security room; " + BayDoor + " is their bay door. Save the scene.");
+        }
+
+        private static AudioSource Sound(Transform parent, string name, string clip, bool loop, float volume)
+        {
+            var holder = new GameObject(name);
+            holder.transform.SetParent(parent, false);
+            holder.transform.localPosition = new Vector3(0f, 0.6f, 0f);
+            var source = holder.AddComponent<AudioSource>();
+            source.clip = Clip(clip);
+            source.loop = loop;
+            source.volume = volume;
+            source.playOnAwake = false;
+            source.spatialBlend = 1f;
+            source.rolloffMode = AudioRolloffMode.Linear;
+            source.minDistance = 2f;
+            source.maxDistance = 22f;
+            return source;
+        }
+
+        private static void SetReferences(Object target, params (string field, Object value)[] fields)
+        {
+            var serialized = new SerializedObject(target);
+            foreach (var (field, value) in fields)
+            {
+                var property = serialized.FindProperty(field) ?? throw new InvalidOperationException(target.GetType().Name + " has no field " + field);
+                property.objectReferenceValue = value;
+            }
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static Material LaserMaterial()
+        {
+            string path = MaterialFolder + "/Mission_Laser.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material != null) return material;
+            var shader = Shader.Find("Universal Render Pipeline/Unlit") ?? throw new InvalidOperationException("URP Unlit shader is missing.");
+            material = new Material(shader) { name = "Mission_Laser" };
+            material.SetColor("_BaseColor", new Color(1f, 0.12f, 0.08f));
+            AssetDatabase.CreateAsset(material, path);
+            return material;
+        }
+
         private static AudioClip Clip(string name)
         {
             var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(AudioFolder + "/" + name + ".wav");
@@ -391,9 +566,10 @@ namespace Lockdown.Editor
             reader.GetComponentsInChildren<Renderer>(true).FirstOrDefault(r => r.name.Contains("Indicator"))
             ?? throw new InvalidOperationException(reader.name + " has no indicator light.");
 
-        private static GameObject Slab(Transform parent, string name, Vector3 position, Vector3 size, Material material)
+        private static GameObject Slab(Transform parent, string name, Vector3 position, Vector3 size, Material material,
+            PrimitiveType shape = PrimitiveType.Cube)
         {
-            var slab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var slab = GameObject.CreatePrimitive(shape);
             slab.name = name;
             Object.DestroyImmediate(slab.GetComponent<Collider>());
             slab.transform.SetParent(parent, false);
