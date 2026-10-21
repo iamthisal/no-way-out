@@ -41,11 +41,12 @@ namespace Lockdown.Editor
             ("Duamutef", new Vector3(-3.95f, 0f, 21.38f), Vector3.left),
             ("Qebehsenuef", new Vector3(-3.95f, 0f, 15.45f), Vector3.left),
         };
-        // Decor that sat in those corners moves to clear wall space in the same gallery.
+        // Decor that sat in those corners moves to clear wall space in the same gallery,
+        // keeping both ends of the wall case open so its loot can still be reached.
         private static readonly (string name, Vector2 from, Vector2 to)[] DecorMoves =
         {
-            ("P_Egypt_Plant", new Vector2(-9.5f, 15.2f), new Vector2(-9.9f, 16.75f)),
-            ("P_Egyptian_Column", new Vector2(-9.5f, 20.9f), new Vector2(-9.75f, 19.95f)),
+            ("P_Egypt_Plant", new Vector2(-9.5f, 15.2f), new Vector2(-3.95f, 19.0f)),
+            ("P_Egyptian_Column", new Vector2(-9.5f, 20.9f), new Vector2(-3.95f, 16.75f)),
             ("P_Egypt_CornerFeature", new Vector2(-4.5f, 21.3f), new Vector2(-4.2f, 18.0f)),
         };
         // One jar per gallery, spread around the museum.
@@ -463,6 +464,7 @@ namespace Lockdown.Editor
                 var sarcophagus = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath("Sarcophagus_", god)), scene);
                 sarcophagus.transform.SetParent(curseRoot.transform, true);
                 sarcophagus.transform.SetPositionAndRotation(position, rotation);
+                FitLidSwing(sarcophagus.GetComponent<Sarcophagus>());
                 var mummy = (GameObject)PrefabUtility.InstantiatePrefab(mummyPrefab, scene);
                 mummy.name = "Mummy_" + god;
                 mummy.transform.SetParent(curseRoot.transform, true);
@@ -499,6 +501,41 @@ namespace Lockdown.Editor
                 prop.position = new Vector3(to.x, before.y, to.y);
                 Debug.Log("Moved " + name + " from " + before + " to " + prop.position + " to clear an Egypt gallery corner for a sarcophagus.");
             }
+        }
+
+        // A corner coffin hinged on its wall side would swing its lid into the wall: stop the lid a few degrees short of anything in its way.
+        private static void FitLidSwing(Sarcophagus sarcophagus)
+        {
+            var serialized = new SerializedObject(sarcophagus);
+            var lid = (Transform)serialized.FindProperty("lid").objectReferenceValue;
+            var openAngle = serialized.FindProperty("openAngle");
+            var filter = lid.GetComponentInChildren<MeshFilter>();
+            float sign = Sarcophagus.SwingSign(lid, sarcophagus.transform.forward);
+            var probe = new GameObject("LidProbe").AddComponent<BoxCollider>();
+            try
+            {
+                probe.center = filter.sharedMesh.bounds.center;
+                probe.size = filter.sharedMesh.bounds.size;
+                probe.transform.localScale = filter.transform.lossyScale;
+                for (int angle = 1; angle <= openAngle.floatValue; angle++)
+                {
+                    var swing = Quaternion.AngleAxis(angle * sign, Vector3.up);
+                    probe.transform.SetPositionAndRotation(lid.position + swing * (filter.transform.position - lid.position), swing * filter.transform.rotation);
+                    Physics.SyncTransforms();
+                    var bounds = probe.bounds;
+                    foreach (var other in Physics.OverlapBox(bounds.center, bounds.extents, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore))
+                    {
+                        if (other == probe || other.transform.IsChildOf(sarcophagus.transform)) continue;
+                        if (!Physics.ComputePenetration(probe, probe.transform.position, probe.transform.rotation,
+                                other, other.transform.position, other.transform.rotation, out _, out float depth) || depth < 0.005f) continue;
+                        openAngle.floatValue = Mathf.Max(30f, angle - 3f);
+                        serialized.ApplyModifiedProperties();
+                        Debug.Log(sarcophagus.name + "'s lid would touch " + other.name + " at " + angle + " degrees, so it opens to " + openAngle.floatValue + ".");
+                        return;
+                    }
+                }
+            }
+            finally { Object.DestroyImmediate(probe.gameObject); }
         }
 
         private static void Carve(GameObject target)

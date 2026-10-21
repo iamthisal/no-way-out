@@ -23,9 +23,12 @@ so players can match them up.
 
 The south-east corner is the south doorway (D13), so Qebehsenuef's sarcophagus
 stands on the east wall just north of the door. Placement moves three decor props
-out of the corners within the same gallery: the plant, the column and the corner
-feature. The pyramid display, wall case, covered crate and the original standing
-sarcophagus are unchanged.
+out of the corners to the east wall of the same gallery: the plant, the column and
+the corner feature. Both ends of the wall case stay clear, so its loot can still be
+reached. The pyramid display, wall case, covered crate and the original standing
+sarcophagus are unchanged. Imsety's and Duamutef's lids are hinged on their wall
+side, so placement stops each lid a few degrees before it would touch the wall
+(88 degrees instead of 105).
 
 1. **Sealed jars.** A jar is sealed while its mummy is still in its sarcophagus.
    Its glaze pulses, hits only make a dull knock, and the HUD says to open the

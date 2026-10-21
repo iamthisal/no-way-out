@@ -30,11 +30,16 @@ namespace Lockdown.Enemies
         {
             if (lid == null) return;
             closedRotation = lid.rotation;
-            // Swing the lid outward: the direction that carries its middle forward, away from the case.
+            openSign = SwingSign(lid, transform.forward);
+        }
+
+        // Swing the lid outward: the direction that carries its middle forward, away from the case.
+        public static float SwingSign(Transform lid, Vector3 forward)
+        {
             var renderer = lid.GetComponentInChildren<Renderer>();
             Vector3 centre = renderer != null ? renderer.bounds.center : lid.position;
             Vector3 swung = lid.position + Quaternion.AngleAxis(60f, Vector3.up) * (centre - lid.position);
-            openSign = Vector3.Dot(swung - centre, transform.forward) >= 0f ? 1f : -1f;
+            return Vector3.Dot(swung - centre, forward) >= 0f ? 1f : -1f;
         }
 
         public void Open()
