@@ -476,8 +476,12 @@ MonoBehaviour:
     obstructedHearing: 0.5
     investigateTimeout: 12
     inspectionDuration: 1.5
-    searchDuration: 14
-    searchRadius: 3
+    searchDuration: 18
+    searchRadius: 4
+    lostTravelTimeout: 12
+    cornerSearchDistance: 6
+    searchPointTimeout: 5
+    searchScanDuration: 1.5
     attackRange: 8
     aimWarning: 0.65
     burstInterval: 0.18
