@@ -14,9 +14,12 @@ namespace Lockdown.AI.Agents
         public void Observe(Vector3 position, float now)
         {
             float dt = now - observedAt;
+            // Fast render frames are not separate motion samples. Accumulate enough
+            // visible time to measure velocity instead of clearing it every frame.
+            if (continuous && dt >= 0f && dt < 0.02f) return;
             Vector3 displacement = position - LastPosition; displacement.y = 0f;
             // Never treat a teleport or movement during an unseen interval as observed velocity.
-            Velocity = continuous && dt > 0.001f && dt < 0.5f && displacement.magnitude / dt <= 8f
+            Velocity = continuous && dt > 0f && dt < 0.5f && displacement.magnitude / dt <= 8f
                 ? Vector3.ClampMagnitude(displacement / dt, 7f) : Vector3.zero;
             LastPosition = position; observedAt = now; continuous = true;
         }
