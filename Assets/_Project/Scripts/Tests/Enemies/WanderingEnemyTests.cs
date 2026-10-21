@@ -74,7 +74,14 @@ namespace Lockdown.Tests
                     Assert.That(agent.pathStatus, Is.EqualTo(NavMeshPathStatus.PathComplete));
             }
             Assert.That(maximumTravel, Is.GreaterThan(0.5f), "The enemy should actually move, not just pick a destination.");
-            Assert.That(Vector3.Distance(agent.destination, enemy.WanderOrigin), Is.LessThanOrEqualTo(enemy.WanderRadius + 0.05f));
+            if (enemy.IsPatrolling)
+            {
+                // As the mission guard he walks his patrol route instead of wandering round his post.
+                bool headingForStop = false;
+                for (int i = 0; i < enemy.StopCount; i++) headingForStop |= Vector3.Distance(agent.destination, enemy.Stop(i)) < 0.6f;
+                Assert.That(headingForStop, Is.True, "The guard walks between his patrol stops.");
+            }
+            else Assert.That(Vector3.Distance(agent.destination, enemy.WanderOrigin), Is.LessThanOrEqualTo(enemy.WanderRadius + 0.05f));
 
             var player = Object.FindFirstObjectByType<FirstPersonController>();
             var weapon = player.GetComponentInChildren<FirstPersonWeapon>(true);
