@@ -31,5 +31,11 @@ The complete implementation at `951aebc` passed 21 decision/component tests and 
 
 No commits are cherry-picked, squashed, rebased or backdated. Review branches point to existing commit boundaries. The original `Ai/pursuer` and `Ai/pursuer-completion` branches are retained. Uncommitted project settings, recovery assets and the pre-existing stash are excluded from this split.
 
-This task creates and publishes review branches only; it does not create PRs or merge anything.
+## Combined develop integration
+
+`Ai/pursuer-develop-integration` brings the complete implementation together for one PR into `develop`. It merges `develop` at `9ff0465`, preserving the original commits and the separate review branches above.
+
+The museum scene conflict was resolved by retaining the current lighting objects and all local scene references, keeping the pursuer/route/signal setup, and preserving the intentional removal of the legacy wandering enemy. The incoming Hound noise scripts are retained unchanged. Separate integration verification results are recorded in `Docs/Characters/PursuerDevelopIntegration.txt` and `Docs/Characters/PursuerDevelopDecisionTests.xml` when available.
+
+The existing skeleton-archer and canopic-mummy PRs are outside this integration. They are not merged or otherwise changed by the pursuer PR.
 
