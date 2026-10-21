@@ -1,0 +1,5 @@
+{
+  "name": "Lockdown.Tests.Missions",
+  "references": ["Lockdown.Runtime", "Lockdown.Interfaces", "Unity.InputSystem"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

@@ -177,6 +177,8 @@ namespace Lockdown.Tests
                 foreach (var shooting in root.GetComponentsInChildren<Lockdown.Enemies.EnemyShooting>(true)) shooting.enabled = false;
                 foreach (var otherPlayer in root.GetComponentsInChildren<FirstPersonController>(true)) otherPlayer.gameObject.SetActive(false);
             }
+            // The Storage doors are locked until the Stone Age keycard is found; this sweep checks how doors move.
+            PlayerKeys.For(player.gameObject).Add("StorageKeycard");
             int count = 0;
             foreach (var root in museum.GetRootGameObjects())
             {
