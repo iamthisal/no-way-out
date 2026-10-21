@@ -28,6 +28,8 @@ namespace Lockdown.Editor
         // The card faces out of the nook, toward a player coming round the standing stones.
         private static readonly Vector3 KeycardFacing = new Vector3(0.45f, 0f, -1f);
         private static readonly Vector3 StorageCentre = new Vector3(9.5f, 0f, 1f);
+        public static readonly string[] SecurityDoors = { "Door_D09_Security", "Door_D10_Security" };
+        private static readonly Vector3 SecurityCentre = new Vector3(8f, 0f, -8.5f);
         private const float ReaderHeight = 1.37f;
         // A reader this close to a door's leaf (the World Builder mounted several) belongs to that door.
         private const float ReaderReach = 1.6f;
@@ -135,8 +137,8 @@ namespace Lockdown.Editor
                 var door = doorRoot != null ? doorRoot.GetComponentInChildren<Door>(true) : null;
                 if (door == null) throw new InvalidOperationException("Missing door " + name + ".");
                 // Reuse the readers already beside this door, and add one only where the outside has none.
-                var indicators = ReadersBeside(scene, door, out bool outsideCovered);
-                if (!outsideCovered) indicators.Add(PlaceReader(reader, readers, door, name));
+                var indicators = ReadersBeside(scene, door, StorageCentre, out bool outsideCovered);
+                if (!outsideCovered) indicators.Add(PlaceReader(reader, readers, door, name, StorageCentre));
                 var doorLock = door.GetComponent<DoorLock>();
                 if (doorLock == null) doorLock = Undo.AddComponent<DoorLock>(door.gameObject);
                 var serialized = new SerializedObject(doorLock);
@@ -228,6 +230,61 @@ namespace Lockdown.Editor
             Debug.Log("The guard now patrols " + stops.Length + " stops from Central Hall to Stone Age and back through the west galleries. Save the scene.");
         }
 
+        // Mission step 3: the hammer quietly breaks the Security room's locks, and its computer turns the
+        // alarm off. The skeleton archer leaves the museum until the dinosaur-room step brings skeletons back.
+        [MenuItem("Tools/Lockdown/Missions/Place Security Room Locks and Console")]
+        public static void PlaceSecurityRoom()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != ScenePath)
+                throw new InvalidOperationException("Open Museum_Main in Edit mode first.");
+            var reader = AssetDatabase.LoadAssetAtPath<GameObject>(ReaderPrefabPath)
+                ?? throw new InvalidOperationException("Missing card reader prefab: " + ReaderPrefabPath);
+            var missions = scene.GetRootGameObjects().FirstOrDefault(r => r.name == "Missions")
+                ?? throw new InvalidOperationException("Place the Storage keycard and locks first.");
+            var readers = missions.transform.Find("StorageReaders");
+            var doors = GameObject.Find("Museum/Doors") ?? throw new InvalidOperationException("Museum/Doors is missing.");
+            foreach (var name in SecurityDoors)
+            {
+                var doorRoot = doors.transform.Find(name);
+                var door = doorRoot != null ? doorRoot.GetComponentInChildren<Door>(true) : null;
+                if (door == null) throw new InvalidOperationException("Missing door " + name + ".");
+                var indicators = ReadersBeside(scene, door, SecurityCentre, out bool outsideCovered);
+                if (!outsideCovered) indicators.Add(PlaceReader(reader, readers, door, name, SecurityCentre));
+                var doorLock = door.GetComponent<DoorLock>();
+                if (doorLock == null) doorLock = Undo.AddComponent<DoorLock>(door.gameObject);
+                var serialized = new SerializedObject(doorLock);
+                serialized.FindProperty("keyId").stringValue = "";
+                serialized.FindProperty("keyName").stringValue = "";
+                serialized.FindProperty("breakable").boolValue = true;
+                var list = serialized.FindProperty("indicators");
+                list.arraySize = indicators.Count;
+                for (int i = 0; i < indicators.Count; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = indicators[i];
+                serialized.ApplyModifiedProperties();
+            }
+
+            var monitor = GameObject.Find("Museum/Decoration/Decor_Security/P_Security_DeskMonitor")
+                ?? throw new InvalidOperationException("The Security room's desk monitor is missing.");
+            if (monitor.GetComponent<Collider>() == null) Undo.AddComponent<BoxCollider>(monitor);
+            var console = monitor.GetComponent<AlarmConsole>();
+            if (console == null) console = Undo.AddComponent<AlarmConsole>(monitor);
+            var screen = monitor.GetComponentsInChildren<Renderer>(true).FirstOrDefault(r => r.name == "M_Museum_DeepBlue")
+                ?? throw new InvalidOperationException("The desk monitor has no screen.");
+            var serializedConsole = new SerializedObject(console);
+            serializedConsole.FindProperty("screen").objectReferenceValue = screen;
+            serializedConsole.ApplyModifiedProperties();
+
+            foreach (var root in scene.GetRootGameObjects())
+                if (root.GetComponentInChildren<Lockdown.Enemies.SkeletonBody>(true) != null)
+                {
+                    Debug.Log("Removed " + root.name + " from the museum until the dinosaur-room step.");
+                    Undo.DestroyObjectImmediate(root);
+                }
+            EditorSceneManager.MarkSceneDirty(scene);
+            Selection.activeGameObject = monitor;
+            Debug.Log("Security doors D09 and D10 now have locks the hammer breaks; the desk computer turns the alarm off. Save the scene.");
+        }
+
         private static AudioClip Clip(string name)
         {
             var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(AudioFolder + "/" + name + ".wav");
@@ -235,10 +292,10 @@ namespace Lockdown.Editor
             return clip;
         }
 
-        private static List<Renderer> ReadersBeside(Scene scene, Door door, out bool outsideCovered)
+        private static List<Renderer> ReadersBeside(Scene scene, Door door, Vector3 roomCentre, out bool outsideCovered)
         {
             var bounds = LeafBounds(door);
-            Vector3 outward = Outward(bounds);
+            Vector3 outward = Outward(bounds, roomCentre);
             outsideCovered = false;
             var found = new List<Renderer>();
             foreach (var root in scene.GetRootGameObjects())
@@ -261,20 +318,20 @@ namespace Lockdown.Editor
             return leaf.bounds;
         }
 
-        // The horizontal wall normal pointing out of the Storage room.
-        private static Vector3 Outward(Bounds bounds)
+        // The horizontal wall normal pointing out of the locked room.
+        private static Vector3 Outward(Bounds bounds, Vector3 roomCentre)
         {
             Vector3 outward = bounds.size.z > bounds.size.x ? Vector3.right : Vector3.forward;
-            return Vector3.Dot(bounds.center - StorageCentre, outward) < 0f ? -outward : outward;
+            return Vector3.Dot(bounds.center - roomCentre, outward) < 0f ? -outward : outward;
         }
 
-        // A card reader on the corridor side of a Storage door, just past the latch edge of the closed leaf.
-        private static Renderer PlaceReader(GameObject prefab, Transform parent, Door door, string name)
+        // A card reader on the outside of a locked door, just past the latch edge of the closed leaf.
+        private static Renderer PlaceReader(GameObject prefab, Transform parent, Door door, string name, Vector3 roomCentre)
         {
             var bounds = LeafBounds(door);
             bool wallAlongZ = bounds.size.z > bounds.size.x;
             Vector3 along = wallAlongZ ? Vector3.forward : Vector3.right;
-            Vector3 outward = Outward(bounds);
+            Vector3 outward = Outward(bounds, roomCentre);
             // The latch edge is the end of the leaf away from the hinge.
             if (Vector3.Dot(bounds.center - door.transform.position, along) < 0f) along = -along;
             float halfLength = Vector3.Dot(bounds.extents, new Vector3(Mathf.Abs(along.x), 0f, Mathf.Abs(along.z)));
