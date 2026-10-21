@@ -1,0 +1,19 @@
+{
+    "timestamp": "2026-10-20T18:16:33.6488692Z",
+    "scenePath": "Assets/_Project/Scenes/Museum/Museum_Main.unity",
+    "playing": true,
+    "dirty": false,
+    "present": true,
+    "renderers": 5,
+    "lootContainers": 12,
+    "prefabImported": true,
+    "missingMeshes": 0,
+    "position": {
+        "x": -1.2999999523162842,
+        "y": 0.0,
+        "z": -7.400000095367432
+    },
+    "cameras": "Main Camera enabled=False at=(0.00, 1.00, -10.00); PlayerCamera enabled=True at=(0.00, 1.64, -9.50)",
+    "action": "",
+    "error": ""
+}

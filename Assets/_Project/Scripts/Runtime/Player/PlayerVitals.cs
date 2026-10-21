@@ -20,6 +20,7 @@ namespace Lockdown.Player
         private float hitEndsAt;
         private GUIStyle labelStyle;
         private GUIStyle deathStyle;
+        public bool IsCaptured { get; private set; }
 
         private void Awake()
         {
@@ -59,6 +60,19 @@ namespace Lockdown.Player
                 hitAudio.volume = deathVolume;
                 hitAudio.Play();
             }
+            DisableControls();
+        }
+
+        public bool Capture()
+        {
+            if (health.IsDead || IsCaptured) return false;
+            IsCaptured = true;
+            DisableControls();
+            return true;
+        }
+
+        private void DisableControls()
+        {
             controller.ReleaseCursor();
             controller.enabled = false;
             foreach (var weapon in GetComponentsInChildren<FirstPersonWeapon>(true)) weapon.enabled = false;
@@ -68,7 +82,7 @@ namespace Lockdown.Player
 
         public void RestartEncounter()
         {
-            if (!health.IsDead) return;
+            if (!health.IsDead && !IsCaptured) return;
             string path = gameObject.scene.path;
 #if UNITY_EDITOR
             UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(path, new LoadSceneParameters(LoadSceneMode.Single));
@@ -85,15 +99,15 @@ namespace Lockdown.Player
                 deathStyle = new GUIStyle(labelStyle) { fontSize = 30, alignment = TextAnchor.MiddleCenter };
             }
             Color previous = GUI.color;
-            if (health.IsDead || Time.time < hitEndsAt)
+            if (health.IsDead || IsCaptured || Time.time < hitEndsAt)
             {
-                GUI.color = new Color(0.65f, 0.02f, 0.04f, health.IsDead ? 0.3f : 0.12f);
+                GUI.color = IsCaptured ? new Color(0.05f, 0.12f, 0.25f, 0.3f) : new Color(0.65f, 0.02f, 0.04f, health.IsDead ? 0.3f : 0.12f);
                 GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
             }
             GUI.color = previous;
             GUI.Label(new Rect(24f, Screen.height - 64f, 180f, 34f), "Health " + Mathf.CeilToInt(health.CurrentHealth), labelStyle);
-            if (!health.IsDead) return;
-            GUI.Label(new Rect(0f, Screen.height * 0.5f - 60f, Screen.width, 48f), "You died", deathStyle);
+            if (!health.IsDead && !IsCaptured) return;
+            GUI.Label(new Rect(0f, Screen.height * 0.5f - 60f, Screen.width, 48f), IsCaptured ? "Caught — handcuffed" : "You died", deathStyle);
             if (GUI.Button(new Rect(Screen.width * 0.5f - 60f, Screen.height * 0.5f, 120f, 40f), "Restart")) RestartEncounter();
         }
     }

@@ -52,14 +52,19 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator MuseumEnemyWandersAndDiesFromFourPistolHits()
+        public IEnumerator WanderingPrefabWandersAndDiesFromFourPistolHits()
         {
             EditorSceneManager.LoadSceneInPlayMode("Assets/_Project/Scenes/Museum/Museum_Main.unity",
                 new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
-            var enemies = Object.FindObjectsByType<WanderingEnemy>(FindObjectsSortMode.None);
-            Assert.That(enemies.Length, Is.EqualTo(1), "The museum should contain exactly one wandering enemy.");
-            var enemy = enemies[0];
+            Assert.That(Object.FindObjectsByType<WanderingEnemy>(FindObjectsSortMode.None), Is.Empty,
+                "The museum should no longer contain the legacy wandering enemy.");
+            foreach (var pursuer in Object.FindObjectsByType<Lockdown.AI.Agents.PursuerAgent>(FindObjectsInactive.Exclude))
+                pursuer.gameObject.SetActive(false);
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Characters/WanderingEnemy.prefab");
+            Assert.That(prefab, Is.Not.Null);
+            var enemy = Object.Instantiate(prefab, new Vector3(0f, 0.05f, -2.5f), Quaternion.Euler(0f, 180f, 0f)).GetComponent<WanderingEnemy>();
+            yield return null;
             var agent = enemy.GetComponent<NavMeshAgent>();
             var health = enemy.GetComponent<Health>();
             Assert.That(agent.isOnNavMesh, Is.True);
