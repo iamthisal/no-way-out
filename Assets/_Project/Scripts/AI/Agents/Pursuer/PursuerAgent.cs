@@ -10,7 +10,7 @@ namespace Lockdown.AI.Agents
     public sealed class PursuerAgent : MonoBehaviour
     {
         // Preserve the original Patrol/Chase enum values for existing scene data.
-        public enum PursuerState { Patrol, Chase, Investigate, Attack, Search, Return, Dead }
+        public enum PursuerState { Patrol, Chase, Investigate, Attack, Search, Return, Dead, Approach, Arrest, Intercept, AdvanceCover, Caught }
         [SerializeField] private Transform[] patrolPoints = new Transform[0];
         [SerializeField] private Transform playerTarget;
         [SerializeField] private PursuerSettings settings = new PursuerSettings();
@@ -20,10 +20,13 @@ namespace Lockdown.AI.Agents
         private PursuerAttackCycle combat;
         private readonly PursuerInvestigation investigation = new PursuerInvestigation();
         private readonly PursuerSearch search = new PursuerSearch();
-        private Vector3 spawn, searchPoint, formationPoint;
-        private bool searchingPoint, hasMemory, hasFlank;
+        private readonly PursuerArrest arrest = new PursuerArrest();
+        private readonly PursuerInterception interception = new PursuerInterception();
+        private Vector3 spawn, searchPoint, interceptPoint, coverPoint, formationPoint;
+        private bool searchingPoint, hasMemory, hasIntercept, retaliating, hasFlank, wasFleeing;
         private int patrolIndex;
-        private float lastSeenAt = float.NegativeInfinity, nextFormation;
+        private float lastSeenAt = float.NegativeInfinity, nextPlan, predictedAt, coverUntil, nextCover, nextFormation;
+        private float attackedAt = float.NegativeInfinity;
         private static readonly ProfilerMarker DecisionMarker = new ProfilerMarker(ProfilerCategory.Scripts, "Pursuer.Decision");
         public bool IsPlayerVisible { get; private set; }
         public PursuerState State { get; private set; } = PursuerState.Patrol;
@@ -31,6 +34,10 @@ namespace Lockdown.AI.Agents
         public string DecisionReason { get; private set; } = "Following patrol route";
         public PursuerSettings Settings => settings;
         public Transform Target => playerTarget;
+        public bool IsRetaliating => retaliating;
+        public float ArrestProgress => arrest.Progress;
+        public Vector3 InterceptPoint => interceptPoint;
+        public Vector3 ObservedVelocity => interception.Velocity;
 
         private void Awake()
         {
@@ -45,7 +52,7 @@ namespace Lockdown.AI.Agents
         }
         private void OnEnable()
         {
-            if (controller != null) controller.Died += Die;
+            if (controller != null) { controller.Died += Die; controller.Attacked += Attacked; }
             if (State != PursuerState.Dead)
             {
                 if (perception != null) perception.enabled = true;
@@ -65,39 +72,38 @@ namespace Lockdown.AI.Agents
         {
             if (Time.deltaTime <= 0f || State == PursuerState.Dead) return;
             if (controller.IsDead) { Die(); return; }
+            if (!TargetAvailable())
+            {
+                IsPlayerVisible = false; hasMemory = hasIntercept = false; arrest.Reset(); interception.Reset();
+                combat.Cancel(Time.time); controller.SetWarning(false); controller.ShowNotice(null);
+                if (controller.TargetCaptured(playerTarget))
+                { SetState(PursuerState.Caught, "Thief handcuffed; encounter ended"); controller.Stop(); return; }
+                if (IsContactState()) SetState(PursuerState.Return, "Target no longer available");
+            }
             formation.SetTarget(playerTarget);
-            bool tracking = State == PursuerState.Chase || State == PursuerState.Attack;
+            bool tracking = IsContactState();
             IsPlayerVisible = perception.CanSee(playerTarget, tracking);
             if (IsPlayerVisible)
             {
                 LastKnownPlayerPosition = playerTarget.position;
                 lastSeenAt = Time.time; hasMemory = true;
+                interception.Observe(LastKnownPlayerPosition, Time.time);
                 perception.ClearClue();
                 perception.RaiseAlert(LastKnownPlayerPosition);
-                if (Time.time >= nextFormation)
-                {
-                    nextFormation = Time.time + 0.5f;
-                    hasFlank = formation.TryFlank(LastKnownPlayerPosition, controller.CanReach, out formationPoint);
-                }
-                bool slotReady = !hasFlank || GroundDistance(transform.position, formationPoint) <= 0.7f;
-                bool canAttack = slotReady && GroundDistance(transform.position, playerTarget.position) <= settings.attackRange
-                    && controller.CanAttack(playerTarget);
-                SetState(canAttack ? PursuerState.Attack : PursuerState.Chase,
-                    canAttack ? "Visible target in clear firing range" : hasFlank ? "Moving to a reserved flank" : "Following visible player");
+                SelectContactAction();
             }
             else
             {
-                hasFlank = false;
-                if (playerTarget == null || !playerTarget.gameObject.activeInHierarchy
-                    || (playerTarget.TryGetComponent<Health>(out var targetHealth) && targetHealth.IsDead)) hasMemory = false;
+                interception.LoseSight(); arrest.Reset(); controller.ShowNotice(null);
                 if (tracking)
                 {
                     if (hasMemory && Time.time - lastSeenAt < settings.sightMemoryDuration)
-                        SetState(PursuerState.Chase, "Following last confirmed position");
-                    else BeginSearch(LastKnownPlayerPosition);
+                        SetState(hasIntercept && Time.time - predictedAt <= settings.predictionLifetime ? PursuerState.Intercept : PursuerState.Chase,
+                            "Following a short-lived prediction or last confirmed position");
+                    else BeginSearch(hasIntercept && Time.time - predictedAt <= settings.predictionLifetime ? interceptPoint : LastKnownPlayerPosition);
                 }
                 // Active pursuit/search is not overwritten by lower-priority sounds or alerts.
-                if (State != PursuerState.Chase && State != PursuerState.Attack && State != PursuerState.Search
+                if (!IsContactState() && State != PursuerState.Search
                     && perception.TryTakeClue(out var clue))
                 {
                     investigation.Begin(clue, Time.time, settings.investigateTimeout);
@@ -106,7 +112,8 @@ namespace Lockdown.AI.Agents
                 else if (State == PursuerState.Search) perception.ClearClue();
             }
             if (!controller.IsReady) { combat.Cancel(Time.time); return; }
-            if (State != PursuerState.Attack) { combat.Cancel(Time.time); controller.SetWarning(false); }
+            if (State != PursuerState.Attack && State != PursuerState.AdvanceCover)
+            { combat.Cancel(Time.time); controller.SetWarning(false); }
             switch (State)
             {
                 case PursuerState.Patrol: Patrol(); break;
@@ -118,20 +125,101 @@ namespace Lockdown.AI.Agents
                     else if (!Move(investigation.Position, settings.patrolSpeed, 0.4f)) BeginSearch(investigation.Position);
                     break;
                 case PursuerState.Chase:
-                    Vector3 goal = IsPlayerVisible && hasFlank ? formationPoint : LastKnownPlayerPosition;
-                    float stop = IsPlayerVisible && hasFlank ? 0.35f : 1.2f;
-                    if (GroundDistance(transform.position, goal) <= stop) controller.Stop();
-                    else Move(goal, settings.chaseSpeed, stop);
-                    if (IsPlayerVisible && !hasFlank) controller.Face(LastKnownPlayerPosition);
+                    Advance(LastKnownPlayerPosition, settings.chaseSpeed, retaliating ? settings.combatStopDistance : settings.arrestRange * 0.75f);
+                    break;
+                case PursuerState.Approach:
+                    controller.ShowNotice("Museum guard approaching — run to avoid arrest");
+                    Advance(LastKnownPlayerPosition, settings.approachSpeed, settings.arrestRange * 0.75f);
+                    break;
+                case PursuerState.Intercept:
+                    if (IsPlayerVisible) controller.ShowNotice("Guard is cutting off your escape");
+                    Advance(interceptPoint, settings.chaseSpeed, 0.35f);
+                    break;
+                case PursuerState.Arrest:
+                    controller.Stop(); controller.Face(LastKnownPlayerPosition);
+                    bool complete = arrest.Tick(IsPlayerVisible && controller.InArrestReach(playerTarget, settings.arrestRange), Time.deltaTime, settings.arrestDuration);
+                    controller.ShowNotice("Handcuffing — move away to escape!", arrest.Progress);
+                    if (complete && controller.TryCapture(playerTarget, settings.arrestRange))
+                    { SetState(PursuerState.Caught, "Thief handcuffed; encounter ended"); controller.ShowNotice(null); }
                     break;
                 case PursuerState.Attack:
-                    controller.Stop(); controller.Face(LastKnownPlayerPosition);
-                    combat.Tick(Time.time, IsPlayerVisible && controller.CanAttack(playerTarget),
-                        () => controller.Fire(playerTarget));
-                    controller.SetWarning(combat.IsAiming);
+                    controller.ShowNotice("Guard returning fire — break line of sight!");
+                    Advance(hasFlank ? formationPoint : LastKnownPlayerPosition, settings.approachSpeed, hasFlank ? 0.35f : settings.combatStopDistance);
+                    ShootIfClear();
+                    break;
+                case PursuerState.AdvanceCover:
+                    controller.ShowNotice("Guard advancing through cover");
+                    Advance(coverPoint, settings.chaseSpeed, 0.3f); ShootIfClear();
                     break;
                 case PursuerState.Search: Search(); break;
             }
+        }
+        private bool TargetAvailable() => playerTarget != null && playerTarget.gameObject.activeInHierarchy
+            && (!playerTarget.TryGetComponent<Health>(out var targetHealth) || !targetHealth.IsDead)
+            && !controller.TargetCaptured(playerTarget);
+        private bool IsContactState() => State == PursuerState.Chase || State == PursuerState.Attack
+            || State == PursuerState.Approach || State == PursuerState.Arrest || State == PursuerState.Intercept || State == PursuerState.AdvanceCover;
+
+        private void SelectContactAction()
+        {
+            if (retaliating)
+            {
+                arrest.Reset(); hasIntercept = false;
+                if (Time.time >= nextFormation)
+                {
+                    nextFormation = Time.time + settings.replanInterval;
+                    hasFlank = formation.TryFlank(LastKnownPlayerPosition, controller.CanReach, out formationPoint);
+                }
+                if (State == PursuerState.AdvanceCover && Time.time < coverUntil
+                    && controller.RouteStatus() != PursuerRouteStatus.Blocked) return;
+                if (Time.time >= nextCover && Time.time - attackedAt < 1.5f)
+                {
+                    nextCover = Time.time + settings.coverCooldown;
+                    if (PursuerAdvanceCover.TryChoose(transform.position, LastKnownPlayerPosition,
+                        controller.TryRouteLength, controller.IsScreened, out coverPoint))
+                    {
+                        coverUntil = Time.time + settings.coverDuration;
+                        SetState(PursuerState.AdvanceCover, "Taking brief forward cover after being hit"); return;
+                    }
+                }
+                SetState(GroundDistance(transform.position, LastKnownPlayerPosition) <= settings.attackRange && controller.CanAttack(playerTarget)
+                    ? PursuerState.Attack : PursuerState.Chase, "Player attacked this guard; returning fire while closing distance");
+                return;
+            }
+            if (controller.InArrestReach(playerTarget, settings.arrestRange))
+            { SetState(PursuerState.Arrest, "Within clear reach; attempting handcuffs"); return; }
+            arrest.Reset();
+            bool fleeing = interception.Velocity.magnitude >= settings.fleeingSpeed;
+            if (Time.time >= nextPlan || (fleeing && !wasFleeing))
+            {
+                nextPlan = Time.time + settings.replanInterval;
+                hasIntercept = interception.TryChoose(transform.position, Time.time, settings, controller.TryRouteLength, out interceptPoint);
+                predictedAt = Time.time;
+            }
+            wasFleeing = fleeing;
+            if (!fleeing) hasIntercept = false;
+            SetState(hasIntercept ? PursuerState.Intercept : fleeing ? PursuerState.Chase : PursuerState.Approach,
+                hasIntercept ? "A reachable prediction saves route distance and can beat the fleeing thief" : "Closing for arrest; running alone never authorizes shooting");
+        }
+        private void Advance(Vector3 goal, float speed, float stop)
+        {
+            if (GroundDistance(transform.position, goal) <= stop) controller.Stop();
+            else Move(goal, speed, stop);
+            if (IsPlayerVisible) controller.Face(LastKnownPlayerPosition);
+        }
+        private void ShootIfClear()
+        {
+            combat.Tick(Time.time, retaliating && IsPlayerVisible && controller.CanAttack(playerTarget), () => controller.Fire(playerTarget));
+            controller.SetWarning(combat.IsAiming);
+        }
+        private void Attacked(Transform source)
+        {
+            if (State == PursuerState.Dead || source == null || playerTarget == null || !source.IsChildOf(playerTarget)) return;
+            retaliating = true; attackedAt = Time.time; arrest.Reset(); hasIntercept = false;
+            // This is one impact-time snapshot, not permission to read an unseen moving target later.
+            LastKnownPlayerPosition = source.position; lastSeenAt = Time.time; hasMemory = true;
+            controller.Face(LastKnownPlayerPosition);
+            SetState(PursuerState.Chase, "Player hit this guard; armed retaliation authorized");
         }
         private bool Move(Vector3 point, float speed, float stop)
         {
@@ -182,6 +270,7 @@ namespace Lockdown.AI.Agents
             DecisionReason = reason;
             if (State == state) return;
             controller.Stop(); combat.Cancel(Time.time);
+            if (state != PursuerState.Arrest) arrest.Reset();
             State = state;
         }
         private static float GroundDistance(Vector3 a, Vector3 b) { a.y = b.y = 0f; return Vector3.Distance(a, b); }
@@ -196,13 +285,15 @@ namespace Lockdown.AI.Agents
         }
         private void OnDisable()
         {
-            if (controller != null) controller.Died -= Die;
+            if (controller != null) { controller.Died -= Die; controller.Attacked -= Attacked; }
             IsPlayerVisible = false; hasMemory = false; lastSeenAt = float.NegativeInfinity;
             if (controller != null) controller.Stop();
             if (perception != null) perception.enabled = false;
             if (formation != null) formation.enabled = false;
             combat?.Cancel(Time.time);
+            arrest.Reset(); interception.Reset(); hasIntercept = wasFleeing = false;
             if (controller != null) controller.SetWarning(false);
+            if (controller != null) controller.ShowNotice(null);
             if (State != PursuerState.Dead) State = PursuerState.Patrol;
         }
     }
