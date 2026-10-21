@@ -45,6 +45,15 @@ namespace Lockdown.World
 
         private void Awake()
         {
+            // Imported storage crates are decorative cover, not loot containers.
+            // Remove only this behaviour at runtime; retain the authored visuals and colliders.
+            if (modelKind == ModelKind.StorageCrate)
+            {
+                enabled = false;
+                Destroy(this);
+                return;
+            }
+
             closedBlocker = GetComponent<Collider>();
             Transform interior;
             Bounds bounds;
