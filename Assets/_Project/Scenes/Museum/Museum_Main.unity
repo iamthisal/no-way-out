@@ -16006,73 +16006,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 342328136}
   m_Mesh: {fileID: -3320468206179982695, guid: edc5b5786c6b55b44a2cb82b79332b60, type: 2}
---- !u!1001 &342691329
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1051191250}
-    m_Modifications:
-    - target: {fileID: 5780023678080253104, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_Name
-      value: Reader_D06_Storage
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 4.8950005
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.37
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.4452131
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
---- !u!4 &342691330 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-  m_PrefabInstance: {fileID: 342691329}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &342691331 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 4240087001147655195, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
-  m_PrefabInstance: {fileID: 342691329}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &343129132
 GameObject:
   m_ObjectHideFlags: 0
@@ -23720,12 +23653,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686ec8e78789f403d8dfd38f2e31205e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
-  keyId: StorageKeycard
-  keyName: Storage keycard
+  keyId: StaffKeycard
+  keyName: staff keycard
   breakable: 0
   strength: 100
   indicators:
   - {fileID: 282996364}
+  - {fileID: 1077806888}
   lockedColor: {r: 0.9, g: 0.08, b: 0.06, a: 1}
   unlockedColor: {r: 0.1, g: 0.85, b: 0.25, a: 1}
   brokenColor: {r: 0.04, g: 0.04, b: 0.04, a: 1}
@@ -25525,8 +25459,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686ec8e78789f403d8dfd38f2e31205e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
-  keyId: StorageKeycard
-  keyName: Storage keycard
+  keyId: StaffKeycard
+  keyName: staff keycard
   breakable: 0
   strength: 100
   indicators:
@@ -37624,7 +37558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
   keyId: 
   keyName: 
-  breakable: 1
+  breakable: 0
   strength: 100
   indicators:
   - {fileID: 422443425}
@@ -40264,7 +40198,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1832841598768766335, guid: cdce2731c5e29421baf4746fabec980b, type: 3}
       propertyPath: m_Name
-      value: StorageKeycard
+      value: StaffKeycard
       objectReference: {fileID: 0}
     - target: {fileID: 3633656909823784914, guid: cdce2731c5e29421baf4746fabec980b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -46593,7 +46527,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1051191250}
   m_Layer: 0
-  m_Name: StorageReaders
+  m_Name: DoorReaders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46612,8 +46546,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 342691330}
   - {fileID: 1221833490}
+  - {fileID: 1077806887}
   m_Father: {fileID: 1807325837}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1051592474
@@ -47345,7 +47279,6 @@ GameObject:
   - component: {fileID: 1062717506}
   - component: {fileID: 1062717505}
   - component: {fileID: 1062717504}
-  - component: {fileID: 1062717507}
   m_Layer: 0
   m_Name: Hinge
   m_TagString: Untagged
@@ -47421,27 +47354,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.4000006, y: 2.5, z: 0.12000066}
   m_Center: {x: 1.2000003, y: 0, z: 0}
---- !u!114 &1062717507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1062717502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 686ec8e78789f403d8dfd38f2e31205e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
-  keyId: StorageKeycard
-  keyName: Storage keycard
-  breakable: 0
-  strength: 100
-  indicators:
-  - {fileID: 342691331}
-  lockedColor: {r: 0.9, g: 0.08, b: 0.06, a: 1}
-  unlockedColor: {r: 0.1, g: 0.85, b: 0.25, a: 1}
-  brokenColor: {r: 0.04, g: 0.04, b: 0.04, a: 1}
 --- !u!1 &1063595293
 GameObject:
   m_ObjectHideFlags: 0
@@ -48266,6 +48178,73 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1001 &1077806886
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1051191250}
+    m_Modifications:
+    - target: {fileID: 5780023678080253104, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_Name
+      value: Reader_D08_Storage
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10.754344
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.8949997
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+--- !u!4 &1077806887 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6592447719747462666, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+  m_PrefabInstance: {fileID: 1077806886}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1077806888 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4240087001147655195, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+  m_PrefabInstance: {fileID: 1077806886}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1079747956
 GameObject:
   m_ObjectHideFlags: 0
@@ -66418,8 +66397,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.AlarmConsole
   screen: {fileID: 1704434852}
-  quietColor: {r: 0.04, g: 0.1, b: 0.3, a: 1}
+  armedColor: {r: 0.04, g: 0.1, b: 0.3, a: 1}
   alarmColor: {r: 0.8, g: 0.05, b: 0.04, a: 1}
+  offlineColor: {r: 0.02, g: 0.02, b: 0.025, a: 1}
 --- !u!65 &1552849854
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -84976,6 +84956,8 @@ MonoBehaviour:
   suspicionDecay: 0.6
   giveUpAfter: 8
   startGrace: 2
+  hearingRange: 30
+  searchTime: 5
   whistle: {fileID: 2064658479}
 --- !u!1 &1834864000
 GameObject:
