@@ -1,30 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-21 09:02:08Z" end-time="2026-10-21 09:02:20Z" duration="11.9454704">
-  <test-suite type="TestSuite" id="1126" name="NoWayOut_UnitySetup" fullname="NoWayOut_UnitySetup" runstate="Runnable" testcasecount="35" result="Passed" start-time="2026-10-21 09:02:08Z" end-time="2026-10-21 09:02:20Z" duration="11.945470" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-21 09:15:41Z" end-time="2026-10-21 09:16:00Z" duration="19.3728216">
+  <test-suite type="TestSuite" id="1077" name="NoWayOut_UnitySetup" fullname="NoWayOut_UnitySetup" runstate="Runnable" testcasecount="35" result="Passed" start-time="2026-10-21 09:15:41Z" end-time="2026-10-21 09:16:00Z" duration="19.372822" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
     <properties>
       <property name="platform" value="PlayMode" />
     </properties>
-    <test-suite type="Assembly" id="1144" name="Lockdown.Tests.Enemies.dll" fullname="C:/Users/thisa/Desktop/warehouse_game/Library/ScriptAssemblies/Lockdown.Tests.Enemies.dll" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 09:02:08Z" end-time="2026-10-21 09:02:20Z" duration="11.942514" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <test-suite type="Assembly" id="1095" name="Lockdown.Tests.Enemies.dll" fullname="C:/Users/thisa/Desktop/warehouse_game/Library/ScriptAssemblies/Lockdown.Tests.Enemies.dll" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 09:15:41Z" end-time="2026-10-21 09:16:00Z" duration="19.361226" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
       <properties>
         <property name="_PID" value="10340" />
         <property name="_APPDOMAIN" value="Unity Child Domain" />
         <property name="platform" value="PlayMode" />
         <property name="EditorOnly" value="False" />
       </properties>
-      <test-suite type="TestSuite" id="1145" name="Lockdown" fullname="Lockdown" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 09:02:08Z" end-time="2026-10-21 09:02:20Z" duration="11.939942" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestSuite" id="1096" name="Lockdown" fullname="Lockdown" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 09:15:41Z" end-time="2026-10-21 09:16:00Z" duration="19.358601" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-suite type="TestSuite" id="1146" name="Tests" fullname="Lockdown.Tests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 09:02:08Z" end-time="2026-10-21 09:02:20Z" duration="11.937805" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="TestSuite" id="1097" name="Tests" fullname="Lockdown.Tests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 09:15:41Z" end-time="2026-10-21 09:16:00Z" duration="19.356546" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-suite type="TestFixture" id="1136" name="EnemyShootingTests" fullname="Lockdown.Tests.EnemyShootingTests" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 09:02:08Z" end-time="2026-10-21 09:02:20Z" duration="11.935610" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestFixture" id="1087" name="EnemyShootingTests" fullname="Lockdown.Tests.EnemyShootingTests" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 09:15:41Z" end-time="2026-10-21 09:15:52Z" duration="11.145955" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-case id="1138" name="EnemyDamageStopsPlayerAndRestartRestoresEncounter" fullname="Lockdown.Tests.EnemyShootingTests.EnemyDamageStopsPlayerAndRestartRestoresEncounter" methodname="EnemyDamageStopsPlayerAndRestartRestoresEncounter" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" seed="941297107" result="Passed" start-time="2026-10-21 09:02:08Z" end-time="2026-10-21 09:02:13Z" duration="4.751072" asserts="0">
+            <test-case id="1089" name="EnemyDamageStopsPlayerAndRestartRestoresEncounter" fullname="Lockdown.Tests.EnemyShootingTests.EnemyDamageStopsPlayerAndRestartRestoresEncounter" methodname="EnemyDamageStopsPlayerAndRestartRestoresEncounter" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" seed="780625502" result="Passed" start-time="2026-10-21 09:15:41Z" end-time="2026-10-21 09:15:45Z" duration="4.090998" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1137" name="EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" fullname="Lockdown.Tests.EnemyShootingTests.EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" methodname="EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" seed="1748717493" result="Passed" start-time="2026-10-21 09:02:13Z" end-time="2026-10-21 09:02:20Z" duration="7.179665" asserts="0">
+            <test-case id="1088" name="EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" fullname="Lockdown.Tests.EnemyShootingTests.EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" methodname="EnemyShootsNearbyPlayerButNotThroughWallsOrAfterDeath" classname="Lockdown.Tests.EnemyShootingTests" runstate="Runnable" seed="1517001012" result="Passed" start-time="2026-10-21 09:15:45Z" end-time="2026-10-21 09:15:52Z" duration="7.033513" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1092" name="WanderingEnemyTests" fullname="Lockdown.Tests.WanderingEnemyTests" classname="Lockdown.Tests.WanderingEnemyTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 09:15:52Z" end-time="2026-10-21 09:16:00Z" duration="8.206260" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1093" name="HealthClampsDamageAndAnnouncesDeathOnce" fullname="Lockdown.Tests.WanderingEnemyTests.HealthClampsDamageAndAnnouncesDeathOnce" methodname="HealthClampsDamageAndAnnouncesDeathOnce" classname="Lockdown.Tests.WanderingEnemyTests" runstate="Runnable" seed="1919203837" result="Passed" start-time="2026-10-21 09:15:52Z" end-time="2026-10-21 09:15:52Z" duration="0.004826" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1094" name="WanderingPrefabWandersAndDiesFromFourPistolHits" fullname="Lockdown.Tests.WanderingEnemyTests.WanderingPrefabWandersAndDiesFromFourPistolHits" methodname="WanderingPrefabWandersAndDiesFromFourPistolHits" classname="Lockdown.Tests.WanderingEnemyTests" runstate="Runnable" seed="2127982490" result="Passed" start-time="2026-10-21 09:15:52Z" end-time="2026-10-21 09:16:00Z" duration="8.184168" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />

@@ -35,7 +35,7 @@ The museum currently contains one pursuer. Distinct formation slots and unreacha
 
 ## Weapon, damage and presentation
 
-The existing `EnemyShooting` component runs in explicit AI-controlled mode on this prefab. The FSM owns warning, burst and cooldown timing; the weapon executes hits, tracers, muzzle flashes and sound. Existing wandering guards retain their autonomous shooting mode.
+The existing `EnemyShooting` component runs in explicit AI-controlled mode on this prefab. The FSM owns warning, burst and cooldown timing; the weapon executes hits, tracers, muzzle flashes and sound. The legacy wandering enemy has been removed from Museum_Main; its reusable prefab retains autonomous shooting for regression fixtures.
 
 Shots check both body visibility and the muzzle-to-player line; solid blockers and other characters can block damage. Each successful pursuer shot deals 10 damage. The pursuer uses the shared 100-health `Health` component and can be killed with the player's weapons.
 
@@ -48,7 +48,7 @@ Open `Museum_Main` in Edit mode and use **Tools > Lockdown > Connect Pursuer AI 
 Tune the serialized `PursuerSettings` on the agent. The gameplay prefab requires a player target and patrol points when instantiated outside the museum setup.
 
 - Nine NUnit Edit Mode tests cover warning/burst timing, cancellation, failed shots, investigation timing, bounded search, sight/occlusion, and formation slots.
-- Both existing wandering-guard shooting Play Mode tests also pass; they select and isolate that guard explicitly now that the scene contains another weapon-equipped enemy.
+- Legacy combat tests instantiate their own wandering-guard prefab and isolate the pursuer. The saved museum contains only the pursuer.
 - The editor-only `PursuerAIVerification` exercises the actual museum: patrol, chase, turning, occlusion, memory, search/return, noise investigation, real player damage, blocked shots, death cleanup and animation.
 - Runtime checks temporarily shorten inspection/search timers for speed; the saved prefab retains 1.5-second inspection and 14-second search defaults. Test objects and player movements are never saved.
 - Decision timing is recorded with `Pursuer.Decision`. See [the performance log](../AIPerformanceLog.md) and [verification report](../Characters/PursuerAIVerification.txt).
