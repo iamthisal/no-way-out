@@ -12,6 +12,7 @@ Decision-making lives in [`Scripts/AI/Agents/Pursuer`](../../Assets/_Project/Scr
 | `PursuerPerception.cs` | Sight, hearing, clue memory and ally alerts. |
 | `PursuerArrest.cs` | Continuous-contact arrest timing and cancellation. |
 | `PursuerInterception.cs` | Visible motion observations, expiring predictions and route-cost comparison. |
+| `PursuerCornerSearch.cs` | Ranks reachable forward/corner hypotheses using observed heading, occlusion and route length. |
 | `PursuerAdvanceCover.cs` | Bounded selection of reachable forward cover after a hit. |
 | `PursuerInvestigation.cs`, `PursuerSearch.cs` | Investigation timing and bounded search candidates. |
 | `PursuerAttackCycle.cs` | Warning, burst and cooldown decisions. |
@@ -40,11 +41,11 @@ Script GUIDs and original enum values are preserved. New states are appended for
 | Approach | Close at 2.8 m/s with an arrest warning; never fire. | Clear reach starts Arrest; observed fleeing starts Chase/Intercept; an attributed hit authorizes retaliation. |
 | Arrest | Stop within 1.6 m and maintain unobstructed reach for 1.5 seconds; show an escape warning and progress bar. | Leaving reach or breaking sight cancels progress; completion captures the actual player; a hit interrupts arrest. |
 | Chase | Run at 4 m/s toward the last confirmed location. Running alone never authorizes fire. | Useful prediction starts Intercept; clear reach starts Arrest; three seconds without evidence starts Search. |
-| Intercept | Navigate to a predicted ahead position using a complete NavMesh route. | Replan from visible movement; fall back to Chase when no useful shortcut exists; unseen prediction expires after two seconds. |
+| Intercept | Navigate to a predicted ahead position using a complete NavMesh route. After losing sight, close on a frozen likely escape area. | Replan from visible movement; after three seconds of lost contact, continue in Search instead of discarding the area. |
 | Attack | After a player hit, close at 2.8 m/s to a 2.8 m standoff while firing warned three-shot bursts. | Lost sight cancels fire; range or obstacles require pursuit. |
 | AdvanceCover | After a hit, use a reachable forward cover position for at most 1.1 seconds; fire only with a clear shot. | Resume armed pressure; six-second selection cooldown; no retreat positions. |
 | Investigate | Walk to a clue snapshot, then inspect for 1.5 seconds. | Sight interrupts; arrival/timeout or blocked route starts Search. |
-| Search | Check up to 17 reachable positions within 3 m of the last evidence. | Sight interrupts; 14-second budget ends in Return. |
+| Search | Travel to ranked escape areas, scan at arrivals, then check nearby positions within 4 m. | Sight interrupts; a separate 12-second travel limit bounds unreachable areas. The 18-second inspection budget starts at first arrival and then ends in Return. |
 | Return | Navigate to the nearest reachable patrol waypoint. | Reaching the route resumes Patrol; evidence can interrupt. |
 | Caught | Stop pursuing the captured thief; player controls are disabled without lethal damage. | Player restarts the encounter. |
 | Dead | Stop navigation/fire, disable colliders, release formation slot and play death animation. | Terminal for this instance. |
@@ -55,7 +56,11 @@ Death has highest priority. Sight overrides clues. A confirmed player hit interr
 
 `PursuerInterception` estimates planar velocity from consecutive visible positions. Reacquisition after hidden movement, large observation gaps and teleports reset the estimate. Every 0.5 seconds, and immediately when fleeing begins, it compares three ahead positions up to 1.5 seconds ahead. It measures complete route lengths from guard to player, player to prediction and guard to prediction. A candidate must save at least 0.6 m against following the player's route and have a plausible arrival time (no more than 0.75 seconds late). The score penalizes late arrival. Unreachable or unhelpful predictions fall back to direct pursuit.
 
-Predictions are guesses, not guaranteed exit choices. They expire after two seconds without replanning from visible motion. Hidden player transforms never update the prediction. This is a custom interception decision over Unity's built-in NavMesh pathfinding, not a separately implemented A* algorithm.
+Predictions are guesses, not guaranteed exit choices. Live interception requires recent visible observations. On losing sight, the last observed movement is instead frozen into bounded search hypotheses; those guesses are not discarded merely because the two-second live-prediction freshness window expires. Hidden player transforms never update them. This is a custom interception decision over Unity's built-in NavMesh pathfinding, not a separately implemented A* algorithm.
+
+`PursuerCornerSearch` considers 15 candidates: three distances up to 6 m along the observed heading and directions 45 or 90 degrees to either side. It rejects incomplete routes, excessive detours from the last sighting and destinations beyond the travel budget. Heading agreement, occlusion behind solid geometry and practical guard-route length rank the candidates. At most three separated hypotheses are retained, followed by the actual last-known position as a fallback. The guard takes a complete NavMesh route directly to each selected area, allowing a shorter available route instead of replaying the player's footsteps.
+
+The guard closes on the first hypothesis during its three-second contact-memory period, then continues travelling in Search if necessary. Travel time no longer consumes the full inspection budget. After reaching the area, it gets 18 seconds to inspect, including 1.5-second full-turn scans at arrivals and movement to other hypotheses or nearby search points. Later arrivals do not reset that budget indefinitely. Each later route has a five-second movement limit; unreachable/stuck points are skipped. If every route is blocked, the 12-second travel budget permits a bounded return to patrol.
 
 Cover candidates must move at least 0.3 m closer to the threat, have a complete route of at most 4.5 m, and be screened by solid geometry. No suitable candidate means keep advancing. Brief cover and a cooldown prevent persistent hiding. Additional guards may reserve distinct reachable flank slots during retaliation; the museum currently has one guard.
 
@@ -75,9 +80,9 @@ Capture shows **Caught - handcuffed**, releases the cursor, and disables movemen
 
 Open Museum_Main in Edit mode. **Tools > Lockdown > Connect Pursuer AI in Museum** rebuilds the gameplay prefab, assigns the actual player and four patrol points, and connects the existing signal relay. Dirty scene work is backed up under `Assets/_Recovery`. Routine tactics updates preserve prefab/scene references rather than rebuilding the environment.
 
-Tune `PursuerSettings` on the brain. The gameplay prefab needs a player target and patrol points outside museum setup. The Inspector exposes state, decision reason, visibility, last confirmed position, retaliation, arrest progress and the interception prediction.
+Tune `PursuerSettings` on the brain. The gameplay prefab needs a player target and patrol points outside museum setup. The Inspector exposes state, decision reason, visibility, last confirmed position, retaliation, arrest progress, interception prediction, search destination and whether the search area has been reached.
 
-The decision suite covers attack timing, investigation, bounded search, sight, formations, continuous arrest cancellation, observed-motion validity, route savings/arrival feasibility and forward-only cover. The museum verifier exercises actual NavMesh interception, no-fire first contact, arrest/escape, a real player pistol hit from behind, retaliation, pressure, wall blocking, death, capture and restart. Temporary shortened timers and test objects are never saved. Legacy combat tests instantiate test-only guards.
+The decision suite covers attack timing, investigation, bounded search, sight, formations, continuous arrest cancellation, observed-motion validity, route savings/arrival feasibility, forward-only cover, arrival-based inspection timing and ranked corner hypotheses. The museum verifier exercises an actual occluded museum corner, direct navigation to the selected area, persistence after arrival, eventual give-up, hidden-position isolation, NavMesh interception, no-fire first contact, arrest/escape, a real pistol hit from behind, retaliation, pressure, wall blocking, death, capture and restart. Temporary shortened timers and test objects are never saved. Legacy combat tests instantiate test-only guards.
 
 Results and mixed-scenario decision timings are recorded in [the encounter report](../Characters/PursuerAIVerification.txt), [NUnit results](../Characters/PursuerDecisionTests.xml) and [performance log](../AIPerformanceLog.md). These samples are not a steady-state or multi-agent benchmark. Run the museum verifier via the editor request hook or `-executeMethod Lockdown.Editor.PursuerAIVerification.RunBatch` in a separate Unity batch session, without `-quit`.
 

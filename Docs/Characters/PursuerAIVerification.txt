@@ -17,8 +17,18 @@ PASS: Unarmed contact never authorizes weapon fire
 PASS: Navigation turns do not lose a confirmed target
 PASS: Wall blocks sight while short-term pursuit is retained
 PASS: Loss of contact transitions to a timed Search
+PASS: Guard keeps travelling after sight memory expires; inspection budget has not started
 PASS: Hidden target movements never update visual memory
 PASS: Search expires and returns toward patrol
+PASS: Guard observes actual motion toward a museum corner before hiding
+PASS: Loss of sight preserves a forward/corner hypothesis instead of discarding it
+PASS: Predicted search area is behind actual corner geometry, not just the old visible point
+PASS: Guard chooses a complete navigation route to the hidden corner area
+PASS: Guard actually travels around the museum corner to inspect its hypothesis
+PASS: Guard reaches the selected occluded corner rather than merely falling back to the old location
+PASS: Corner pursuit never reads the hidden target's new position
+PASS: Guard keeps inspecting after arrival instead of immediately returning to patrol
+PASS: Corner search eventually gives up after a full inspection budget
 PASS: A distraction noise starts Investigation
 PASS: Inspecting the clue starts a local Search
 PASS: Actual player is approached for handcuffing on first sight
@@ -47,4 +57,4 @@ PASS: Handcuffing captures without inflicting lethal damage
 PASS: Capture disables player movement and weapon controls
 PASS: Captured player cannot fire the pistol
 PASS: Restart clears arrest and retaliation and restores the player
-PROFILE: one pursuer, mixed museum integration scenario, 723 recorded frames; average decision 110.53 us; maximum 5943.10 us. Rendering, animation and managed allocation costs are not included.
+PROFILE: one pursuer, mixed museum integration scenario, 1076 recorded frames; average decision 110.03 us; maximum 7550.10 us. Rendering, animation and managed allocation costs are not included.
