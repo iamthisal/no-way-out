@@ -29,8 +29,8 @@ namespace Lockdown.AI.Agents
             }
             player = FindAnyObjectByType<FirstPersonController>();
             body = player != null ? player.GetComponent<CharacterController>() : null;
-            weapon = player != null ? player.GetComponentInChildren<FirstPersonWeapon>(true) : null;
-            shots = weapon != null ? weapon.ShotsFired : 0;
+            var discoveredWeapon = player != null ? player.GetComponentInChildren<FirstPersonWeapon>(true) : null;
+            if (weapon != discoveredWeapon) { weapon = discoveredWeapon; shots = weapon != null ? weapon.ShotsFired : 0; }
         }
         private void Update()
         {
