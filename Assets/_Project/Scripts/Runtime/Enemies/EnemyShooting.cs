@@ -28,6 +28,8 @@ namespace Lockdown.Enemies
 
         public int ShotsFired { get; private set; }
         public float ShootingRange => shootingRange;
+        // Set by a guard who has not spotted the player yet.
+        public bool HoldFire { get; set; }
 
         private void Awake() { health = GetComponent<Health>(); }
 
@@ -41,7 +43,7 @@ namespace Lockdown.Enemies
                 targetHealth = target != null ? target.GetComponent<Health>() : null;
                 nextTargetSearch = Time.time + 1f;
             }
-            bool visible = HasVisibleTarget();
+            bool visible = !HoldFire && HasVisibleTarget();
             if (visible)
             {
                 if (gunPivot != null) gunPivot.LookAt(AimPoint());
@@ -79,7 +81,7 @@ namespace Lockdown.Enemies
 
         public bool TryFire()
         {
-            if (!isActiveAndEnabled || health.IsDead || Time.time < nextShotTime || !HasVisibleTarget()) return false;
+            if (!isActiveAndEnabled || HoldFire || health.IsDead || Time.time < nextShotTime || !HasVisibleTarget()) return false;
             if (gunPivot != null) gunPivot.LookAt(AimPoint());
             if (!HitsPlayer(muzzle.position, AimPoint() - muzzle.position, out var hit)) return false;
             nextShotTime = Time.time + shotInterval;
