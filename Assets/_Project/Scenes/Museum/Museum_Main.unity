@@ -1327,6 +1327,11 @@ Transform:
   - {fileID: 576223788}
   m_Father: {fileID: 912546485}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &15729331 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4240087001147655195, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+  m_PrefabInstance: {fileID: 355439222}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &16325574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21031,6 +21036,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8383870855881737181, guid: 29231bf5e25742141b15d0e476414c2b, type: 3}
   m_PrefabInstance: {fileID: 418982154}
   m_PrefabAsset: {fileID: 0}
+--- !u!23 &422443425 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4240087001147655195, guid: a9a5dd55b919c024c9f57fd857f76ad9, type: 3}
+  m_PrefabInstance: {fileID: 2043659306}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &422895733
 GameObject:
   m_ObjectHideFlags: 0
@@ -23712,10 +23722,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
   keyId: StorageKeycard
   keyName: Storage keycard
+  breakable: 0
+  strength: 100
   indicators:
   - {fileID: 282996364}
   lockedColor: {r: 0.9, g: 0.08, b: 0.06, a: 1}
   unlockedColor: {r: 0.1, g: 0.85, b: 0.25, a: 1}
+  brokenColor: {r: 0.04, g: 0.04, b: 0.04, a: 1}
 --- !u!1001 &503843507
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25514,11 +25527,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
   keyId: StorageKeycard
   keyName: Storage keycard
+  breakable: 0
+  strength: 100
   indicators:
   - {fileID: 146064836}
   - {fileID: 1221833491}
   lockedColor: {r: 0.9, g: 0.08, b: 0.06, a: 1}
   unlockedColor: {r: 0.1, g: 0.85, b: 0.25, a: 1}
+  brokenColor: {r: 0.04, g: 0.04, b: 0.04, a: 1}
 --- !u!1 &554385687
 GameObject:
   m_ObjectHideFlags: 0
@@ -37518,6 +37534,7 @@ GameObject:
   - component: {fileID: 890225822}
   - component: {fileID: 890225821}
   - component: {fileID: 890225820}
+  - component: {fileID: 890225823}
   m_Layer: 0
   m_Name: Hinge
   m_TagString: Untagged
@@ -37593,6 +37610,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.0008185, y: 2.5185945, z: 0.4211169}
   m_Center: {x: 1.0004092, y: 0, z: 0}
+--- !u!114 &890225823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890225818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 686ec8e78789f403d8dfd38f2e31205e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
+  keyId: 
+  keyName: 
+  breakable: 1
+  strength: 100
+  indicators:
+  - {fileID: 422443425}
+  lockedColor: {r: 0.9, g: 0.08, b: 0.06, a: 1}
+  unlockedColor: {r: 0.1, g: 0.85, b: 0.25, a: 1}
+  brokenColor: {r: 0.04, g: 0.04, b: 0.04, a: 1}
 --- !u!1001 &895297169
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47397,10 +47435,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
   keyId: StorageKeycard
   keyName: Storage keycard
+  breakable: 0
+  strength: 100
   indicators:
   - {fileID: 342691331}
   lockedColor: {r: 0.9, g: 0.08, b: 0.06, a: 1}
   unlockedColor: {r: 0.1, g: 0.85, b: 0.25, a: 1}
+  brokenColor: {r: 0.04, g: 0.04, b: 0.04, a: 1}
 --- !u!1 &1063595293
 GameObject:
   m_ObjectHideFlags: 0
@@ -58414,75 +58455,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1319001010}
   m_Mesh: {fileID: 7866965755067546687, guid: edc5b5786c6b55b44a2cb82b79332b60, type: 2}
---- !u!1001 &1319286591
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 8.699999
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.9385999
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.34500757
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898217779912864535, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3251640292539718512, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: wakeOnBroken.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3251640292539718512, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: 'wakeOnBroken.Array.data[0]'
-      value: 
-      objectReference: {fileID: 621904262}
-    - target: {fileID: 6577288821218304882, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: m_Name
-      value: SkeletonArcher
-      objectReference: {fileID: 0}
-    - target: {fileID: 8532631997645652880, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: sightLayers.m_Bits
-      value: 59
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
 --- !u!1 &1324862285
 GameObject:
   m_ObjectHideFlags: 0
@@ -66351,6 +66323,8 @@ GameObject:
   - component: {fileID: 1552849850}
   - component: {fileID: 1552849852}
   - component: {fileID: 1552849851}
+  - component: {fileID: 1552849854}
+  - component: {fileID: 1552849853}
   m_Layer: 0
   m_Name: P_Security_DeskMonitor
   m_TagString: Untagged
@@ -66431,6 +66405,42 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1552849849}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1552849853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552849849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b347c6d4fc66242448d188b1c148ef2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.AlarmConsole
+  screen: {fileID: 1704434852}
+  quietColor: {r: 0.04, g: 0.1, b: 0.3, a: 1}
+  alarmColor: {r: 0.8, g: 0.05, b: 0.04, a: 1}
+--- !u!65 &1552849854
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552849849}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1556576565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74617,6 +74627,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1703472843}
   m_Mesh: {fileID: -266139003476400318, guid: edc5b5786c6b55b44a2cb82b79332b60, type: 2}
+--- !u!23 &1704434852 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8179974433170093508, guid: 56c1e128065980b4183252a1bbe1787c, type: 3}
+  m_PrefabInstance: {fileID: 339871557}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1705926753
 GameObject:
   m_ObjectHideFlags: 0
@@ -81383,6 +81398,7 @@ GameObject:
   - component: {fileID: 1753015927}
   - component: {fileID: 1753015926}
   - component: {fileID: 1753015925}
+  - component: {fileID: 1753015928}
   m_Layer: 0
   m_Name: Hinge
   m_TagString: Untagged
@@ -81458,6 +81474,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.0008187, y: 2.518594, z: 0.42111635}
   m_Center: {x: 1.0004094, y: 0, z: 0}
+--- !u!114 &1753015928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753015923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 686ec8e78789f403d8dfd38f2e31205e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorLock
+  keyId: 
+  keyName: 
+  breakable: 1
+  strength: 100
+  indicators:
+  - {fileID: 15729331}
+  lockedColor: {r: 0.9, g: 0.08, b: 0.06, a: 1}
+  unlockedColor: {r: 0.1, g: 0.85, b: 0.25, a: 1}
+  brokenColor: {r: 0.04, g: 0.04, b: 0.04, a: 1}
 --- !u!1 &1755132622
 GameObject:
   m_ObjectHideFlags: 0
@@ -99556,7 +99593,6 @@ SceneRoots:
   - {fileID: 685157697}
   - {fileID: 1833833053}
   - {fileID: 479483913}
-  - {fileID: 1319286591}
   - {fileID: 962528222}
   - {fileID: 1578611168}
   - {fileID: 1807325837}
