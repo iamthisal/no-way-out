@@ -1,12 +1,13 @@
 # AI Performance and Evaluation Log
 
-Current scope: Sentinel/Pursuer, Stalker/Ambusher, Hound and Dynamic Spawning Agent. See [AI scope](AI/README.md). No performance measurements have been recorded in this log yet.
+Current scope: Sentinel/Pursuer, Stalker/Ambusher, Hound and Dynamic Spawning Agent. See [AI scope](AI/README.md). Measurements below distinguish decision markers from full-game frame costs.
 
 Identify runtime (HTML or Unity), commit, hardware, room/scene, population and repeatable scenario for each result. HTML measurements are not Unity evidence; fixed waves are not adaptive difficulty.
 
 | Date / commit | Runtime and conditions | Agent / scenario | Decision or path cost | Frame / allocation impact | Behavior result and evidence |
 |---|---|---|---|---|---|
 | Not measured | Baseline pending | Selected four-agent scope | Pending | Pending | Record actual checks and measurements |
+| 2026-10-21 / Ai/pursuer-completion | Unity 6000.6.3f1, Windows 11, DX11, RTX 4050 Laptop GPU, 16087 MB RAM; Museum_Main; one pursuer; interactive Editor session | Mixed patrol, chase, occlusion, search, investigation, attack and death integration scenario | `Pursuer.Decision`: 616 recorded frames, mean 44.78 microseconds, maximum 2113.40 microseconds | Rendering, animation, native navigation updates and managed allocations were not measured | 27 functional integration assertions passed. Nine separate NUnit decision/component tests passed. This is a mixed-scenario marker sample, not a steady-state or multi-agent performance guarantee. See [the report](Characters/PursuerAIVerification.txt) and [implementation](AI/Sentinel.md). |
 | 2026-10-19 / feature/interactive-doors (base de67995) | Unity 6000.6.3f1, Museum_Main; seven interior doors; functional checks only | Door collision and navigation integration | Not measured | Not measured | Five Play Mode door tests passed; every interior door opened/closed through player interaction. Closed/open player passage and obstacle carving configuration checked; security-door screenshots visually checked. Local evidence: Temp/DoorsVerification/results.xml, door-closed.png, door-open.png. Enemy routes and carving timing were not measured. See [door notes](PlayerDoors.md) for the pre-existing missing exterior prefab and blocked loot regression tests. |
 
 ## Evaluation Scenarios

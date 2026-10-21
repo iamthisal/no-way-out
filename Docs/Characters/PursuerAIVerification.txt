@@ -1,0 +1,29 @@
+PASSED
+PASS: Pursuer FSM exists in Museum_Main
+PASS: Pursuer is bound to the baked museum NavMesh
+PASS: Actual player is assigned
+PASS: Four patrol points are assigned
+PASS: Weapon and damage systems are connected
+PASS: Gameplay noise relay is present
+PASS: Out-of-range target does not interrupt patrol
+PASS: Patrol moves and drives locomotion animation
+PASS: Clear sight acquires the target and starts Chase
+PASS: Chase moves at configured speed
+PASS: Navigation turns do not lose a confirmed target
+PASS: Wall blocks sight while short-term pursuit is retained
+PASS: Loss of contact transitions to a timed Search
+PASS: Hidden target movements never update visual memory
+PASS: Search expires and returns toward patrol
+PASS: A distraction noise starts Investigation
+PASS: Inspecting the clue starts a local Search
+PASS: Visible healthy player in range selects Attack
+PASS: Aim warning precedes the first bullet
+PASS: Attack decision executes actual weapon fire
+PASS: Weapon fire damages actual player Health
+PASS: Solid blocker prevents actual controlled weapon damage
+PASS: Occlusion cancels remaining burst shots
+PASS: Lethal damage enters Dead and disables navigation
+PASS: Death disables the weapon
+PASS: Death removes collision and releases formation slot
+PASS: Death animation plays on imported character
+PROFILE: one pursuer, mixed museum integration scenario, 616 recorded frames; average decision 44.78 us; maximum 2113.40 us. Rendering, animation and managed allocation costs are not included.
