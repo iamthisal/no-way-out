@@ -7,6 +7,7 @@ using Lockdown.AI.Core.Hound;
 using Lockdown.Combat;
 using Lockdown.Enemies;
 using Lockdown.Player;
+using Lockdown.Weapons;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -21,8 +22,11 @@ namespace Lockdown.Editor
         private static PursuerAgent brain;
         private static NavMeshAgent nav;
         private static Transform originalTarget;
-        private static GameObject probe, wall;
+        private static GameObject probe, wall, coverWall;
         private static Vector3 spawn, phaseStart, lastSeen;
+        private static Vector3 interceptStart, interceptVelocity;
+        private static double movingAt;
+        private static bool sawIntercept;
         private static Quaternion rotation;
         private static double deadline;
         private static int phase, initialShots;
@@ -98,6 +102,11 @@ namespace Lockdown.Editor
                 maximumTravel = Mathf.Max(maximumTravel, Vector3.Distance(phaseStart, brain.transform.position));
                 maximumAnimation = Mathf.Max(maximumAnimation, brain.GetComponentInChildren<Animator>().GetFloat("Speed"));
             }
+            if (phase == 50)
+            {
+                probe.transform.position = interceptStart + interceptVelocity * (float)(Time.timeAsDouble - movingAt);
+                sawIntercept |= brain.State == PursuerAgent.PursuerState.Intercept;
+            }
             if (Time.timeAsDouble < deadline) return;
             try
             {
@@ -106,17 +115,30 @@ namespace Lockdown.Editor
                     case 0:
                         Require(brain.State == PursuerAgent.PursuerState.Patrol && !brain.IsPlayerVisible, "Out-of-range target does not interrupt patrol");
                         Require(maximumTravel > 0.3f && maximumAnimation > 0.1f, "Patrol moves and drives locomotion animation");
+                        Warp(); FindInterceptionScenario();
+                        probe.transform.position = interceptStart;
+                        brain.transform.rotation = Quaternion.LookRotation(interceptStart - spawn);
+                        nav.updatePosition = false; movingAt = Time.timeAsDouble; sawIntercept = false;
+                        Next(50, 0.9f); break;
+                    case 50:
+                        Require(sawIntercept, "Observed fleeing movement selects Intercept using actual museum route lengths");
+                        Require(brain.GetComponent<PursuerController>().TryRouteLength(spawn, brain.InterceptPoint, out float interceptionLength)
+                            && interceptionLength > 0f, "Selected interception destination has a complete baked-NavMesh route");
+                        Require(!brain.IsRetaliating && brain.GetComponent<EnemyShooting>().ShotsFired == 0, "Fleeing alone never authorizes shooting");
+                        Capture("PursuerIntercept");
+                        brain.enabled = false; brain.enabled = true; nav.updatePosition = true;
                         Warp(); probe.transform.position = VisiblePoint();
                         brain.transform.rotation = Quaternion.LookRotation(probe.transform.position - spawn);
                         phaseStart = spawn; Next(1, 0.65f); break;
                     case 1:
-                        Require(brain.State == PursuerAgent.PursuerState.Chase && brain.IsPlayerVisible, "Clear sight acquires the target and starts Chase");
-                        Require(nav.speed == 4f && Vector3.Distance(phaseStart, brain.transform.position) > 0.15f, "Chase moves at configured speed");
+                        Require((brain.State == PursuerAgent.PursuerState.Approach || brain.State == PursuerAgent.PursuerState.Arrest) && brain.IsPlayerVisible, "First sight approaches for arrest instead of shooting");
+                        Require(nav.speed == brain.Settings.approachSpeed && Vector3.Distance(phaseStart, brain.transform.position) > 0.15f, "Approach moves at configured speed");
+                        Require(!brain.IsRetaliating && brain.GetComponent<EnemyShooting>().ShotsFired == 0, "Unarmed contact never authorizes weapon fire");
                         nav.updateRotation = false;
                         brain.transform.rotation = Quaternion.LookRotation(brain.transform.position - probe.transform.position);
                         Next(2, 0.15f); break;
                     case 2:
-                        Require(brain.IsPlayerVisible && brain.State == PursuerAgent.PursuerState.Chase, "Navigation turns do not lose a confirmed target");
+                        Require(brain.IsPlayerVisible, "Navigation turns do not lose a confirmed target");
                         nav.updateRotation = true; nav.updatePosition = false; Warp(); brain.transform.position = spawn;
                         lastSeen = brain.LastKnownPlayerPosition;
                         Block(probe.transform.position); Next(3, 0.2f); break;
@@ -139,7 +161,7 @@ namespace Lockdown.Editor
                         Warp(); Next(7, 0.6f); break;
                     case 7:
                         Require(brain.State == PursuerAgent.PursuerState.Search, "Inspecting the clue starts a local Search");
-                        var controller = originalTarget.GetComponent<FirstPersonController>(); controller.enabled = false;
+                        var controller = originalTarget.GetComponent<FirstPersonController>(); controller.enabled = true; controller.CaptureCursor();
                         var body = originalTarget.GetComponent<CharacterController>(); body.enabled = false;
                         originalTarget.position = lastSeen; body.enabled = true;
                         controller.PlayerCamera.transform.LookAt(spawn + Vector3.up * 1.2f);
@@ -149,15 +171,47 @@ namespace Lockdown.Editor
                         playerHealth = originalTarget.GetComponent<Health>().CurrentHealth;
                         Next(8, 0.25f); break;
                     case 8:
-                        Require(brain.State == PursuerAgent.PursuerState.Attack, "Visible healthy player in range selects Attack");
-                        Require(brain.GetComponent<EnemyShooting>().ShotsFired == initialShots, "Aim warning precedes the first bullet");
-                        Capture("PursuerAimWarning");
-                        Next(9, 1.2f); break;
+                        Require(brain.State == PursuerAgent.PursuerState.Approach || brain.State == PursuerAgent.PursuerState.Arrest, "Actual player is approached for handcuffing on first sight");
+                        Require(brain.GetComponent<EnemyShooting>().ShotsFired == initialShots, "Guard does not shoot an unprovoked player");
+                        Next(80, 0.65f); break;
+                    case 80:
+                        Require(brain.State == PursuerAgent.PursuerState.Arrest && brain.ArrestProgress > 0f, "Staying within reach starts a visible arrest countdown");
+                        Capture("PursuerArrest");
+                        nav.updatePosition = false; nav.updateRotation = false; Warp(); brain.transform.position = spawn;
+                        Next(81, 0.2f); break;
+                    case 81:
+                        Require(brain.ArrestProgress == 0f && !originalTarget.GetComponent<PlayerVitals>().IsCaptured, "Breaking reach cancels the handcuff attempt");
+                        brain.enabled = false; brain.enabled = true; Warp();
+                        brain.transform.rotation = Quaternion.LookRotation(spawn - originalTarget.position);
+                        originalTarget.GetComponent<FirstPersonController>().CaptureCursor();
+                        Next(82, 0.15f); break;
+                    case 82:
+                        Require(!brain.IsPlayerVisible && !brain.IsRetaliating, "Guard has not seen the player behind it before the hit");
+                        Require(originalTarget.GetComponent<PlayerEquipment>().TryEquipPistol(), "Actual player equips the pistol for retaliation verification");
+                        originalTarget.GetComponent<FirstPersonController>().PlayerCamera.transform.LookAt(spawn + Vector3.up * 1.2f);
+                        AddForwardCover();
+                        Physics.SyncTransforms();
+                        float guardHealth = brain.GetComponent<Health>().CurrentHealth;
+                        Require(originalTarget.GetComponentInChildren<FirstPersonWeapon>(true).TryFire(), "Actual player pistol fires from behind the guard");
+                        Require(brain.GetComponent<Health>().CurrentHealth == guardHealth - 25f, "Actual bullet damages the guard");
+                        Require(brain.IsRetaliating, "Attributed player hit authorizes retaliation even from behind");
+                        nav.updateRotation = true; Next(83, 0.2f); break;
+                    case 83:
+                        Require(brain.State == PursuerAgent.PursuerState.AdvanceCover, "Attacked guard selects nearby forward cover against real solid geometry");
+                        Require(brain.GetComponent<EnemyShooting>().ShotsFired == initialShots, "Aim warning precedes the first retaliatory bullet");
+                        Capture("PursuerAimWarning"); Next(9, 1.7f); break;
                     case 9:
                         Require(brain.GetComponent<EnemyShooting>().ShotsFired > initialShots, "Attack decision executes actual weapon fire");
                         Require(originalTarget.GetComponent<Health>().CurrentHealth < playerHealth, "Weapon fire damages actual player Health");
+                        Require(brain.State != PursuerAgent.PursuerState.AdvanceCover, "Brief cover expires and guard resumes armed pressure");
+                        Object.DestroyImmediate(coverWall); coverWall = null;
                         Capture("PursuerAttack");
-                        Next(91, 0.2f); break;
+                        nav.updatePosition = true; phaseStart = brain.transform.position;
+                        Next(90, 0.7f); break;
+                    case 90:
+                        Require(Vector3.Distance(brain.transform.position, originalTarget.position) <= brain.Settings.combatStopDistance + 0.3f
+                            || Vector3.Distance(phaseStart, brain.transform.position) > 0.1f, "Armed guard closes distance instead of camping");
+                        Next(91, 0.1f); break;
                     case 91:
                         nav.updatePosition = false; Warp(); brain.transform.position = spawn;
                         Block(originalTarget.position);
@@ -172,14 +226,34 @@ namespace Lockdown.Editor
                         Require(!brain.GetComponent<EnemyShooting>().enabled, "Death disables the weapon");
                         Require(!brain.GetComponent<Collider>().enabled && !brain.GetComponent<PursuerFormation>().enabled, "Death removes collision and releases formation slot");
                         Next(11, 0.3f); break;
-                    default:
-                        if (phase == 11)
-                        {
-                            Require(brain.GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Death"), "Death animation plays on imported character");
-                            Capture("PursuerDeath");
-                            Next(12, 0.2f);
-                        }
-                        else Finish(null);
+                    case 11:
+                        Require(brain.GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Death"), "Death animation plays on imported character");
+                        Capture("PursuerDeath");
+                        Object.DestroyImmediate(brain.gameObject);
+                        var fresh = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PursuerAIBuilder.PrefabPath), spawn, rotation);
+                        brain = fresh.GetComponent<PursuerAgent>(); nav = fresh.GetComponent<NavMeshAgent>(); Assign(originalTarget);
+                        brain.Settings.arrestDuration = 0.8f;
+                        nav.updatePosition = false;
+                        var playerBody = originalTarget.GetComponent<CharacterController>(); playerBody.enabled = false;
+                        originalTarget.position = spawn + (lastSeen - spawn).normalized * 1.1f;
+                        playerBody.enabled = true;
+                        brain.transform.rotation = Quaternion.LookRotation(originalTarget.position - spawn);
+                        Physics.SyncTransforms(); playerHealth = originalTarget.GetComponent<Health>().CurrentHealth;
+                        Next(12, 1.2f); break;
+                    case 12:
+                        Require(originalTarget.GetComponent<PlayerVitals>().IsCaptured && brain.State == PursuerAgent.PursuerState.Caught, "Remaining within handcuff reach ends the encounter as Caught");
+                        Require(originalTarget.GetComponent<Health>().CurrentHealth == playerHealth, "Handcuffing captures without inflicting lethal damage");
+                        Require(!originalTarget.GetComponent<FirstPersonController>().enabled
+                            && !originalTarget.GetComponentInChildren<FirstPersonWeapon>(true).enabled, "Capture disables player movement and weapon controls");
+                        Require(!originalTarget.GetComponentInChildren<FirstPersonWeapon>(true).TryFire(), "Captured player cannot fire the pistol");
+                        originalTarget.GetComponent<PlayerVitals>().RestartEncounter();
+                        Next(13, 0.6f); break;
+                    case 13:
+                        var restartedPlayer = Object.FindAnyObjectByType<FirstPersonController>();
+                        brain = Object.FindAnyObjectByType<PursuerAgent>();
+                        Require(restartedPlayer != null && restartedPlayer.enabled && !restartedPlayer.GetComponent<PlayerVitals>().IsCaptured
+                            && restartedPlayer.GetComponent<Health>().CurrentHealth == 100f && !brain.IsRetaliating, "Restart clears arrest and retaliation and restores the player");
+                        Finish(null);
                         break;
                 }
             }
@@ -215,6 +289,16 @@ namespace Lockdown.Editor
             wall.transform.localScale = new Vector3(4f, 3f, 0.15f);
             Physics.SyncTransforms();
         }
+        private static void AddForwardCover()
+        {
+            Vector3 direction = originalTarget.position - spawn; direction.y = 0f; direction.Normalize();
+            Vector3 candidate = spawn + direction + Vector3.Cross(Vector3.up, direction) * 1.5f;
+            coverWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            coverWall.name = "Pursuer_ForwardCoverVerification";
+            coverWall.transform.SetPositionAndRotation((candidate + originalTarget.position) * 0.5f + Vector3.up * 1.3f,
+                Quaternion.LookRotation(originalTarget.position - candidate));
+            coverWall.transform.localScale = new Vector3(0.8f, 2.6f, 0.12f);
+        }
         private static Vector3 VisiblePoint()
         {
             foreach (var offset in new[] { Vector3.right, Vector3.back, Vector3.forward, Vector3.left })
@@ -229,9 +313,31 @@ namespace Lockdown.Editor
             }
             throw new InvalidOperationException("No reachable clear verification target");
         }
+        private static void FindInterceptionScenario()
+        {
+            var actions = brain.GetComponent<PursuerController>();
+            var navigation = brain.GetComponent<PursuerNavigation>();
+            for (int ring = 3; ring <= 5; ring += 2)
+            for (int direction = 0; direction < 8; direction++)
+            for (int travel = 0; travel < 8; travel++)
+            {
+                float angle = direction * Mathf.PI / 4f, heading = travel * Mathf.PI / 4f;
+                var start = spawn + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * ring;
+                var velocity = new Vector3(Mathf.Cos(heading), 0f, Mathf.Sin(heading)) * 4f;
+                if (Vector3.Dot((start - spawn).normalized, velocity.normalized) < -0.1f) continue;
+                if (!navigation.HasClearLine(spawn + Vector3.up * 1.2f, start + Vector3.up * 1.2f)
+                    || !navigation.HasClearLine(spawn + Vector3.up * 1.2f, start + velocity * 0.9f + Vector3.up * 1.2f)
+                    || !actions.TryRouteLength(start, start + velocity * 0.9f, out _)) continue;
+                var planner = new PursuerInterception();
+                planner.Observe(start - velocity * 0.1f, 0f); planner.Observe(start, 0.1f);
+                if (!planner.TryChoose(spawn, 0.1f, brain.Settings, actions.TryRouteLength, out _)) continue;
+                interceptStart = start; interceptVelocity = velocity; return;
+            }
+            throw new InvalidOperationException("No visible reachable interception scenario near museum spawn");
+        }
         private static void Require(bool condition, string message)
         {
-            if (!condition) throw new InvalidOperationException(message + " [state=" + (brain != null ? brain.State.ToString() : "missing") + "]");
+            if (!condition) throw new InvalidOperationException(message + " [state=" + (brain != null ? brain.State.ToString() + ", visible=" + brain.IsPlayerVisible + ", observed velocity=" + brain.ObservedVelocity + ", reason=" + brain.DecisionReason : "missing") + "]");
             checks.Add("PASS: " + message);
         }
         private static void Finish(Exception error)
@@ -239,6 +345,7 @@ namespace Lockdown.Editor
             EditorApplication.update -= Tick;
             if (probe != null) Object.DestroyImmediate(probe);
             if (wall != null) Object.DestroyImmediate(wall);
+            if (coverWall != null) Object.DestroyImmediate(coverWall);
             Application.runInBackground = previousBackground;
             if (decisionRecorder.Valid)
             {
