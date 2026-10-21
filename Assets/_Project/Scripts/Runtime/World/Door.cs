@@ -13,15 +13,17 @@ namespace Lockdown.World
         [SerializeField] private bool startsOpen;
         private Quaternion closedRotation;
         private float currentAngle;
+        private DoorLock doorLock;
 
         // IsOpen is the requested state, so another press can reverse a moving door.
         public bool IsOpen { get; private set; }
         public bool IsMoving => currentAngle != TargetAngle;
-        public string InteractionLabel => IsOpen ? "Close door" : "Open door";
+        public string InteractionLabel => doorLock != null && doorLock.IsLocked ? doorLock.Label : IsOpen ? "Close door" : "Open door";
         private float TargetAngle => IsOpen ? openAngle : 0f;
 
         private void Awake()
         {
+            doorLock = GetComponent<DoorLock>();
             closedRotation = transform.localRotation;
             IsOpen = startsOpen;
             currentAngle = TargetAngle;
@@ -40,6 +42,7 @@ namespace Lockdown.World
             if (!isActiveAndEnabled || interactor == null) return false;
             var interaction = interactor.GetComponent<PlayerInteraction>();
             if (interaction == null || interaction.CurrentTarget != (IInteractable)this) return false;
+            if (doorLock != null && !doorLock.TryUnlock(interactor)) return false;
             IsOpen = !IsOpen;
             return true;
         }
