@@ -177,8 +177,12 @@ namespace Lockdown.Tests
                 foreach (var shooting in root.GetComponentsInChildren<Lockdown.Enemies.EnemyShooting>(true)) shooting.enabled = false;
                 foreach (var otherPlayer in root.GetComponentsInChildren<FirstPersonController>(true)) otherPlayer.gameObject.SetActive(false);
             }
-            // The Storage doors are locked until the Stone Age keycard is found; this sweep checks how doors move.
+            // Mission locks: this sweep checks how doors move, so carry the Storage keycard and smash the
+            // Security room's breakable locks first.
             PlayerKeys.For(player.gameObject).Add("StorageKeycard");
+            foreach (var root in museum.GetRootGameObjects())
+                foreach (var doorLock in root.GetComponentsInChildren<DoorLock>(true))
+                    if (doorLock.IsBreakable) doorLock.TakeDamage(float.MaxValue);
             int count = 0;
             foreach (var root in museum.GetRootGameObjects())
             {
