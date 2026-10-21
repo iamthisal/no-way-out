@@ -1,5 +1,6 @@
 using System;
 using Lockdown.Interfaces;
+using Lockdown.Combat;
 using Lockdown.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -119,7 +120,9 @@ namespace Lockdown.Weapons
             if (Physics.Raycast(ray, out RaycastHit hit, range, hitMask, QueryTriggerInteraction.Ignore))
             {
                 end = hit.point;
-                hit.collider.GetComponentInParent<IDamageable>()?.TakeDamage(damage);
+                var damageable = hit.collider.GetComponentInParent<IDamageable>();
+                if (damageable is Health health) health.TakeDamage(damage, player.transform);
+                else damageable?.TakeDamage(damage);
                 if (impactPrefab != null)
                 {
                     var impact = Instantiate(impactPrefab, hit.point + hit.normal * 0.015f, Quaternion.LookRotation(hit.normal));

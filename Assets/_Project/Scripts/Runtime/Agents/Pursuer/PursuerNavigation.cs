@@ -64,6 +64,43 @@ namespace Lockdown.Agents.Pursuer
 
         public bool CanReach(Vector3 point) => TryPath(point, out _);
 
+        /// <summary>Queries a complete route without changing the active movement command.</summary>
+        public bool TryRouteLength(Vector3 from, Vector3 to, out float length)
+        {
+            length = float.PositiveInfinity;
+            if (!IsReady || !IsFinite(from.x) || !IsFinite(from.y) || !IsFinite(from.z)
+                || !IsFinite(to.x) || !IsFinite(to.y) || !IsFinite(to.z)) return false;
+            if (!NavMesh.SamplePosition(from, out var start, sampleRadius, Filter)
+                || !NavMesh.SamplePosition(to, out var end, sampleRadius, Filter)
+                || Mathf.Abs(start.position.y - from.y) > sampleRadius || Mathf.Abs(end.position.y - to.y) > sampleRadius
+                || SegmentBlocked(from + Vector3.up * 0.45f, start.position + Vector3.up * 0.45f, false)
+                || SegmentBlocked(to + Vector3.up * 0.45f, end.position + Vector3.up * 0.45f, false)) return false;
+            if (!NavMesh.CalculatePath(start.position, end.position, Filter, queryPath)
+                || queryPath.status != NavMeshPathStatus.PathComplete) return false;
+            var corners = queryPath.corners;
+            length = 0f;
+            for (int i = 1; i < corners.Length; i++) length += Vector3.Distance(corners[i - 1], corners[i]);
+            return true;
+        }
+
+        public bool HasClearLine(Vector3 from, Vector3 to, Transform target = null)
+        {
+            Vector3 direction = to - from;
+            if (direction.sqrMagnitude < 0.0001f) return true;
+            int count = Physics.RaycastNonAlloc(from, direction.normalized, hits, direction.magnitude,
+                solidMask, QueryTriggerInteraction.Ignore);
+            if (count == hits.Length) return false;
+            for (int i = 0; i < count; i++)
+                if (!hits[i].transform.IsChildOf(transform) && (target == null || !hits[i].transform.IsChildOf(target))) return false;
+            return true;
+        }
+
+        public bool IsScreened(Vector3 position, Vector3 threatPosition)
+        {
+            // Only solid world geometry is cover; another character is not a safe cover point.
+            return SegmentBlocked(position + Vector3.up * 1.2f, threatPosition + Vector3.up * 1.2f, false);
+        }
+
         private bool TryPath(Vector3 point, out Vector3 snapped)
         {
             snapped = point;

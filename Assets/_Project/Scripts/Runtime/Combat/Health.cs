@@ -16,14 +16,18 @@ namespace Lockdown.Combat
         public bool IsDead => CurrentHealth <= 0f;
         public UnityEvent OnDamaged => onDamaged;
         public UnityEvent OnDeath => onDeath;
+        public event System.Action<Transform> DamagedBy;
 
         private void Awake() { CurrentHealth = maxHealth; }
 
-        public void TakeDamage(float amount)
+        public void TakeDamage(float amount) => TakeDamage(amount, null);
+
+        public void TakeDamage(float amount, Transform instigator)
         {
             if (IsDead || amount <= 0f || float.IsNaN(amount) || float.IsInfinity(amount)) return;
             CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
             onDamaged.Invoke();
+            DamagedBy?.Invoke(instigator);
             if (IsDead) onDeath.Invoke();
         }
 
