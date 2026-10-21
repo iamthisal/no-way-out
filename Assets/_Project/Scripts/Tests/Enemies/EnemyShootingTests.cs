@@ -113,7 +113,9 @@ namespace Lockdown.Tests
             // This suite validates the autonomous wanderer, independently of the pursuer FSM.
             foreach (var pursuer in Object.FindObjectsByType<PursuerAgent>(FindObjectsInactive.Exclude))
                 pursuer.gameObject.SetActive(false);
-            return Object.FindAnyObjectByType<WanderingEnemy>().GetComponent<EnemyShooting>();
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Characters/WanderingEnemy.prefab");
+            Assert.That(prefab, Is.Not.Null);
+            return Object.Instantiate(prefab, new Vector3(0f, 0.05f, -2.5f), Quaternion.Euler(0f, 180f, 0f)).GetComponent<EnemyShooting>();
         }
 
         private static void SetPosition(FirstPersonController player, Vector3 position)
