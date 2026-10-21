@@ -61,7 +61,10 @@ namespace Lockdown.Tests
                 Assert.That(renderer.GetComponents<BoxCollider>().Length, Is.EqualTo(1));
             }
             Assert.That(meshPanes, Is.EqualTo(7));
-            Assert.That(Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude).Length, Is.EqualTo(7));
+            int shatterEffects = 0;
+            foreach (var effect in Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude))
+                if (effect.name == "GlassShatter") shatterEffects++;
+            Assert.That(shatterEffects, Is.EqualTo(7));
             Assert.That(GameObject.Find("Courtyard_LockedGlassDoor").GetComponent<BreakableGlass>(), Is.Null);
             int expectedItems = 0;
             long expectedValue = 0;
