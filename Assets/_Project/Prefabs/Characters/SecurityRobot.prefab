@@ -544,7 +544,7 @@ MonoBehaviour:
   sightRange: 12
   fieldOfView: 160
   eyeHeight: 0.76
-  powerUpTime: 1
+  powerUpTime: 0.2
   searchRadius: 8
   keepDistance: 6
   loseSightAfter: 1.5

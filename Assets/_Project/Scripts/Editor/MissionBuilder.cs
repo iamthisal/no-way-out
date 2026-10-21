@@ -30,16 +30,15 @@ namespace Lockdown.Editor
 
         public enum LockKind { None, Keycard, Breakable, Sealed }
         // Every mission door, with a point on the side its lock keeps the player out of; the reader that shows
-        // the lock goes on the other side. Storage is open, and its back doors into the Staff Corridor take the
-        // keycard. From the corridor the hammer breaks into the Security room. Its lobby door stays sealed so
-        // the keycard cannot be skipped.
+        // the lock goes on the other side. Storage is open. The staff keycard opens its back doors into the
+        // Staff Corridor and the Security room's lobby door; from the corridor the hammer can also break in.
         public static readonly (string door, LockKind kind, Vector3 lockedSide)[] DoorLocks =
         {
             ("Door_D06_Storage", LockKind.None, Vector3.zero),
             ("Door_D07_Storage", LockKind.Keycard, new Vector3(15.5f, 0f, 1f)),
             ("Door_D08_Storage", LockKind.Keycard, new Vector3(9.5f, 0f, -4.5f)),
             ("Door_D09_Security", LockKind.Breakable, new Vector3(8f, 0f, -8.5f)),
-            ("Door_D10_Security", LockKind.Sealed, new Vector3(8f, 0f, -8.5f)),
+            ("Door_D10_Security", LockKind.Keycard, new Vector3(8f, 0f, -8.5f)),
         };
         private const float ReaderHeight = 1.37f;
         // A reader this close to a door's leaf (the World Builder mounted several) belongs to that door.
@@ -80,11 +79,15 @@ namespace Lockdown.Editor
                 { "Mission_RobotPad", (new Color(0.05f, 0.35f, 0.45f), 0.4f, 0.8f) },
             };
 
-        // Mission step 5: two security robots rest on chargers in the Security room, beside the sealed lobby
-        // door they use as their bay door. Both docks are clear of the inward swing of the corridor door.
+        // Mission step 5: security robots rest on chargers in far-apart corners of the museum, so when the alarm
+        // sends them after the player they close in from opposite ends.
         public const string RobotPrefabPath = "Assets/_Project/Prefabs/Characters/SecurityRobot.prefab";
-        private const string BayDoor = "Door_D10_Security";
-        private static readonly Vector3[] RobotDocks = { new Vector3(6f, 0f, -7.3f), new Vector3(6f, 0f, -8.9f) };
+        // Each dock is a corner kept clear and walkable, with the robot facing into the room.
+        public static readonly (string room, Vector2 spot, Vector2 facing)[] RobotDocks =
+        {
+            ("Art Gallery", new Vector2(-15.1f, 4.1f), new Vector2(1f, -1f)),
+            ("Asian Heritage", new Vector2(4.4f, 29.1f), new Vector2(1f, -1f)),
+        };
 
         [MenuItem("Tools/Lockdown/Missions/Build Staff Keycard")]
         public static void BuildKeycard()
@@ -402,6 +405,7 @@ namespace Lockdown.Editor
             Debug.Log("Security robot prefab built at " + RobotPrefabPath + ".");
         }
 
+        // Safe to run again: it replaces the robots and their chargers with ones at the RobotDocks corners.
         [MenuItem("Tools/Lockdown/Missions/Place Security Robots")]
         public static void PlaceRobots()
         {
@@ -411,53 +415,35 @@ namespace Lockdown.Editor
             var missions = scene.GetRootGameObjects().FirstOrDefault(r => r.name == "Missions")
                 ?? throw new InvalidOperationException("Place the mission set-up and the alarm first.");
             if (missions.GetComponentInChildren<MuseumAlarm>(true) == null) throw new InvalidOperationException("Place the guard patrol and alarm first.");
-            var existing = missions.transform.Find("RobotBay");
-            if (existing != null) { Selection.activeGameObject = existing.gameObject; return; }
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RobotPrefabPath) == null) BuildRobot();
-            var doorRoot = GameObject.Find("Museum/Doors/" + BayDoor) ?? throw new InvalidOperationException("Missing door " + BayDoor + ".");
-            var door = doorRoot.GetComponentInChildren<Door>(true);
-
-            var bay = new GameObject("RobotBay");
-            Undo.RegisterCreatedObjectUndo(bay, "Place security robots");
-            bay.transform.SetParent(missions.transform, false);
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RobotPrefabPath);
-            var robots = new List<Lockdown.Enemies.SecurityRobot>();
-            for (int i = 0; i < RobotDocks.Length; i++)
+            // The first version docked the robots in a bay in the Security room.
+            foreach (var old in new[] { "RobotBay", "SecurityRobots" })
             {
-                if (!NavMesh.SamplePosition(RobotDocks[i], out var floor, 0.3f, NavMesh.AllAreas))
-                    throw new InvalidOperationException("Robot dock " + RobotDocks[i] + " is off the NavMesh.");
-                // The NavMesh floats a little above the floor; the charger sits on the floor itself.
-                Slab(bay.transform, "Charger_" + (i + 1), new Vector3(RobotDocks[i].x, 0.011f, RobotDocks[i].z), new Vector3(0.8f, 0.01f, 0.8f),
-                    MaterialFor("Mission_RobotPad"), PrimitiveType.Cylinder);
-                var robot = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
-                robot.name = "SecurityRobot_" + (i + 1);
-                robot.transform.SetParent(bay.transform, true);
-                // Facing the bay door, ready to roll out.
-                robot.transform.SetPositionAndRotation(floor.position, Quaternion.LookRotation(Vector3.left));
-                robots.Add(robot.GetComponent<Lockdown.Enemies.SecurityRobot>());
+                var previous = missions.transform.Find(old);
+                if (previous != null) Undo.DestroyObjectImmediate(previous.gameObject);
             }
 
-            // A barrier in the doorway keeps the player out while the door stands open for the robots.
-            var leaf = LeafBounds(door);
-            var barrier = new GameObject("RobotBarrier");
-            barrier.layer = LayerMask.NameToLayer("Ignore Raycast");
-            barrier.transform.SetParent(bay.transform, false);
-            barrier.transform.position = new Vector3(leaf.center.x, 1.2f, leaf.center.z);
-            var block = barrier.AddComponent<BoxCollider>();
-            block.size = leaf.size.z > leaf.size.x ? new Vector3(0.3f, 2.4f, leaf.size.z) : new Vector3(leaf.size.x, 2.4f, 0.3f);
-            block.enabled = false;
-
-            var robotBay = bay.AddComponent<Lockdown.Enemies.RobotBay>();
-            var serialized = new SerializedObject(robotBay);
-            serialized.FindProperty("door").objectReferenceValue = door;
-            serialized.FindProperty("barrier").objectReferenceValue = block;
-            var list = serialized.FindProperty("robots");
-            list.arraySize = robots.Count;
-            for (int i = 0; i < robots.Count; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = robots[i];
-            serialized.ApplyModifiedProperties();
+            var group = new GameObject("SecurityRobots");
+            Undo.RegisterCreatedObjectUndo(group, "Place security robots");
+            group.transform.SetParent(missions.transform, false);
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RobotPrefabPath);
+            for (int i = 0; i < RobotDocks.Length; i++)
+            {
+                var (room, spot, facing) = RobotDocks[i];
+                var dock = new Vector3(spot.x, 0f, spot.y);
+                if (!NavMesh.SamplePosition(dock, out var floor, 0.3f, NavMesh.AllAreas))
+                    throw new InvalidOperationException("The robot dock in " + room + " is off the NavMesh.");
+                // The NavMesh floats a little above the floor; the charger sits on the floor itself.
+                Slab(group.transform, "Charger_" + room.Replace(" ", ""), new Vector3(dock.x, 0.011f, dock.z), new Vector3(0.8f, 0.01f, 0.8f),
+                    MaterialFor("Mission_RobotPad"), PrimitiveType.Cylinder);
+                var robot = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
+                robot.name = "SecurityRobot_" + room.Replace(" ", "");
+                robot.transform.SetParent(group.transform, true);
+                robot.transform.SetPositionAndRotation(floor.position, Quaternion.LookRotation(new Vector3(facing.x, 0f, facing.y)));
+            }
             EditorSceneManager.MarkSceneDirty(scene);
-            Selection.activeGameObject = bay;
-            Debug.Log("Two security robots wait on their chargers in the Security room; " + BayDoor + " is their bay door. Save the scene.");
+            Selection.activeGameObject = group;
+            Debug.Log(RobotDocks.Length + " security robots wait on chargers in the corners of the museum. Save the scene.");
         }
 
         private static AudioSource Sound(Transform parent, string name, string clip, bool loop, float volume)
