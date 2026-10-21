@@ -5,7 +5,7 @@ The joint GV/IS project uses **three ground enemy agents and a dynamic spawning 
 | Selected agent | Reference under `game_html/src/` | Existing decision approach |
 |---|---|---|
 | [Sentinel / Pursuer](Sentinel.md) | `enemy-ai.js`, `Pursuer` | State-based patrol, investigation, chase, search and return |
-| [Stalker / Ambusher](Stalker.md) | `enemy-ai.js`, `Ambusher` | Cover/peek/retreat states with scored cover selection in `main.js` |
+| [Stalker / Ambusher](Stalker.md) | `enemy-ai.js`, `Ambusher` | Cover/peek/retreat states with scored cover selection in `main.js`; Unity: [skeleton archer](../SkeletonArcher.md) |
 | [Hound](Hound.md) | `hound-ai.js`, `Hound` | Sound utility scoring, decaying memory and wander/track/sniff states |
 | [Dynamic Spawning Agent](DynamicSpawner.md) | `room-controller.js`, `room-config.js`, `spawnWave` in `main.js` | Event-driven configured waves; adaptive policy pending |
 
