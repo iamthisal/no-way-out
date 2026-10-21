@@ -35,7 +35,7 @@ namespace Lockdown.Editor
             SessionState.SetString(ResultFile, "Logs/PursuerDecisionTests.xml");
             Runner.Execute(new ExecutionSettings(new Filter {
                 testMode = TestMode.EditMode,
-                testNames = new[] { "Lockdown.Tests.PursuerDecisionTests" }
+                testNames = new[] { "Lockdown.Tests.PursuerDecisionTests", "Lockdown.Tests.PursuerTacticsTests" }
             }));
         }
         private sealed class Reporter : ICallbacks
