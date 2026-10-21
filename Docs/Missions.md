@@ -201,3 +201,60 @@ destination.
 over the pistol and equips it, and that the empty locker offers nothing more. The
 museum tests that shoot (`EnemyShootingTests`, `WanderingEnemyTests`,
 `LootPickupTests`, `PlayerEquipmentTests`) collect the locker pistol first.
+
+## Step 5: the security robots
+
+Two small robots that roll on their sphere bellies rest on glowing chargers in the
+Security room, beside the sealed lobby door (D10). That door is their bay door.
+
+- **Waking up.** When the alarm sounds they light up red, chirp and power up for
+  a second. Then they roll out through D10, which swings open for them.
+- **The bay door.** While any robot is out, D10 stays open, with an invisible
+  barrier in the doorway that keeps the player out. The barrier is on the Ignore
+  Raycast layer, so shots and sight pass through it.
+- **Hunting by sound.** The alarm reports where each noise or sighting happened:
+  the broken glass, or where the guard spotted you. The robots roll there at
+  2.6 m/s and search the area around it. Each new report sends them to the new
+  place.
+- **The laser.** They see 12 m in a 160-degree cone. On sight they close to about
+  6 m and fire an eye laser that does 8 damage, every 1.3 s. Before each shot the
+  eye glows white for 0.45 s with its aim locked, so stepping aside makes it miss.
+  The beam only hurts the player; it doesn't break glass.
+- **Losing you.** If they lose sight of you for 1.5 s, they hunt your last known
+  position.
+- **Going home.** When the Security computer switches the alarm off, they roll
+  home and dock. D10 closes behind them, and since the alarm can never ring again,
+  they stay docked.
+- **Fighting back.** Each robot has 75 health: three pistol shots or one hammer
+  blow. A destroyed robot slumps, its eye goes dark, and it stays down.
+
+**How it's built.** `SecurityRobot` is the robot's states, movement and sight, and
+`RobotLaser` is the telegraphed shot. `RobotBay` opens D10 and switches the
+barrier on while any robot is away. The guard and the robots share `PlayerSight`
+for cone and line-of-sight checks. `MuseumAlarm.Alerted` carries the location of
+each report. `Door.SetOpen` lets a script move a door without touching its lock.
+
+**Building it.**
+
+- **Tools > Lockdown > Missions > Build Security Robot** builds the placeholder
+  model: a white shell with orange bands that show it rolling, a dark dome head and
+  a glowing eye.
+- **Tools > Lockdown > Missions > Place Security Robots** adds the chargers, the
+  robots, the barrier and the bay.
+- `Blender/Missions/generate_audio.py` synthesises the hum, power-up, laser and
+  breakdown sounds.
+
+### Testing (step 5)
+
+`SecurityRobotTests` runs most checks in a small arena of its own:
+
+- the alarm wakes a robot, which then hits a player in sight;
+- sidestepping during the charge makes the shot miss;
+- three pistol shots destroy a robot for good;
+- switching the alarm off sends it home to its charger, and it can't be woken
+  again.
+
+In the museum it checks that both robots charge in the Security room and roll out
+through D10. It also checks that the barrier stops the player in the doorway, that
+both robots dock again once the alarm is off and the door closes, and that glass
+broken after the switch-off leaves them on their chargers.
