@@ -35,7 +35,6 @@ namespace Lockdown.Enemies
         private EnemyShooting rifle;
         private Health health;
         private FirstPersonController player;
-        private Health playerHealth;
         private float nextPlayerSearch;
         private float awakeAt;
         private float lastSeenAt;
@@ -154,46 +153,10 @@ namespace Lockdown.Enemies
             if (Time.time < nextPlayerSearch) return;
             nextPlayerSearch = Time.time + 1f;
             player = FindAnyObjectByType<FirstPersonController>();
-            playerHealth = player != null ? player.GetComponent<Health>() : null;
         }
 
-        private bool SeesPlayer(out float distance)
-        {
-            distance = 0f;
-            if (player == null || !player.gameObject.activeInHierarchy || playerHealth == null || playerHealth.IsDead) return false;
-            Vector3 eye = transform.position + Vector3.up * eyeHeight;
-            Vector3 flatForward = transform.forward;
-            flatForward.y = 0f;
-            // His head or his chest is enough.
-            foreach (var point in new[] { player.PlayerCamera != null ? player.PlayerCamera.transform.position : player.transform.position + Vector3.up * 1.6f,
-                                          player.transform.position + Vector3.up * 1.0f })
-            {
-                Vector3 direction = point - eye;
-                if (direction.magnitude > sightRange) continue;
-                Vector3 flat = direction;
-                flat.y = 0f;
-                if (Vector3.Angle(flatForward, flat) > fieldOfView * 0.5f) continue;
-                if (!ClearLine(eye, direction)) continue;
-                distance = direction.magnitude;
-                return true;
-            }
-            return false;
-        }
-
-        // The first thing the line meets, other than the guard himself, must be the player.
-        private bool ClearLine(Vector3 eye, Vector3 direction)
-        {
-            float nearest = float.PositiveInfinity;
-            Collider first = null;
-            foreach (var hit in Physics.RaycastAll(eye, direction.normalized, direction.magnitude + 0.3f,
-                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
-            {
-                if (hit.transform.IsChildOf(transform) || hit.distance >= nearest) continue;
-                nearest = hit.distance;
-                first = hit.collider;
-            }
-            return first != null && first.GetComponentInParent<FirstPersonController>() == player;
-        }
+        private bool SeesPlayer(out float distance) =>
+            PlayerSight.Sees(transform, transform.position + Vector3.up * eyeHeight, transform.forward, sightRange, fieldOfView, player, out distance);
 
         private void Spot()
         {
@@ -205,7 +168,7 @@ namespace Lockdown.Enemies
             nextPursuitUpdate = 0f;
             legs.Pursue(lastSeen);
             if (whistle != null && whistle.clip != null) whistle.Play();
-            if (MuseumAlarm.Current != null) MuseumAlarm.Current.Raise("The guard spotted you");
+            if (MuseumAlarm.Current != null) MuseumAlarm.Current.Raise("The guard spotted you", lastSeen);
             Spotted?.Invoke();
         }
 
