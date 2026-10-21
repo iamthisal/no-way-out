@@ -1,48 +1,97 @@
+using Lockdown.AI.Core.Hound;
 using UnityEngine;
 
 namespace Lockdown.AI.Agents
 {
-    // First milestone: remember one audible clue. Target scoring and movement come later.
+    [DisallowMultipleComponent]
     public sealed class HoundHearing : MonoBehaviour
     {
+        [SerializeField] private HoundSettings settings;
+        [Tooltip("Range for the original normalized HearNoise(position, loudness) API.")]
         [SerializeField, Min(0.1f)] private float hearingRange = 12f;
         [SerializeField, Min(0.1f)] private float memoryDuration = 5f;
+        [SerializeField] private LayerMask obstructionMask = Physics.DefaultRaycastLayers;
+        [SerializeField, Min(0.1f)] private float earHeight = 0.65f;
+        [Tooltip("Optional territory restriction; leave empty for the connected museum.")]
+        [SerializeField] private BoxCollider listeningArea;
 
-        [Header("Read-only during testing: these values show the latest clue")]
+        [Header("Runtime information")]
         [SerializeField] private bool hasClue;
         [SerializeField] private Vector3 lastHeardPosition;
         [SerializeField] private float memoryRemaining;
+        [SerializeField] private int rememberedSounds;
+
+        private HoundMemory memory;
+        private readonly RaycastHit[] hits = new RaycastHit[32];
 
         public bool HasClue => hasClue;
         public Vector3 LastHeardPosition => lastHeardPosition;
+        public HoundSettings Settings => settings;
+        public HoundMemory Memory => memory ?? (memory = settings != null ? settings.CreateMemory()
+            : new HoundMemory(maximumAge: memoryDuration));
 
-        // Call this when a gameplay noise occurs. Audio playback is a separate concern.
-        // Loudness is 0..1: 1 reaches the full hearing range, 0.5 reaches half of it.
+        private void OnEnable() { HoundNoiseBus.NoiseEmitted += ReceiveBroadcast; }
+        private void OnDisable()
+        {
+            HoundNoiseBus.NoiseEmitted -= ReceiveBroadcast;
+            memory?.Clear();
+            UpdateDebugValues();
+        }
+
+        private void ReceiveBroadcast(HoundSound sound, Transform source) { TryHear(sound, source); }
+
+        // Backwards compatible with the first milestone: loudness is normalized to 0..1.
         public void HearNoise(Vector3 position, float loudness)
         {
-            if (!isActiveAndEnabled) return;
+            if (!HoundSound.IsFinite(loudness)) return;
+            loudness = Mathf.Clamp01(loudness);
+            TryHear(new HoundSound(position, HoundSoundKind.Custom, loudness * 6f,
+                hearingRange * loudness, Time.timeAsDouble));
+        }
 
-            float audibleRange = hearingRange * Mathf.Clamp01(loudness);
-            if (audibleRange <= 0f || Vector3.Distance(transform.position, position) > audibleRange)
-                return;
+        public bool TryHear(HoundSound sound, Transform source = null)
+        {
+            if (!isActiveAndEnabled || !Application.isPlaying || Time.timeScale <= 0f || !sound.IsValid) return false;
+            if (source != null && (source == transform || source.IsChildOf(transform))) return false;
+            if (listeningArea != null && !listeningArea.bounds.Contains(sound.Position)) return false;
+            if ((sound.Position - transform.position).sqrMagnitude > sound.Radius * sound.Radius) return false;
 
-            lastHeardPosition = position;
-            memoryRemaining = memoryDuration;
-            hasClue = true;
+            Vector3 origin = transform.position + Vector3.up * earHeight;
+            Vector3 offset = sound.Position - origin;
+            int count = Physics.RaycastNonAlloc(origin, offset.normalized, hits, offset.magnitude,
+                obstructionMask, QueryTriggerInteraction.Ignore);
+            bool obstructed = count == hits.Length;
+            for (int i = 0; i < count; i++)
+            {
+                Transform hit = hits[i].transform;
+                if (hit.IsChildOf(transform) || (source != null && hit.IsChildOf(source))) continue;
+                obstructed = true;
+                break;
+            }
+            if (obstructed)
+            {
+                sound = sound.Attenuated(settings != null ? settings.obstructedSoundMultiplier : 0f);
+                if (!sound.IsValid || offset.magnitude > sound.Radius) return false;
+            }
+            bool accepted = Memory.Remember(sound, Time.timeAsDouble);
+            UpdateDebugValues();
+            return accepted;
         }
 
         private void Update()
         {
-            if (!hasClue) return;
-
-            memoryRemaining = Mathf.Max(0f, memoryRemaining - Time.deltaTime);
-            if (memoryRemaining == 0f) hasClue = false;
+            Memory.Prune(transform.position, Time.timeAsDouble);
+            UpdateDebugValues();
         }
 
-        private void OnDisable()
+        private void UpdateDebugValues()
         {
-            hasClue = false;
-            memoryRemaining = 0f;
+            HoundClue latest = memory?.Latest;
+            rememberedSounds = memory?.Count ?? 0;
+            hasClue = latest != null;
+            memoryRemaining = latest == null ? 0f
+                : Mathf.Max(0f, memory.MaximumAge - (float)(Time.timeAsDouble - latest.Sound.EmittedAt));
+            if (latest != null) lastHeardPosition = latest.Sound.Position;
         }
 
         private void OnDrawGizmosSelected()
