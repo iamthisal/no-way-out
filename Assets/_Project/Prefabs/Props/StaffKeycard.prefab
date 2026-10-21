@@ -190,7 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3633656909823784914}
   m_Layer: 0
-  m_Name: StorageKeycard
+  m_Name: StaffKeycard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -395,8 +395,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f12a05afe5341c18eb15d5cd1b81be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.KeyPickup
-  keyId: StorageKeycard
-  displayName: Storage keycard
+  keyId: StaffKeycard
+  displayName: staff keycard
 --- !u!1 &4956182915134327768
 GameObject:
   m_ObjectHideFlags: 0

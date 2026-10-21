@@ -12,14 +12,14 @@ using Object = UnityEngine.Object;
 
 namespace Lockdown.Editor
 {
-    // Mission step 1: the Storage room is locked, and its keycard waits on a plinth at the back of Stone Age.
+    // The museum's mission set-up: the staff keycard, the door locks, the guard's patrol, the alarm and the
+    // Security console.
     public static class MissionBuilder
     {
-        public const string StorageKeyId = "StorageKeycard";
-        public const string StorageKeyName = "Storage keycard";
-        public const string KeycardPrefabPath = "Assets/_Project/Prefabs/Props/StorageKeycard.prefab";
+        public const string StaffKeyId = "StaffKeycard";
+        public const string StaffKeyName = "staff keycard";
+        public const string KeycardPrefabPath = "Assets/_Project/Prefabs/Props/StaffKeycard.prefab";
         public const string ReaderPrefabPath = "Assets/_Project/Prefabs/Props/DoorLock_and_Keycard_Combined.prefab";
-        public static readonly string[] StorageDoors = { "Door_D06_Storage", "Door_D07_Storage", "Door_D08_Storage" };
         private const string MaterialFolder = "Assets/_Project/Materials/Missions";
         private const string PropMaterialFolder = "Assets/_Project/Materials/World/Props/Lobby";
         private const string ScenePath = "Assets/_Project/Scenes/Museum/Museum_Main.unity";
@@ -27,9 +27,20 @@ namespace Lockdown.Editor
         private static readonly Vector3 KeycardSpot = new Vector3(-9.75f, 0f, 28.55f);
         // The card faces out of the nook, toward a player coming round the standing stones.
         private static readonly Vector3 KeycardFacing = new Vector3(0.45f, 0f, -1f);
-        private static readonly Vector3 StorageCentre = new Vector3(9.5f, 0f, 1f);
-        public static readonly string[] SecurityDoors = { "Door_D09_Security", "Door_D10_Security" };
-        private static readonly Vector3 SecurityCentre = new Vector3(8f, 0f, -8.5f);
+
+        public enum LockKind { None, Keycard, Breakable, Sealed }
+        // Every mission door, with a point on the side its lock keeps the player out of; the reader that shows
+        // the lock goes on the other side. Storage is open, and its back doors into the Staff Corridor take the
+        // keycard. From the corridor the hammer breaks into the Security room. Its lobby door stays sealed so
+        // the keycard cannot be skipped.
+        public static readonly (string door, LockKind kind, Vector3 lockedSide)[] DoorLocks =
+        {
+            ("Door_D06_Storage", LockKind.None, Vector3.zero),
+            ("Door_D07_Storage", LockKind.Keycard, new Vector3(15.5f, 0f, 1f)),
+            ("Door_D08_Storage", LockKind.Keycard, new Vector3(9.5f, 0f, -4.5f)),
+            ("Door_D09_Security", LockKind.Breakable, new Vector3(8f, 0f, -8.5f)),
+            ("Door_D10_Security", LockKind.Sealed, new Vector3(8f, 0f, -8.5f)),
+        };
         private const float ReaderHeight = 1.37f;
         // A reader this close to a door's leaf (the World Builder mounted several) belongs to that door.
         private const float ReaderReach = 1.6f;
@@ -64,13 +75,13 @@ namespace Lockdown.Editor
                 { "Mission_KeycardStripe", (new Color(0.10f, 0.45f, 0.95f), 0.6f, 3f) },
             };
 
-        [MenuItem("Tools/Lockdown/Missions/Build Storage Keycard")]
+        [MenuItem("Tools/Lockdown/Missions/Build Staff Keycard")]
         public static void BuildKeycard()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Stop Play mode before building the keycard.");
             EnsureFolder(MaterialFolder);
-            var root = new GameObject("StorageKeycard");
+            var root = new GameObject("StaffKeycard");
             try
             {
                 // A walnut plinth with a brass cap, matching the gallery's display cases. Its front is local +Z.
@@ -96,62 +107,94 @@ namespace Lockdown.Editor
                 target.size = new Vector3(0.22f, 0.12f, 0.12f);
                 var pickup = card.AddComponent<KeyPickup>();
                 var serialized = new SerializedObject(pickup);
-                serialized.FindProperty("keyId").stringValue = StorageKeyId;
-                serialized.FindProperty("displayName").stringValue = StorageKeyName;
+                serialized.FindProperty("keyId").stringValue = StaffKeyId;
+                serialized.FindProperty("displayName").stringValue = StaffKeyName;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
                 PrefabUtility.SaveAsPrefabAsset(root, KeycardPrefabPath);
             }
             finally { Object.DestroyImmediate(root); }
             AssetDatabase.SaveAssets();
-            Debug.Log("Storage keycard prefab built at " + KeycardPrefabPath + ".");
+            Debug.Log("Staff keycard prefab built at " + KeycardPrefabPath + ".");
         }
 
-        [MenuItem("Tools/Lockdown/Missions/Place Storage Keycard and Locks")]
+        // Safe to run again: it places the keycard if it is missing and brings every door lock in line with DoorLocks.
+        [MenuItem("Tools/Lockdown/Missions/Place Staff Keycard and Door Locks")]
         public static void Place()
         {
             var scene = SceneManager.GetActiveScene();
             if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != ScenePath)
                 throw new InvalidOperationException("Open Museum_Main in Edit mode first.");
-            foreach (var existing in scene.GetRootGameObjects())
-                if (existing.name == "Missions") { Selection.activeGameObject = existing; return; }
             if (AssetDatabase.LoadAssetAtPath<GameObject>(KeycardPrefabPath) == null) BuildKeycard();
+            var missions = scene.GetRootGameObjects().FirstOrDefault(r => r.name == "Missions");
+            if (missions == null)
+            {
+                missions = new GameObject("Missions");
+                SceneManager.MoveGameObjectToScene(missions, scene);
+                Undo.RegisterCreatedObjectUndo(missions, "Place mission set-up");
+            }
+            if (missions.GetComponentInChildren<KeyPickup>(true) == null)
+            {
+                Physics.SyncTransforms();
+                if (Physics.CheckBox(KeycardSpot + new Vector3(0f, 0.55f, 0f), new Vector3(0.24f, 0.5f, 0.24f), Quaternion.identity, ~0, QueryTriggerInteraction.Ignore))
+                    throw new InvalidOperationException("Something is in the way of the keycard plinth at " + KeycardSpot + ".");
+                var keycard = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(KeycardPrefabPath), scene);
+                Undo.RegisterCreatedObjectUndo(keycard, "Place staff keycard");
+                keycard.transform.SetParent(missions.transform, true);
+                keycard.transform.SetPositionAndRotation(KeycardSpot, Quaternion.LookRotation(KeycardFacing));
+            }
+            ConfigureLocks(scene, missions.transform);
+            EditorSceneManager.MarkSceneDirty(scene);
+            Selection.activeGameObject = missions;
+            Debug.Log("The staff keycard waits in Stone Age at " + KeycardSpot + "; mission door locks updated. Save the scene.");
+        }
+
+        private static void ConfigureLocks(Scene scene, Transform missions)
+        {
             var reader = AssetDatabase.LoadAssetAtPath<GameObject>(ReaderPrefabPath)
                 ?? throw new InvalidOperationException("Missing card reader prefab: " + ReaderPrefabPath);
-            Physics.SyncTransforms();
-            if (Physics.CheckBox(KeycardSpot + new Vector3(0f, 0.55f, 0f), new Vector3(0.24f, 0.5f, 0.24f), Quaternion.identity, ~0, QueryTriggerInteraction.Ignore))
-                throw new InvalidOperationException("Something is in the way of the keycard plinth at " + KeycardSpot + ".");
-
-            var missions = new GameObject("Missions");
-            SceneManager.MoveGameObjectToScene(missions, scene);
-            Undo.RegisterCreatedObjectUndo(missions, "Place storage keycard and locks");
-            var keycard = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(KeycardPrefabPath), scene);
-            keycard.transform.SetParent(missions.transform, true);
-            keycard.transform.SetPositionAndRotation(KeycardSpot, Quaternion.LookRotation(KeycardFacing));
-
-            var readers = new GameObject("StorageReaders").transform;
-            readers.SetParent(missions.transform, false);
+            var readers = missions.Find("DoorReaders");
+            // Scenes from the first version of this step kept their readers in a Storage-only group.
+            var legacy = missions.Find("StorageReaders");
+            if (readers == null && legacy != null)
+            {
+                Undo.RecordObject(legacy.gameObject, "Rename door readers");
+                legacy.name = "DoorReaders";
+                readers = legacy;
+            }
+            if (readers == null)
+            {
+                readers = new GameObject("DoorReaders").transform;
+                Undo.RegisterCreatedObjectUndo(readers.gameObject, "Add door readers");
+                readers.SetParent(missions, false);
+            }
             var doors = GameObject.Find("Museum/Doors") ?? throw new InvalidOperationException("Museum/Doors is missing.");
-            foreach (var name in StorageDoors)
+            // Unlocked doors first, so a reader placed for an old lock is gone before readers are counted.
+            foreach (var (name, kind, lockedSide) in DoorLocks.OrderBy(entry => entry.kind != LockKind.None))
             {
                 var doorRoot = doors.transform.Find(name);
                 var door = doorRoot != null ? doorRoot.GetComponentInChildren<Door>(true) : null;
                 if (door == null) throw new InvalidOperationException("Missing door " + name + ".");
-                // Reuse the readers already beside this door, and add one only where the outside has none.
-                var indicators = ReadersBeside(scene, door, StorageCentre, out bool outsideCovered);
-                if (!outsideCovered) indicators.Add(PlaceReader(reader, readers, door, name, StorageCentre));
                 var doorLock = door.GetComponent<DoorLock>();
+                if (kind == LockKind.None)
+                {
+                    if (doorLock != null) Undo.DestroyObjectImmediate(doorLock);
+                    var added = readers.Find("Reader_" + name.Replace("Door_", ""));
+                    if (added != null) Undo.DestroyObjectImmediate(added.gameObject);
+                    continue;
+                }
+                // Reuse the readers already beside this door, and add one only where the near side has none.
+                var indicators = ReadersBeside(scene, door, lockedSide, out bool nearSideCovered);
+                if (!nearSideCovered) indicators.Add(PlaceReader(reader, readers, door, name, lockedSide));
                 if (doorLock == null) doorLock = Undo.AddComponent<DoorLock>(door.gameObject);
                 var serialized = new SerializedObject(doorLock);
-                serialized.FindProperty("keyId").stringValue = StorageKeyId;
-                serialized.FindProperty("keyName").stringValue = StorageKeyName;
+                serialized.FindProperty("keyId").stringValue = kind == LockKind.Keycard ? StaffKeyId : "";
+                serialized.FindProperty("keyName").stringValue = kind == LockKind.Keycard ? StaffKeyName : "";
+                serialized.FindProperty("breakable").boolValue = kind == LockKind.Breakable;
                 var list = serialized.FindProperty("indicators");
                 list.arraySize = indicators.Count;
                 for (int i = 0; i < indicators.Count; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = indicators[i];
                 serialized.ApplyModifiedProperties();
             }
-            EditorSceneManager.MarkSceneDirty(scene);
-            Selection.activeGameObject = missions;
-            Debug.Log("Storage doors locked; the keycard waits in Stone Age at " + KeycardSpot + ". Save the scene.");
         }
 
         [MenuItem("Tools/Lockdown/Missions/Place Guard Patrol and Alarm")]
@@ -230,39 +273,14 @@ namespace Lockdown.Editor
             Debug.Log("The guard now patrols " + stops.Length + " stops from Central Hall to Stone Age and back through the west galleries. Save the scene.");
         }
 
-        // Mission step 3: the hammer quietly breaks the Security room's locks, and its computer turns the
-        // alarm off. The skeleton archer leaves the museum until the dinosaur-room step brings skeletons back.
-        [MenuItem("Tools/Lockdown/Missions/Place Security Room Locks and Console")]
-        public static void PlaceSecurityRoom()
+        // The Security room's desk computer switches the alarm system off for good. The skeleton archer leaves
+        // the museum until the dinosaur-room step brings skeletons back.
+        [MenuItem("Tools/Lockdown/Missions/Place Security Console")]
+        public static void PlaceSecurityConsole()
         {
             var scene = SceneManager.GetActiveScene();
             if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != ScenePath)
                 throw new InvalidOperationException("Open Museum_Main in Edit mode first.");
-            var reader = AssetDatabase.LoadAssetAtPath<GameObject>(ReaderPrefabPath)
-                ?? throw new InvalidOperationException("Missing card reader prefab: " + ReaderPrefabPath);
-            var missions = scene.GetRootGameObjects().FirstOrDefault(r => r.name == "Missions")
-                ?? throw new InvalidOperationException("Place the Storage keycard and locks first.");
-            var readers = missions.transform.Find("StorageReaders");
-            var doors = GameObject.Find("Museum/Doors") ?? throw new InvalidOperationException("Museum/Doors is missing.");
-            foreach (var name in SecurityDoors)
-            {
-                var doorRoot = doors.transform.Find(name);
-                var door = doorRoot != null ? doorRoot.GetComponentInChildren<Door>(true) : null;
-                if (door == null) throw new InvalidOperationException("Missing door " + name + ".");
-                var indicators = ReadersBeside(scene, door, SecurityCentre, out bool outsideCovered);
-                if (!outsideCovered) indicators.Add(PlaceReader(reader, readers, door, name, SecurityCentre));
-                var doorLock = door.GetComponent<DoorLock>();
-                if (doorLock == null) doorLock = Undo.AddComponent<DoorLock>(door.gameObject);
-                var serialized = new SerializedObject(doorLock);
-                serialized.FindProperty("keyId").stringValue = "";
-                serialized.FindProperty("keyName").stringValue = "";
-                serialized.FindProperty("breakable").boolValue = true;
-                var list = serialized.FindProperty("indicators");
-                list.arraySize = indicators.Count;
-                for (int i = 0; i < indicators.Count; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = indicators[i];
-                serialized.ApplyModifiedProperties();
-            }
-
             var monitor = GameObject.Find("Museum/Decoration/Decor_Security/P_Security_DeskMonitor")
                 ?? throw new InvalidOperationException("The Security room's desk monitor is missing.");
             if (monitor.GetComponent<Collider>() == null) Undo.AddComponent<BoxCollider>(monitor);
@@ -282,7 +300,7 @@ namespace Lockdown.Editor
                 }
             EditorSceneManager.MarkSceneDirty(scene);
             Selection.activeGameObject = monitor;
-            Debug.Log("Security doors D09 and D10 now have locks the hammer breaks; the desk computer turns the alarm off. Save the scene.");
+            Debug.Log("The Security desk computer now switches the alarm system off for good. Save the scene.");
         }
 
         private static AudioClip Clip(string name)
@@ -292,11 +310,11 @@ namespace Lockdown.Editor
             return clip;
         }
 
-        private static List<Renderer> ReadersBeside(Scene scene, Door door, Vector3 roomCentre, out bool outsideCovered)
+        private static List<Renderer> ReadersBeside(Scene scene, Door door, Vector3 lockedSide, out bool nearSideCovered)
         {
             var bounds = LeafBounds(door);
-            Vector3 outward = Outward(bounds, roomCentre);
-            outsideCovered = false;
+            Vector3 nearSide = NearSide(bounds, lockedSide);
+            nearSideCovered = false;
             var found = new List<Renderer>();
             foreach (var root in scene.GetRootGameObjects())
                 foreach (var light in root.GetComponentsInChildren<Renderer>(true))
@@ -306,7 +324,7 @@ namespace Lockdown.Editor
                     offset.y = 0f;
                     if (offset.magnitude > ReaderReach) continue;
                     found.Add(light);
-                    if (Vector3.Dot(offset, outward) > 0f) outsideCovered = true;
+                    if (Vector3.Dot(offset, nearSide) > 0f) nearSideCovered = true;
                 }
             return found;
         }
@@ -318,20 +336,20 @@ namespace Lockdown.Editor
             return leaf.bounds;
         }
 
-        // The horizontal wall normal pointing out of the locked room.
-        private static Vector3 Outward(Bounds bounds, Vector3 roomCentre)
+        // The horizontal wall normal pointing toward the side the player comes from, away from the locked side.
+        private static Vector3 NearSide(Bounds bounds, Vector3 lockedSide)
         {
             Vector3 outward = bounds.size.z > bounds.size.x ? Vector3.right : Vector3.forward;
-            return Vector3.Dot(bounds.center - roomCentre, outward) < 0f ? -outward : outward;
+            return Vector3.Dot(bounds.center - lockedSide, outward) < 0f ? -outward : outward;
         }
 
-        // A card reader on the outside of a locked door, just past the latch edge of the closed leaf.
-        private static Renderer PlaceReader(GameObject prefab, Transform parent, Door door, string name, Vector3 roomCentre)
+        // A card reader on the player's side of a locked door, just past the latch edge of the closed leaf.
+        private static Renderer PlaceReader(GameObject prefab, Transform parent, Door door, string name, Vector3 lockedSide)
         {
             var bounds = LeafBounds(door);
             bool wallAlongZ = bounds.size.z > bounds.size.x;
             Vector3 along = wallAlongZ ? Vector3.forward : Vector3.right;
-            Vector3 outward = Outward(bounds, roomCentre);
+            Vector3 outward = NearSide(bounds, lockedSide);
             // The latch edge is the end of the leaf away from the hinge.
             if (Vector3.Dot(bounds.center - door.transform.position, along) < 0f) along = -along;
             float halfLength = Vector3.Dot(bounds.extents, new Vector3(Mathf.Abs(along.x), 0f, Mathf.Abs(along.z)));
