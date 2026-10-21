@@ -37,9 +37,6 @@ namespace Lockdown.World
             transform.localRotation = closedRotation * Quaternion.Euler(0f, currentAngle, 0f);
         }
 
-        // For scripts that move a door without a player, such as the robots' bay door. Ignores any lock.
-        public void SetOpen(bool open) { IsOpen = open; }
-
         public bool TryInteract(GameObject interactor)
         {
             if (!isActiveAndEnabled || interactor == null) return false;

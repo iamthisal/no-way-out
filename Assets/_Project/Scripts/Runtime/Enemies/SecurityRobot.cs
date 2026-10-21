@@ -7,11 +7,11 @@ using UnityEngine.AI;
 namespace Lockdown.Enemies
 {
     /// <summary>
-    /// A small security robot that rolls on its sphere belly. It rests on its charger in the Security room
-    /// until the alarm sounds, then powers up and rolls to wherever the alarm reported a noise or a
-    /// sighting, and searches the halls around it. When it sees the player it keeps its distance and
-    /// fires its eye laser. When the alarm is switched off it rolls home to its charger. Once destroyed
-    /// it stays down.
+    /// A small security robot that rolls on its sphere belly. It rests on its charger in a corner of the
+    /// museum until the alarm sounds. Then it heads straight for where the player is at that moment, and
+    /// searches the halls around that spot. Every new alarm report sends it to the player again. When it
+    /// sees the player it keeps its distance and fires its eye laser. When the alarm is switched off it
+    /// rolls home to its charger. Once destroyed it stays down.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent), typeof(Health), typeof(RobotLaser))]
@@ -25,7 +25,7 @@ namespace Lockdown.Enemies
         [SerializeField, Min(1f)] private float sightRange = 12f;
         [SerializeField, Range(10f, 360f)] private float fieldOfView = 160f;
         [SerializeField, Min(0.1f)] private float eyeHeight = 0.76f;
-        [SerializeField, Min(0f)] private float powerUpTime = 1f;
+        [SerializeField, Min(0f)] private float powerUpTime = 0.2f;
         [SerializeField, Min(1f)] private float searchRadius = 8f;
         [SerializeField, Min(1f)] private float keepDistance = 6f;
         [SerializeField, Min(0f)] private float loseSightAfter = 1.5f;
@@ -49,7 +49,6 @@ namespace Lockdown.Enemies
         private float rollAngle;
 
         public Mode State { get; private set; } = Mode.Docked;
-        // Out of its charger, so the bay door has to be open for it.
         public bool IsAway => State != Mode.Docked && State != Mode.Destroyed;
         public Vector3 Target => target;
         public Vector3 DockPosition => dockPosition;
@@ -87,10 +86,12 @@ namespace Lockdown.Enemies
             alarm.Silenced -= OnSilenced;
         }
 
+        // Glass breaking or the guard's whistle gives the player away: head for where they are right now.
         private void OnAlert(Vector3 where)
         {
             if (!isActiveAndEnabled || State == Mode.Destroyed) return;
-            target = where;
+            FindPlayer();
+            target = player != null ? player.transform.position : where;
             if (State == Mode.Docked || State == Mode.Returning)
             {
                 State = Mode.PoweringUp;
