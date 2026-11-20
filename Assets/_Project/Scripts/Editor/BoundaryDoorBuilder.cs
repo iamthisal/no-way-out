@@ -197,16 +197,39 @@ namespace Lockdown.Editor
                 props.SetParent(Require(museum, "FixedCover"), false);
             }
 
-            var planter = Bounds(Require(Require(decoration, "Saintpaulia_Flowers"), "maceta"));
+            FitPlanterCollider(museum);
             var trunk = Require(Require(decoration, "Trees"), "tree1").position;
-            CapsuleBlocker("Courtyard_Planter_Blocker", props,
-                new Vector3(planter.center.x, 0f, planter.center.z), planter.extents.x, planter.size.y);
             CapsuleBlocker("Courtyard_Tree_Blocker", props, new Vector3(trunk.x, 0f, trunk.z), 0.3f, 2.5f);
             // Shrink the leafy bounds slightly so the blockers follow the solid parts.
             var bush = Bounds(Require(Require(decoration, "Trees"), "tree2"));
             BoxBlocker("Courtyard_Bush_Blocker", props, bush.center, Vector3.Scale(bush.size, new Vector3(0.85f, 1f, 0.85f)));
             var rock = Bounds(Require(decoration, "moss rock"));
             BoxBlocker("Courtyard_Rock_Blocker", props, rock.center, Vector3.Scale(rock.size, new Vector3(0.9f, 1f, 0.9f)));
+        }
+
+        /// <summary>
+        /// Gives the courtyard's large flower vase (maceta) an exact mesh collider and removes the
+        /// old capsule blocker. A capsule cannot be shorter than its width, so the 2.3 m wide pot's
+        /// capsule rose to 2.35 m and stopped shots in the air about 1 m above the 1.34 m pot. The
+        /// plant's leaves have no collider, so shots pass through them as before.
+        /// </summary>
+        public static void FitPlanterCollider(Transform museum)
+        {
+            var decoration = Require(Require(museum, "Decoration"), "CourtYard");
+            var pot = Require(Require(decoration, "Saintpaulia_Flowers"), "maceta");
+            var filter = pot.GetComponent<MeshFilter>();
+            var mesh = filter != null ? filter.sharedMesh : null;
+            if (mesh == null) throw new InvalidOperationException("The courtyard vase has no mesh.");
+            var oldBlocker = Require(museum, "FixedCover").Find("Props_Courtyard/Courtyard_Planter_Blocker");
+            if (oldBlocker != null) Undo.DestroyObjectImmediate(oldBlocker.gameObject);
+            PropColliderBuilder.EnsureReadable(mesh);
+            var collider = pot.GetComponent<MeshCollider>();
+            if (collider == null) collider = Undo.AddComponent<MeshCollider>(pot.gameObject);
+            Undo.RecordObject(collider, "Fit courtyard vase collider");
+            collider.sharedMesh = mesh;
+            collider.convex = false;
+            Undo.RecordObject(pot.gameObject, "Fit courtyard vase collider");
+            pot.gameObject.layer = WorldSolidLayer();
         }
 
         private static void Block(string name, Transform parent, Vector3 position, Vector3 size, Material material)
