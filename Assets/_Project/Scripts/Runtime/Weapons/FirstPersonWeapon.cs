@@ -16,7 +16,6 @@ namespace Lockdown.Weapons
         [SerializeField] private GameObject muzzleFlash;
         [SerializeField] private GameObject impactPrefab;
         [SerializeField] private AudioSource shotAudio;
-        [SerializeField] private LineRenderer tracer;
 
         [Header("Pistol")]
         [SerializeField, Min(0.1f)] private float damage = 25f;
@@ -153,25 +152,20 @@ namespace Lockdown.Weapons
 
             var camera = player.PlayerCamera;
             var ray = new Ray(camera.transform.position, camera.transform.forward);
-            Vector3 end = ray.GetPoint(range);
             if (TryFindTarget(ray, out RaycastHit hit))
             {
-                end = hit.point;
                 var damageable = hit.collider.GetComponentInParent<IDamageable>();
                 if (damageable is Health health) health.TakeDamage(damage, player.transform);
                 else damageable?.TakeDamage(damage);
                 if (impactPrefab != null)
                 {
-                    var impact = Instantiate(impactPrefab, hit.point + hit.normal * 0.015f, Quaternion.LookRotation(hit.normal));
-                    Destroy(impact, 1.5f);
+                    // Sits just off the surface to avoid z-fighting; the hole removes itself.
+                    var impact = Instantiate(impactPrefab, hit.point + hit.normal * 0.002f, Quaternion.LookRotation(hit.normal));
+                    var hole = impact.GetComponent<BulletHole>();
+                    if (hole != null) hole.Attach(hit.collider.transform);
+                    else Destroy(impact, 1.5f);
                 }
                 OnHit?.Invoke(hit);
-            }
-            if (tracer != null)
-            {
-                tracer.SetPosition(0, muzzle.position);
-                tracer.SetPosition(1, end);
-                tracer.enabled = true;
             }
             return true;
         }
@@ -221,7 +215,6 @@ namespace Lockdown.Weapons
         private void HideFlash()
         {
             if (muzzleFlash != null) muzzleFlash.SetActive(false);
-            if (tracer != null) tracer.enabled = false;
         }
 
         private void OnGUI()
