@@ -62,7 +62,7 @@ namespace Lockdown.Tests
             }
             Assert.That(meshPanes, Is.EqualTo(7));
             Assert.That(Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude).Length, Is.EqualTo(7));
-            Assert.That(GameObject.Find("Courtyard_LockedGlassDoor").GetComponent<BreakableGlass>(), Is.Null);
+            Assert.That(GameObject.Find("Courtyard_GlassDoor").GetComponent<BreakableGlass>(), Is.Null);
             int expectedItems = 0;
             long expectedValue = 0;
 

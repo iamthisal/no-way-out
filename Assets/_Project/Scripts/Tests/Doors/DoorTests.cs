@@ -237,7 +237,8 @@ namespace Lockdown.Tests
                     }
                 }
             }
-            Assert.That(count, Is.EqualTo(7));
+            // Seven interior doors, plus the D00 double door (two leaves), D19 and D20.
+            Assert.That(count, Is.EqualTo(11));
             yield return SceneManager.UnloadSceneAsync(museum);
         }
 
