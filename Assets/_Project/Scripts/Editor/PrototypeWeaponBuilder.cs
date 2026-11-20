@@ -61,15 +61,6 @@ namespace Lockdown.Editor
                 audio.playOnAwake = false;
                 audio.spatialBlend = 0f;
                 audio.volume = 0.25f;
-                var tracer = weapon.AddComponent<LineRenderer>();
-                tracer.positionCount = 2;
-                tracer.useWorldSpace = true;
-                tracer.startWidth = 0.007f;
-                tracer.endWidth = 0.004f;
-                tracer.sharedMaterial = flash;
-                tracer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                tracer.receiveShadows = false;
-                tracer.enabled = false;
                 var shooting = weapon.AddComponent<FirstPersonWeapon>();
                 var serialized = new SerializedObject(shooting);
                 serialized.FindProperty("inputActions").objectReferenceValue = AssetDatabase.LoadAssetAtPath<InputActionAsset>("Assets/InputSystem_Actions.inputactions");
@@ -77,7 +68,6 @@ namespace Lockdown.Editor
                 serialized.FindProperty("muzzleFlash").objectReferenceValue = muzzleFlash;
                 serialized.FindProperty("impactPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(ImpactPath);
                 serialized.FindProperty("shotAudio").objectReferenceValue = audio;
-                serialized.FindProperty("tracer").objectReferenceValue = tracer;
                 serialized.FindProperty("frontSight").objectReferenceValue = weapon.transform.Find("FrontSight");
                 serialized.ApplyModifiedPropertiesWithoutUndo();
                 PrefabUtility.SaveAsPrefabAsset(weapon, WeaponPath);
@@ -100,6 +90,27 @@ namespace Lockdown.Editor
             finally { PrefabUtility.UnloadPrefabContents(player); }
             AssetDatabase.SaveAssets();
             Debug.Log("Prototype pistol, materials, shot audio, and impact prefab created and equipped on FirstPersonPlayer.");
+        }
+
+        /// <summary>
+        /// Brings the existing pistol prefab's shot effects up to date in place: the
+        /// muzzle-to-impact tracer line is removed, leaving the muzzle flash.
+        /// </summary>
+        [MenuItem("Tools/Lockdown/Update Pistol Shot Effects")]
+        public static void UpdateShotEffects()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Stop Play mode before updating the pistol shot effects.");
+            var weapon = PrefabUtility.LoadPrefabContents(WeaponPath);
+            try
+            {
+                var tracer = weapon.GetComponent<LineRenderer>();
+                if (tracer != null) UnityEngine.Object.DestroyImmediate(tracer);
+                PrefabUtility.SaveAsPrefabAsset(weapon, WeaponPath);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(weapon); }
+            AssetDatabase.SaveAssets();
+            Debug.Log("Pistol shot effects updated: no tracer line.");
         }
 
         /// <summary>
