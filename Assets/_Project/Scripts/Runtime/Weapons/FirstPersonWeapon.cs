@@ -159,8 +159,11 @@ namespace Lockdown.Weapons
                 else damageable?.TakeDamage(damage);
                 if (impactPrefab != null)
                 {
-                    var impact = Instantiate(impactPrefab, hit.point + hit.normal * 0.015f, Quaternion.LookRotation(hit.normal));
-                    Destroy(impact, 1.5f);
+                    // Sits just off the surface to avoid z-fighting; the hole removes itself.
+                    var impact = Instantiate(impactPrefab, hit.point + hit.normal * 0.002f, Quaternion.LookRotation(hit.normal));
+                    var hole = impact.GetComponent<BulletHole>();
+                    if (hole != null) hole.Attach(hit.collider.transform);
+                    else Destroy(impact, 1.5f);
                 }
                 OnHit?.Invoke(hit);
             }

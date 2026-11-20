@@ -30,18 +30,11 @@ namespace Lockdown.Editor
             var accent = Material("PistolAccent", new Color(0.24f, 0.62f, 0.45f), false);
             var flash = Material("PistolFlash", new Color(1f, 0.65f, 0.15f), true);
             CreateSound();
+            BuildBulletHole();
 
             var preview = EditorSceneManager.NewPreviewScene();
             try
             {
-                var impact = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                SceneManager.MoveGameObjectToScene(impact, preview);
-                impact.name = "PistolImpact";
-                impact.transform.localScale = new Vector3(0.045f, 0.045f, 0.008f);
-                UnityEngine.Object.DestroyImmediate(impact.GetComponent<Collider>());
-                impact.GetComponent<Renderer>().sharedMaterial = flash;
-                PrefabUtility.SaveAsPrefabAsset(impact, ImpactPath);
-
                 var weapon = new GameObject("PrototypePistol");
                 SceneManager.MoveGameObjectToScene(weapon, preview);
                 Part(weapon.transform, "Slide", PrimitiveType.Cube, new Vector3(0f, 0.02f, 0.06f), new Vector3(0.085f, 0.075f, 0.28f), metal);
@@ -94,7 +87,8 @@ namespace Lockdown.Editor
 
         /// <summary>
         /// Brings the existing pistol prefab's shot effects up to date in place: the
-        /// muzzle-to-impact tracer line is removed, leaving the muzzle flash.
+        /// muzzle-to-impact tracer line is removed, leaving the muzzle flash, and the bright
+        /// impact flash is rebuilt as a temporary dark bullet hole (same prefab path and GUID).
         /// </summary>
         [MenuItem("Tools/Lockdown/Update Pistol Shot Effects")]
         public static void UpdateShotEffects()
@@ -109,8 +103,32 @@ namespace Lockdown.Editor
                 PrefabUtility.SaveAsPrefabAsset(weapon, WeaponPath);
             }
             finally { PrefabUtility.UnloadPrefabContents(weapon); }
+            BuildBulletHole();
             AssetDatabase.SaveAssets();
-            Debug.Log("Pistol shot effects updated: no tracer line.");
+            Debug.Log("Pistol shot effects updated: no tracer line, dark temporary bullet holes.");
+        }
+
+        // A small, flat, matte dark disc. Its forward axis is the surface normal when spawned.
+        private static void BuildBulletHole()
+        {
+            var material = Material("BulletHole", new Color(0.03f, 0.03f, 0.03f), false);
+            material.SetFloat("_Smoothness", 0f);
+            EditorUtility.SetDirty(material);
+            var preview = EditorSceneManager.NewPreviewScene();
+            try
+            {
+                var hole = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                SceneManager.MoveGameObjectToScene(hole, preview);
+                hole.name = "PistolImpact";
+                hole.transform.localScale = new Vector3(0.035f, 0.035f, 0.004f);
+                UnityEngine.Object.DestroyImmediate(hole.GetComponent<Collider>());
+                var renderer = hole.GetComponent<Renderer>();
+                renderer.sharedMaterial = material;
+                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                hole.AddComponent<BulletHole>();
+                PrefabUtility.SaveAsPrefabAsset(hole, ImpactPath);
+            }
+            finally { EditorSceneManager.ClosePreviewScene(preview); }
         }
 
         /// <summary>
