@@ -283,7 +283,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 770557847458846268, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
       propertyPath: m_Controller
-      value:
+      value: 
       objectReference: {fileID: 9100000, guid: b4ad6aacf0b4223418876b734ca2f9df, type: 2}
     - target: {fileID: 7609566617747741245, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
       propertyPath: m_Name
@@ -392,7 +392,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 5094787623963269799}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.3
+  m_Radius: 0.26
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
@@ -401,7 +401,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1.9
+  m_Height: 1.7
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 910358e9c233f19478113eec23bf41fe, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Combat.Health
   maxHealth: 100
   onDamaged:
@@ -434,7 +434,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1c46b930f1015944a80702dc343756e, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerNavigation
   solidMask:
     serializedVersion: 2
@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a850201b24b4f9ebdadb2c06ebfef58, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.PursuerAgent
   patrolPoints: []
   playerTarget: {fileID: 0}
@@ -499,7 +499,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2733067c99043c4d98c9baa5471c684, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.PursuerPerception
 --- !u!114 &7133259113021210819
 MonoBehaviour:
@@ -511,7 +511,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f876aaf331efad140905b953160be8be, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.PursuerFormation
 --- !u!114 &2271349230132956235
 MonoBehaviour:
@@ -523,7 +523,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b65223df32f38d94cb9c3225279d69dd, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerLocomotion
   animator: {fileID: 2710987325068400294}
 --- !u!114 &6045782623727410699
@@ -536,7 +536,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9390e17dfebb384dbb2eebe8105966f, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerPresentation
   animator: {fileID: 2710987325068400294}
   warningSound: {fileID: 8300000, guid: 4a5cf179883520f4085369ca399ce842, type: 3}
@@ -647,7 +647,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 726ec277add497141b905dc2674df0a1, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.EnemyShooting
   gunPivot: {fileID: 0}
   muzzle: {fileID: 8207976769077197914}
@@ -669,7 +669,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd29ddc484f24db1bdd5562e7c97543a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerController
 --- !u!4 &6417361383882650462 stripped
 Transform:
