@@ -16,6 +16,10 @@ namespace Lockdown.Editor
     {
         public const string SourcePath = "Assets/_ThirdParty/Characters/QuaterniusToonShooter/Character_Soldier.gltf";
         public const string PrefabPath = "Assets/_Project/Prefabs/Characters/PursuerVisual.prefab";
+        // Sized for the museum's interior: slightly shorter than the 1.8 m player, with a slimmer build.
+        public const float Height = 1.7f;
+        public const float Radius = 0.26f;
+        private const float Thickness = 0.85f;
         private const string MaterialFolder = "Assets/_Project/Materials/Enemies/Pursuer";
         private const string AnimationFolder = "Assets/_Project/Animations/Pursuer";
         private static string VerificationFolder => Path.GetFullPath(Path.Combine(Application.dataPath, "../Verification/Pursuer"));
@@ -141,13 +145,14 @@ namespace Lockdown.Editor
 
                 var bounds = Bounds(root);
                 if (bounds.size.y < 0.01f) throw new InvalidOperationException("The imported model has no visible geometry.");
-                model.transform.localScale *= 1.9f / bounds.size.y;
+                model.transform.localScale *= Height / bounds.size.y;
+                model.transform.localScale = Vector3.Scale(model.transform.localScale, new Vector3(Thickness, 1f, Thickness));
                 bounds = Bounds(root);
                 model.transform.localPosition -= new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
                 var collider = root.AddComponent<CapsuleCollider>();
-                collider.height = 1.9f;
-                collider.radius = 0.3f;
-                collider.center = Vector3.up * 0.95f;
+                collider.height = Height;
+                collider.radius = Radius;
+                collider.center = Vector3.up * (Height * 0.5f);
                 if (root.GetComponentsInChildren<MonoBehaviour>(true).Any())
                     throw new InvalidOperationException("The presentation prefab must not contain gameplay scripts.");
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
