@@ -154,7 +154,7 @@ namespace Lockdown.Weapons
             var camera = player.PlayerCamera;
             var ray = new Ray(camera.transform.position, camera.transform.forward);
             Vector3 end = ray.GetPoint(range);
-            if (Physics.Raycast(ray, out RaycastHit hit, range, hitMask, QueryTriggerInteraction.Ignore))
+            if (TryFindTarget(ray, out RaycastHit hit))
             {
                 end = hit.point;
                 var damageable = hit.collider.GetComponentInParent<IDamageable>();
@@ -174,6 +174,24 @@ namespace Lockdown.Weapons
                 tracer.enabled = true;
             }
             return true;
+        }
+
+        // The first collider along the ray that is not part of the player. The player's own
+        // capsule must be skipped: CharacterController.Move updates the transform at once, but
+        // the physics scene keeps the capsule at its old position until the next sync, so after
+        // stepping backwards the camera can sit behind that stale capsule and shoot into it.
+        private bool TryFindTarget(Ray ray, out RaycastHit target)
+        {
+            var hits = Physics.RaycastAll(ray, range, hitMask, QueryTriggerInteraction.Ignore);
+            Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+            foreach (var hit in hits)
+            {
+                if (hit.transform.IsChildOf(player.transform)) continue;
+                target = hit;
+                return true;
+            }
+            target = default;
+            return false;
         }
 
         public bool TryReload()
