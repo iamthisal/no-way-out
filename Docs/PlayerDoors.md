@@ -6,25 +6,8 @@ the button toggles once; pressing again can reverse a moving door. Interactions
 use the existing sight, cursor, player-health, and controller checks.
 
 Configured interior doors: D06, D07, D08 (storage), D09, D10 (security), D11
-(toilet), and D21 (guest toilet). Decorative cubicle panels retain their existing
-behavior.
-
-Boundary doors also open now, each into a new space:
-
-| Door | Panel | Swings into | Leads to |
-|---|---|---|---|
-| D00 entrance | Two leaves (`Hinge_Left`, `Hinge_Right`) | Entrance vestibule | 4 x 4 m room, X=-2..2, Z=-15..-11 |
-| D19 courtyard | Glass pane `Courtyard_GlassDoor` | Exhibition hall | The walled courtyard, walkable, open to the sky |
-| D20 exit | Single piece across both leaves | Exit vestibule | 4 x 4 m room, X=13..17, Z=12..16 |
-
-`Tools > Lockdown > Build Boundary Door Rooms` adds the two vestibules (floor,
-walls, ceiling, a realtime light until the next lighting bake) and the courtyard's
-collider floor plus blockers around its planter, tree, bush and rock.
-`Tools > Lockdown > Configure Boundary Doors` then converts the three closed panels
-into doors using the hinge setup described below; the entrance model is unpacked so its
-leaves can move. Both commands skip work already done. Rebake the museum NavMesh
-and save the scene afterwards. The courtyard planting leaves gaps narrower than
-the NavMesh agent, so enemies only reach its southern half.
+(toilet), and D21 (guest toilet). Exterior boundary doors and decorative cubicle
+panels retain their existing behavior.
 
 `Assets/_Project/Scripts/Runtime/World/Door.cs` implements `IInteractable` on an
 unscaled `Hinge` object. Its child panel rotates around that hinge, with a moving

@@ -430,8 +430,6 @@ Optional empty door markers: D19 at (0,0,14), D20 at (15.5,0,12), both Rotation 
 
 Save with Ctrl+S. Take one eye-level screenshot of each door. With the actual controller, confirm the glass is see-through but blocks movement, the exit blocks movement, and all D01–D18 interior passages still work. Re-bake navigation/lighting after the changes when those stages are reached. Suggested scene commit after verification: feat(world): add exit and locked courtyard doors. Student 1 owns this geometry/material work; no interaction code is required here.
 
-**Superseded (20 November 2026):** D00, D19 and D20 now open. D00 and D20 each lead to a 4 x 4 m vestibule, and the courtyard behind D19 is walkable but stays open to the sky. See [interactive museum doors](../PlayerDoors.md). The two vestibules' lighting is not baked yet.
-
 
 ## Appendix A — Exact v3.2 shell geometry
 
