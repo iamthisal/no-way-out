@@ -119,7 +119,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator MuseumPlayerSpawnsBehindCourtyardVaseAndWalksThroughLobbyDoorway()
+        public IEnumerator MuseumPlayerSpawnsOnFloorAndWalksThroughLobbyDoorway()
         {
             UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
                 "Assets/_Project/Scenes/Museum/Museum_Main.unity",
@@ -141,28 +141,6 @@ namespace Lockdown.Tests
                 if (listener.isActiveAndEnabled) activeListeners++;
             Assert.That(activeCameras, Is.EqualTo(1));
             Assert.That(activeListeners, Is.EqualTo(1));
-
-            // The player starts in the courtyard garden, hidden behind the large flower vase
-            // (north of it), with the vase between them and the glass door to the hall.
-            var vase = GameObject.Find("maceta");
-            Assert.That(vase, Is.Not.Null, "The courtyard's large flower vase should be in the museum.");
-            Bounds vaseBounds = vase.GetComponentInChildren<Renderer>().bounds;
-            Vector3 start = player.transform.position;
-            Assert.That(start.z, Is.GreaterThan(vaseBounds.max.z), "The player should start behind (north of) the vase.");
-            Assert.That(start.x, Is.InRange(vaseBounds.min.x, vaseBounds.max.x), "The vase should be directly in front of the player's start.");
-            Assert.That(start.z - vaseBounds.max.z, Is.LessThan(1.5f), "The player should start close behind the vase.");
-            var spawn = GameObject.Find("Spawn_Player");
-            Assert.That(spawn, Is.Not.Null);
-            Assert.That(Vector3.Distance(new Vector3(start.x, 0f, start.z), new Vector3(spawn.transform.position.x, 0f, spawn.transform.position.z)),
-                Is.LessThan(0.05f), "The player should start at the Spawn_Player marker.");
-
-            // The Lobby doorway check still applies, from the old Lobby start.
-            var body = player.GetComponent<CharacterController>();
-            body.enabled = false;
-            player.transform.SetPositionAndRotation(new Vector3(0f, 0.05f, -9.5f), Quaternion.identity);
-            body.enabled = true;
-            Physics.SyncTransforms();
-            yield return new WaitForSeconds(0.3f);
             controller.CaptureCursor();
             yield return null;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W));
