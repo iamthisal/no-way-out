@@ -103,45 +103,6 @@ namespace Lockdown.Editor
             Debug.Log("First-person player prefab and Player_Test scene created.");
         }
 
-        // Behind (north of) the large flower vase in the courtyard garden, so the vase stands
-        // between the player and the courtyard's glass door into the Exhibition hall. The player
-        // faces past the vase's west side towards that door.
-        public static readonly Vector3 CourtyardSpawnPosition = new Vector3(1.5f, 0f, 18.4f);
-        public const float CourtyardSpawnYaw = 200f;
-
-        [MenuItem("Tools/Lockdown/Move Player Spawn Behind Courtyard Vase")]
-        public static void MoveSpawnBehindCourtyardVase()
-        {
-            var scene = SceneManager.GetActiveScene();
-            if (scene.path != MuseumScenePath || EditorApplication.isPlayingOrWillChangePlaymode)
-                throw new InvalidOperationException("Open Museum_Main in Edit mode first.");
-            var player = UnityEngine.Object.FindFirstObjectByType<FirstPersonController>(FindObjectsInactive.Include);
-            if (player == null) throw new InvalidOperationException("Place the player in the museum first.");
-
-            var marker = GameObject.Find("Spawn_Player");
-            if (marker == null)
-            {
-                marker = new GameObject("Spawn_Player");
-                Undo.RegisterCreatedObjectUndo(marker, "Move player spawn");
-            }
-            Undo.RecordObject(marker.transform, "Move player spawn");
-            var rotation = Quaternion.Euler(0f, CourtyardSpawnYaw, 0f);
-            marker.transform.SetPositionAndRotation(CourtyardSpawnPosition, rotation);
-
-            Undo.RecordObject(player.transform, "Move player spawn");
-            Vector3 position = CourtyardSpawnPosition + Vector3.up * 0.05f;
-            player.transform.SetPositionAndRotation(position, rotation);
-            Physics.SyncTransforms();
-            var body = player.GetComponent<CharacterController>();
-            var lower = position + Vector3.up * (body.radius + 0.04f);
-            var upper = position + Vector3.up * (body.height - body.radius);
-            foreach (var hit in Physics.OverlapCapsule(lower, upper, body.radius, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(player.transform)) Debug.LogWarning("Player spawn overlaps " + hit.name, hit);
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
-            Debug.Log("Player now spawns behind the courtyard vase at " + position);
-        }
-
         [MenuItem("Tools/Lockdown/Place Player In Museum")]
         public static void PlaceInMuseum()
         {
