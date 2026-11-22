@@ -155,7 +155,7 @@ To colour the greybox: right-click `Materials/World` > **Create > Material**, na
 **Owner: Student 1 tests; Student 2 supplies the actual controller.**
 
 1. Under `Markers`, create a **3D Object > Capsule**, name `REF_PlayerScale`, Position `(0,1,-9.5)`, Rotation `(0,0,0)`, Scale `(0.6,0.9,0.6)`. Unity's default capsule is 2 units high and 1 unit wide: this gives a 1.8 m high, 0.6 m wide visual reference. Remove its Collider using the component menu > **Remove Component**; it is a reference, not a controller.
-2. Create an empty `Spawn_Player` at `(0,0,-9.5)` with Rotation `(0,0,0)` (facing +Z). *(Superseded 21 November 2026: the player now starts in the courtyard garden behind the large flower vase, at `(1.5,0,18.4)` facing 200°. `Tools > Lockdown > Move Player Spawn Behind Courtyard Vase` sets the marker and moves the player.)* This is a **floor/feet marker**. Student 2 must offset their controller according to its own pivot; do not assume all controller prefab roots are at the feet.
+2. Create an empty `Spawn_Player` at `(0,0,-9.5)` with Rotation `(0,0,0)` (facing +Z). This is a **floor/feet marker**. Student 2 must offset their controller according to its own pivot; do not assume all controller prefab roots are at the feet.
 3. For a static eye-level preview, select a temporary camera, Position `(0,1.65,-9.5)`, Rotation `(0,0,0)`. This camera cannot walk. Keep only one active main camera and Audio Listener in the integrated scene.
 4. Ask Student 2 to place their tested controller at this marker. Deactivate `REF_PlayerScale` before playing. Your starting assumptions are standing height 1.8 m, radius 0.3 m and eye height 1.65 m; replace these with the actual agreed controller dimensions if different.
 5. Press Play. Walk the full Phase 1 route in both directions. Try every door from its centre and both edges. Test against windows, wall corners and floor seams. Enable ceilings and repeat. Stop Play before editing.
@@ -669,7 +669,7 @@ Empty GameObjects under Markers, rotation `(0,0,0)`, scale `(1,1,1)`. These are 
 
 | Name | Position X,Y,Z |
 | --- | --- |
-| Spawn_Player | (1.5, 0, 18.4), rotation (0, 200, 0). Moved 21 November 2026 from (0, 0, -9.5) to behind the courtyard flower vase |
+| Spawn_Player | (0, 0, -9.5) |
 | Route_Central | (0, 0, 0) |
 | Route_Art | (-10, 0, 1) |
 | Route_Temporary | (-11, 0, 8) |
