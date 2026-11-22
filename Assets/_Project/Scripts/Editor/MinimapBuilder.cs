@@ -25,6 +25,18 @@ namespace Lockdown.Editor
         private static readonly Color32 PropColor = new Color32(104, 112, 126, 245);
         private static readonly Color32 WallColor = new Color32(222, 222, 216, 255);
 
+        /// <summary>
+        /// Command-line entry point (project closed in the editor):
+        /// Unity.exe -batchmode -projectPath . -executeMethod Lockdown.Editor.MinimapBuilder.BuildInBatch -quit
+        /// </summary>
+        public static void BuildInBatch()
+        {
+            var scene = EditorSceneManager.OpenScene("Assets/_Project/Scenes/Museum/Museum_Main.unity");
+            Build();
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+        }
+
         [MenuItem("Tools/Lockdown/Build Museum Minimap")]
         public static void Build()
         {
