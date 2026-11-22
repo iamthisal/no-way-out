@@ -23270,6 +23270,58 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 447448360}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &455805763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 455805765}
+  - component: {fileID: 455805764}
+  m_Layer: 0
+  m_Name: HUD_Minimap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &455805764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455805763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eafee9cee7889844aba6e5ba54d0ff67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Player.PlayerMinimap
+  player: {fileID: 1451238374}
+  floorPlan: {fileID: 2800000, guid: ffb361dd23cc7de4aa0f5c0b1976f406, type: 3}
+  worldMin: {x: -16.85, y: -11.85}
+  worldMax: {x: 17.85, y: 30.85}
+  screenHeightFraction: 0.32
+  margin: 16
+  markerSize: 14
+  markerColor: {r: 1, g: 0.82, b: 0.2, a: 1}
+--- !u!4 &455805765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455805763}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &459145930
 GameObject:
   m_ObjectHideFlags: 0
@@ -41337,7 +41389,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 0
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41365,7 +41417,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 0
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41393,7 +41445,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 2
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41421,7 +41473,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 0
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41449,7 +41501,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 2
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41477,7 +41529,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 1
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41505,7 +41557,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 0
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41533,7 +41585,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 1
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41561,7 +41613,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 0
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41589,7 +41641,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 0
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41617,7 +41669,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 2
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -41645,7 +41697,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
   modelKind: 3
   woodMaterial: {fileID: 2100000, guid: 292841bf426866f4488c34428c9d49c1, type: 2}
@@ -60791,7 +60843,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26d5bf102b8fb1749bfec2f971073df4, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.PursuerStimulusRelay
 --- !u!4 &1282644699
 Transform:
@@ -61951,7 +62003,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3251640292539718512, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
-      propertyPath: wakeOnBroken.Array.data[0]
+      propertyPath: 'wakeOnBroken.Array.data[0]'
       value: 
       objectReference: {fileID: 621904262}
     - target: {fileID: 6577288821218304882, guid: 1c3ba59fbc2794453ad411228eabfc65, type: 3}
@@ -94808,7 +94860,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4425767766062852127, guid: 28f7d6588cdd36a4e95af7bf4550ab9a, type: 3}
       propertyPath: playerTarget
-      value:
+      value: 
       objectReference: {fileID: 1451238374}
     - target: {fileID: 4425767766062852127, guid: 28f7d6588cdd36a4e95af7bf4550ab9a, type: 3}
       propertyPath: patrolPoints.Array.size
@@ -94816,19 +94868,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4425767766062852127, guid: 28f7d6588cdd36a4e95af7bf4550ab9a, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2115518495}
     - target: {fileID: 4425767766062852127, guid: 28f7d6588cdd36a4e95af7bf4550ab9a, type: 3}
       propertyPath: 'patrolPoints.Array.data[1]'
-      value:
+      value: 
       objectReference: {fileID: 787325513}
     - target: {fileID: 4425767766062852127, guid: 28f7d6588cdd36a4e95af7bf4550ab9a, type: 3}
       propertyPath: 'patrolPoints.Array.data[2]'
-      value:
+      value: 
       objectReference: {fileID: 473456927}
     - target: {fileID: 4425767766062852127, guid: 28f7d6588cdd36a4e95af7bf4550ab9a, type: 3}
       propertyPath: 'patrolPoints.Array.data[3]'
-      value:
+      value: 
       objectReference: {fileID: 2061956217}
     - target: {fileID: 5094787623963269799, guid: 28f7d6588cdd36a4e95af7bf4550ab9a, type: 3}
       propertyPath: m_Name
@@ -104710,3 +104762,4 @@ SceneRoots:
   - {fileID: 894495181}
   - {fileID: 1926760422}
   - {fileID: 1282644699}
+  - {fileID: 455805765}

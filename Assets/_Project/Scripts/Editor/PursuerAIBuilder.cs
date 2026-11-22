@@ -110,7 +110,7 @@ namespace Lockdown.Editor
                 var root = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(PursuerVisualBuilder.PrefabPath), preview);
                 root.name = "Pursuer";
                 var agent = root.AddComponent<NavMeshAgent>();
-                agent.height = 1.9f; agent.radius = 0.3f; agent.speed = 2f;
+                agent.height = PursuerVisualBuilder.Height; agent.radius = PursuerVisualBuilder.Radius; agent.speed = 2f;
                 agent.acceleration = 8f; agent.angularSpeed = 360f; agent.stoppingDistance = 1.2f;
                 root.AddComponent<PursuerAgent>();
                 root.AddComponent<PursuerPerception>();

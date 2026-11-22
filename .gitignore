@@ -46,3 +46,14 @@ Desktop.ini
 /game_html/.edge-test/
 /Docs/WorldBuilder/Plan_Validation.json
 /Docs/WorldBuilder/Museum_Geometry.csv
+
+# Local, personal and generated files kept out of the repo
+/instructions.md
+.vscode/
+# Unity crash-recovery scene backups
+/Assets/_Recovery/
+/Assets/_Recovery.meta
+# Burst output from a local Web build
+/Data/
+# Meta for an empty Resources folder (nothing in Assets/Resources yet)
+/Assets/Resources.meta
