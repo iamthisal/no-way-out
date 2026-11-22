@@ -1,9 +1,7 @@
 using System;
-using Lockdown.World;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 namespace Lockdown.Editor
@@ -32,110 +30,12 @@ namespace Lockdown.Editor
             Undo.SetCurrentGroupName("Build boundary door rooms");
             // D00 is in the Z=-11 wall; its threshold stone covers the floor to Z=-11.24.
             BuildVestibule(museum, "EntranceVestibule", new Vector3(0f, 0f, -13f), -1f, 0.24f, EntranceWallMaterial);
-            // D20 (X=14.5..16.5) is in the Z=12 wall. The room sits flush with the X=17 facade and
-            // leaves space west of the hinge for the door leaf when it is swung open.
-            BuildVestibule(museum, "ExitVestibule", new Vector3(15f, 0f, 14f), 1f, 0f, ExitWallMaterial);
+            // D20 is in the Z=12 wall.
+            BuildVestibule(museum, "ExitVestibule", new Vector3(15.5f, 0f, 14f), 1f, 0f, ExitWallMaterial);
             BuildCourtyard(museum);
             Undo.CollapseUndoOperations(undoGroup);
             EditorSceneManager.MarkSceneDirty(scene);
             Debug.Log("Boundary door rooms built. Rebake the museum NavMesh, then save the scene.");
-        }
-
-        [MenuItem("Tools/Lockdown/Configure Boundary Doors")]
-        public static void ConfigureDoors()
-        {
-            var scene = MuseumScene();
-            var museum = Require(scene.GetRootGameObjects(), "Museum");
-            var windows = Require(museum, "Windows");
-            var doors = Require(museum, "Doors");
-
-            Undo.IncrementCurrentGroup();
-            int undoGroup = Undo.GetCurrentGroup();
-            Undo.SetCurrentGroupName("Configure boundary doors");
-
-            // D00: the palace double door's leaves swing south into the entrance vestibule.
-            var entrance = windows.Find("Entrance_ClosedGlassPlaceholder");
-            if (entrance != null)
-            {
-                var model = Require(Require(entrance, "Visual"), "Entrance_PalaceDoubleDoor");
-                // Unpack the model instance so its leaves can move beneath hinges while the surround stays.
-                if (PrefabUtility.IsPartOfPrefabInstance(model))
-                    PrefabUtility.UnpackPrefabInstance(PrefabUtility.GetOutermostPrefabInstanceRoot(model.gameObject),
-                        PrefabUnpackMode.Completely, InteractionMode.UserAction);
-                var root = DoorRoot(doors, "Door_D00_Entrance", new Vector3(0f, 1.25f, -11f));
-                Hinge(root, "Hinge_Left", Require(model, "LeftLeaf"), 1f, 95f);
-                Hinge(root, "Hinge_Right", Require(model, "RightLeaf"), -1f, -95f);
-                var visuals = DoorRoot(root, "Visuals", root.position);
-                Undo.SetTransformParent(model, visuals, "Keep door surround fixed");
-                Undo.SetTransformParent(Require(entrance, "Entrance_StoneThreshold"), visuals, "Keep door threshold fixed");
-                Undo.DestroyObjectImmediate(entrance.gameObject);
-            }
-
-            // D19: the glass pane swings south into the Exhibition hall, clear of the courtyard planter.
-            var courtyard = windows.Find("Courtyard_LockedGlassDoor");
-            if (courtyard != null)
-            {
-                var root = DoorRoot(doors, "Door_D19_Courtyard", new Vector3(0f, 1.25f, 14f));
-                Undo.RecordObject(courtyard.gameObject, "Rename courtyard door");
-                courtyard.name = "Courtyard_GlassDoor";
-                Hinge(root, "Hinge", courtyard, 1f, 95f);
-            }
-
-            // D20: the exit door is one model across both leaves, so it swings as a single panel
-            // north into the exit vestibule; the Exit room side has its electrical panel and extinguisher.
-            var exit = windows.Find("Exit_ClosedDoorPlaceholder");
-            if (exit != null)
-            {
-                var root = DoorRoot(doors, "Door_D20_Exit", new Vector3(15.5f, 1.25f, 12f));
-                Hinge(root, "Hinge", Require(exit, "Exit_MuseumDoubleDoor"), 1f, -95f);
-                Undo.DestroyObjectImmediate(exit.gameObject);
-            }
-
-            Undo.CollapseUndoOperations(undoGroup);
-            EditorSceneManager.MarkSceneDirty(scene);
-            Debug.Log("Boundary doors configured. Rebake the museum NavMesh, then save the scene.");
-        }
-
-        private static Transform DoorRoot(Transform parent, string name, Vector3 position)
-        {
-            var go = new GameObject(name);
-            Undo.RegisterCreatedObjectUndo(go, "Create " + name);
-            go.transform.SetParent(parent, false);
-            go.transform.position = position;
-            return go.transform;
-        }
-
-        // Matches DoorBuilder: an unscaled hinge at the panel edge carries the panel, a box collider,
-        // a carving NavMeshObstacle and the Door. extent is +1 when the panel lies east of its hinge.
-        private static void Hinge(Transform root, string name, Transform panel, float extent, float openAngle)
-        {
-            var bounds = Bounds(panel);
-            var hinge = DoorRoot(root, name, new Vector3(extent > 0f ? bounds.min.x : bounds.max.x,
-                bounds.center.y, bounds.center.z));
-            Undo.SetTransformParent(panel, hinge, "Attach moving door panel");
-            if (panel.parent != hinge) throw new InvalidOperationException(panel.name + " could not be attached to its hinge.");
-
-            foreach (var part in panel.GetComponentsInChildren<Transform>(true))
-            {
-                Undo.RecordObject(part.gameObject, "Make door movable");
-                GameObjectUtility.SetStaticEditorFlags(part.gameObject, 0);
-                // The NavMesh bakes WorldSolid colliders; a moving panel must not be baked shut.
-                part.gameObject.layer = 0;
-                foreach (var collider in part.GetComponents<Collider>()) Undo.DestroyObjectImmediate(collider);
-            }
-
-            var box = Undo.AddComponent<BoxCollider>(hinge.gameObject);
-            box.center = new Vector3(extent * bounds.size.x * 0.5f, 0f, 0f);
-            box.size = new Vector3(bounds.size.x, bounds.size.y, Mathf.Max(0.08f, bounds.size.z));
-            var obstacle = Undo.AddComponent<NavMeshObstacle>(hinge.gameObject);
-            obstacle.shape = NavMeshObstacleShape.Box;
-            obstacle.center = box.center;
-            obstacle.size = box.size;
-            obstacle.carving = true;
-            obstacle.carveOnlyStationary = true;
-            var door = new SerializedObject(Undo.AddComponent<Door>(hinge.gameObject));
-            door.FindProperty("openAngle").floatValue = openAngle;
-            door.ApplyModifiedPropertiesWithoutUndo();
         }
 
         // A 4 x 4 m room centred on (centre.x, centre.z); direction is -1 when it extends south of its door wall.
