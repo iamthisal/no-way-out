@@ -132,6 +132,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9de83152f4e27f46b0d08a00f05355d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.HoundLocomotion
+  animator: {fileID: 0}
+  topClipSpeed: 3.7
+  maxPlaybackBoost: 1.5
 --- !u!114 &17467124622182633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +152,7 @@ MonoBehaviour:
   memoryDuration: 12
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 59
   earHeight: 0.65
   listeningArea: {fileID: 0}
   hasClue: 0
@@ -170,7 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNavigation
   solidMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 59
   sampleRadius: 0.65
   waypointSpacing: 0.5
   route: []
@@ -229,7 +232,7 @@ MonoBehaviour:
   playerHealth: {fileID: 0}
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 59
   onBite:
     m_PersistentCalls:
       m_Calls: []

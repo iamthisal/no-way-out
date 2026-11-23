@@ -57,3 +57,6 @@ Desktop.ini
 /Data/
 # Meta for an empty Resources folder (nothing in Assets/Resources yet)
 /Assets/Resources.meta
+# Blender auto-backups and stray exports (Unity imports FBX from Assets/_Project/Models)
+*.blend1
+Blender/**/*.fbx
