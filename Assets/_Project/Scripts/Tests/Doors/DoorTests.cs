@@ -205,7 +205,7 @@ namespace Lockdown.Tests
                         if (interaction.CurrentTarget == configured) { found = true; break; }
                     }
                     Assert.That(found, Is.True, configured.transform.parent.name + " cannot be reached from either side.");
-                    if (configured.IsBarricaded || configured.InteractionLabel == "Use identity tag")
+                    if (configured.InteractionLabel == "Use identity tag")
                     {
                         Assert.That(interaction.TryInteract(), Is.False, configured.transform.parent.name);
                         Assert.That(configured.IsOpen, Is.False);
