@@ -22,7 +22,7 @@ MonoBehaviour:
   decisionInterval: 0.5
   obstructedSoundMultiplier: 0
   wanderSpeed: 3.0
-  trackingSpeed: 6.0
+  trackingSpeed: 6.5
   wanderRadius: 6
   wanderPause: 1.2
   sniffDuration: 1
