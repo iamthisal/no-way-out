@@ -5,16 +5,26 @@ namespace Lockdown.Player
 {
     /// <summary>
     /// The interaction prompt under the crosshair as a thin walnut bar: a brass key cap for the
-    /// binding, then the label.
+    /// binding, then the label. It fades in briefly whenever the prompt changes.
     /// </summary>
     internal sealed class InteractionPromptHud
     {
+        private const float FadeSeconds = 0.15f;
         private GUIStyle keyStyle, labelStyle;
         private float stylesScale = -1f;
+        private string lastPrompt;
+        private float shownAt;
 
         public void Draw(string binding, string label)
         {
-            if (string.IsNullOrEmpty(label)) return;
+            if (string.IsNullOrEmpty(label)) { lastPrompt = null; return; }
+            string prompt = binding + label;
+            if (Event.current.type == EventType.Repaint && prompt != lastPrompt)
+            {
+                lastPrompt = prompt;
+                shownAt = Time.unscaledTime;
+            }
+            float fade = Mathf.Clamp01((Time.unscaledTime - shownAt) / FadeSeconds);
             float scale = Scale(0.6f);
             if (StylesStale(keyStyle, stylesScale, scale))
             {
@@ -34,12 +44,12 @@ namespace Lockdown.Player
             var bar = new Rect((Screen.width - width) * 0.5f, Screen.height * 0.5f + 34f * scale, width, height);
 
             Color previous = GUI.color;
-            Fill(bar, new Color(Walnut.r, Walnut.g, Walnut.b, 0.82f));
-            Frame(bar, 1f, Brass);
+            Fill(bar, new Color(Walnut.r, Walnut.g, Walnut.b, 0.82f), fade);
+            Frame(bar, 1f, Brass, fade);
             var cap = new Rect(bar.x + pad, bar.center.y - key * 0.5f, key, key);
-            Fill(cap, Brass);
-            Text(cap, binding, keyStyle, Walnut);
-            Text(new Rect(cap.xMax + gap, bar.y, labelWidth, bar.height), label, labelStyle, Ivory);
+            Fill(cap, Brass, fade);
+            Text(cap, binding, keyStyle, Walnut, fade);
+            Text(new Rect(cap.xMax + gap, bar.y, labelWidth, bar.height), label, labelStyle, Ivory, fade);
             GUI.color = previous;
         }
     }
