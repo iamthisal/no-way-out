@@ -7,6 +7,9 @@ the broken case. Breaking another case redirects the same pack to that location.
 There is one pack per scene load, rather than three additional dogs per break.
 Restarting restores intact glass and removes the pack.
 
+Killed dogs play a death animation and are removed after about 6.5 seconds. They are
+not replaced. See [EnemyDeaths.md](EnemyDeaths.md).
+
 ## Runtime components
 
 `GlassHoundResponse.cs` subscribes to the existing `BreakableGlass.OnBroken`
