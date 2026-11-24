@@ -20,6 +20,7 @@ namespace Lockdown.Player
         private InputAction handsAction;
         private InputAction pistolAction;
         private InputAction hammerAction;
+        private readonly WeaponHud weaponHud = new WeaponHud();
         private enum Slot { Hands, Pistol, Hammer }
 
         public bool IsPistolEquipped => pistol != null && pistol.gameObject.activeSelf;
@@ -92,6 +93,13 @@ namespace Lockdown.Player
             emptyHands.SetActive(slot == Slot.Hands);
             pistol.gameObject.SetActive(slot == Slot.Pistol);
             if (hammer != null) hammer.gameObject.SetActive(slot == Slot.Hammer && HasHammer);
+        }
+
+        private void OnGUI()
+        {
+            if (pistol == null) return;
+            var slot = IsPistolEquipped ? WeaponHudSlot.Pistol : IsHammerEquipped ? WeaponHudSlot.Hammer : WeaponHudSlot.Hands;
+            weaponHud.Draw(slot, pistol.CurrentAmmo, pistol.MagazineSize, pistol.IsReloading);
         }
 
         private void OnDisable()
