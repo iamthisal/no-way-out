@@ -17,7 +17,17 @@ namespace Lockdown.AI.Agents
         private CharacterController body;
         private int shots;
         private float nextStep, nextDiscovery;
-        private void OnEnable() { Discover(); }
+        private void OnEnable()
+        {
+            MovableProp.DistractionLanded += ReportDistraction;
+            Discover();
+        }
+
+        private void ReportDistraction(MovableProp prop, Vector3 position)
+        {
+            if (prop.gameObject.scene == gameObject.scene)
+                HoundNoiseBus.Emit(position, HoundSoundKind.Distraction, prop.transform);
+        }
         private void Discover()
         {
             foreach (var glass in FindObjectsByType<BreakableGlass>(FindObjectsInactive.Exclude))
@@ -48,6 +58,7 @@ namespace Lockdown.AI.Agents
         }
         private void OnDisable()
         {
+            MovableProp.DistractionLanded -= ReportDistraction;
             foreach (var entry in subscriptions) if (entry.Key != null) entry.Key.OnBroken.RemoveListener(entry.Value);
             subscriptions.Clear();
         }

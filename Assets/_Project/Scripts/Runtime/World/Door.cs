@@ -15,12 +15,15 @@ namespace Lockdown.World
         private Quaternion closedRotation;
         private float currentAngle;
         private InteractionFeedback closingFeedback;
+        private BoxCollider barricade;
+        private Bounds barricadeClearance;
         internal Transform RequiredIdentityTag => requiredIdentityTag;
+        public bool IsBarricaded => barricade != null && barricade.bounds.Intersects(barricadeClearance);
 
         // IsOpen is the requested state, so another press can reverse a moving door.
         public bool IsOpen { get; private set; }
         public bool IsMoving => currentAngle != TargetAngle;
-        public string InteractionLabel => IsOpen ? "Close door" :
+        public string InteractionLabel => IsBarricaded ? "Push the packing crate aside" : IsOpen ? "Close door" :
             requiredIdentityTag != null ? "Use identity tag" : "Open door";
         private float TargetAngle => IsOpen ? openAngle : 0f;
 
@@ -52,7 +55,7 @@ namespace Lockdown.World
 
         public bool TryInteract(GameObject interactor)
         {
-            if (!isActiveAndEnabled || interactor == null) return false;
+            if (!isActiveAndEnabled || interactor == null || IsBarricaded) return false;
             var interaction = interactor.GetComponent<PlayerInteraction>();
             if (interaction == null) return false;
             var target = interaction.CurrentTarget;
@@ -63,7 +66,16 @@ namespace Lockdown.World
         }
 
         internal string GetPrompt(LootInventory inventory) =>
-            !IsOpen && !HasAccess(inventory) ? "Identity tag required" : InteractionLabel;
+            !IsBarricaded && !IsOpen && !HasAccess(inventory) ? "Identity tag required" : InteractionLabel;
+
+        internal void SetBarricade(BoxCollider crate)
+        {
+            barricade = crate;
+            Vector3 size = crate.size;
+            // The closed passage extends 0.3 m beyond either end of the parked crate.
+            barricadeClearance = new Bounds(crate.transform.TransformPoint(crate.center),
+                new Vector3(size.z, size.y, size.x + 0.6f));
+        }
 
         private bool HasAccess(LootInventory inventory) =>
             requiredIdentityTag == null || (inventory != null && inventory.HasItem(requiredIdentityTag));

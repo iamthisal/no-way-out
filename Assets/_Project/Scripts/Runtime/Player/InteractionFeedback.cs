@@ -40,6 +40,7 @@ namespace Lockdown.Player
             var door = target as Door ?? reader?.Door;
             if (door != null)
             {
+                if (door.IsBarricaded) return;
                 if (succeeded) door.PlayMovementFeedback(this);
                 if (door.RequiredIdentityTag != null && (!succeeded || door.IsOpen))
                     ReportScan(succeeded, door.RequiredIdentityTag, reader != null ? reader : door,

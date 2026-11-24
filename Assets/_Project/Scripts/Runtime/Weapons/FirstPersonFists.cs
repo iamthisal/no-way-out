@@ -20,6 +20,7 @@ namespace Lockdown.Weapons
         [SerializeField] private AudioClip hitSound;
 
         private FirstPersonController player;
+        private PlayerInteraction interaction;
         private Health health;
         private AudioSource audioSource;
         private InputAction attack;
@@ -46,6 +47,7 @@ namespace Lockdown.Weapons
         private void Awake()
         {
             player = GetComponentInParent<FirstPersonController>();
+            interaction = player != null ? player.GetComponent<PlayerInteraction>() : null;
             health = player != null ? player.GetComponent<Health>() : null;
             if (health == null || leftHand == null || rightHand == null || leftForearm == null || rightForearm == null)
             {
@@ -74,7 +76,7 @@ namespace Lockdown.Weapons
         private void OnDestroy() => attack?.Dispose();
 
         private bool CanPunch => isActiveAndEnabled && player != null && player.enabled && player.CanUseWeapon &&
-            health != null && !health.IsDead;
+            health != null && !health.IsDead && (interaction == null || !interaction.IsHoldingProp);
 
         private void Update()
         {
