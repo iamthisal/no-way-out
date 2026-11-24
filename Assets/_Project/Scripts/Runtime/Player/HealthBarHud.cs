@@ -4,18 +4,25 @@ using static Lockdown.Player.MuseumHud;
 namespace Lockdown.Player
 {
     /// <summary>
-    /// Bottom-left health plaque. The bar shifts from verdigris to amber to red,
-    /// pulsing when health is low.
+    /// Bottom-left health plaque. The bar eases to the new value, leaves a pale segment for the
+    /// damage just taken, and shifts from verdigris to amber to red, pulsing when health is low.
     /// </summary>
     internal sealed class HealthBarHud
     {
         private const float LowHealth = 0.3f;
+        private const float ChipHoldSeconds = 0.45f;
+        private const float ChipDrainPerSecond = 0.5f;
         private GUIStyle labelStyle, valueStyle;
         private float stylesScale = -1f;
+        private float shown = -1f, chip = -1f, chipHoldUntil;
+
+        /// <summary>The fraction the bar currently shows (eased), exposed for checks.</summary>
+        internal float ShownFraction => shown;
 
         public void Draw(float current, float maximum)
         {
             float target = maximum > 0f ? Mathf.Clamp01(current / maximum) : 0f;
+            if (Event.current.type == EventType.Repaint) Animate(target);
             float scale = Scale(0.6f);
             if (StylesStale(labelStyle, stylesScale, scale))
             {
@@ -37,9 +44,12 @@ namespace Lockdown.Player
 
             var bar = new Rect(panel.x + pad, panel.y + 52f * scale, panel.width - pad * 2f, 20f * scale);
             Fill(bar, new Color(0.025f, 0.02f, 0.016f, 1f));
-            Color fill = FillColour(target);
+            if (chip > shown)
+                Fill(new Rect(bar.x + bar.width * shown, bar.y, bar.width * (chip - shown), bar.height),
+                    new Color(0.93f, 0.78f, 0.64f, 0.85f));
+            Color fill = FillColour(shown);
             if (low) fill = Color.Lerp(fill, BrightBrass, pulse * 0.25f);
-            var filled = new Rect(bar.x, bar.y, bar.width * target, bar.height);
+            var filled = new Rect(bar.x, bar.y, bar.width * shown, bar.height);
             Fill(filled, fill);
             Fill(new Rect(filled.x, filled.y, filled.width, Mathf.Max(1f, bar.height * 0.22f)), Color.white, 0.18f);
             for (int tick = 1; tick < 4; tick++)
@@ -47,6 +57,20 @@ namespace Lockdown.Player
                     new Color(Walnut.r, Walnut.g, Walnut.b, 0.85f));
             Frame(bar, 1f, DimBrass);
             GUI.color = previous;
+        }
+
+        private void Animate(float target)
+        {
+            if (shown < 0f) { shown = chip = target; return; }
+            float dt = Time.unscaledDeltaTime;
+            if (target < shown)
+            {
+                chip = Mathf.Max(chip, shown);
+                chipHoldUntil = Time.unscaledTime + ChipHoldSeconds;
+            }
+            shown = Mathf.MoveTowards(shown, target, Mathf.Max(0.02f, Mathf.Abs(target - shown) * 10f) * dt);
+            if (Time.unscaledTime >= chipHoldUntil) chip = Mathf.MoveTowards(chip, shown, ChipDrainPerSecond * dt);
+            chip = Mathf.Max(chip, shown);
         }
 
         private static Color FillColour(float fraction)
