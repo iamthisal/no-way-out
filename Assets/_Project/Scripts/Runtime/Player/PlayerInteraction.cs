@@ -21,7 +21,7 @@ namespace Lockdown.Player
         private GUIStyle promptStyle;
         private readonly LootCounterHud lootCounter = new LootCounterHud();
         private GUIStyle entryStyle;
-        private GUIStyle objectiveStyle;
+        private readonly ObjectiveHud objectiveHud = new ObjectiveHud();
         private MuseumExit museumExit;
         private bool showInventory;
 
@@ -115,18 +115,11 @@ namespace Lockdown.Player
                     normal = { textColor = Color.white }, wordWrap = true };
                 entryStyle = new GUIStyle(GUI.skin.label) { fontSize = 16, alignment = TextAnchor.MiddleRight,
                     normal = { textColor = Color.white }, wordWrap = true };
-                objectiveStyle = new GUIStyle(promptStyle) { fontStyle = FontStyle.Bold };
             }
             float width = Mathf.Min(300f, Screen.width - 48f);
             float lootBottom = lootCounter.Draw(inventory.TotalValue);
             if (!CanInteract) return;
-            if (museumExit != null)
-            {
-                float objectiveWidth = Mathf.Min(460f, Screen.width * 0.48f);
-                var objectiveRect = new Rect((Screen.width - objectiveWidth) * 0.5f, 16f, objectiveWidth, 60f);
-                GUI.Box(objectiveRect, GUIContent.none);
-                GUI.Label(objectiveRect, museumExit.GetObjective(inventory), objectiveStyle);
-            }
+            if (museumExit != null) objectiveHud.Draw(museumExit.GetObjective(inventory));
             var equipment = GetComponent<PlayerEquipment>();
             if (equipment == null || !equipment.IsPistolEquipped)
                 GUI.DrawTexture(new Rect(Screen.width * 0.5f - 2f, Screen.height * 0.5f - 2f, 4f, 4f), Texture2D.whiteTexture);
