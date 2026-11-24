@@ -1,0 +1,6 @@
+{
+  "name": "Lockdown.Tests.Menu",
+  "references": ["Lockdown.Runtime", "Unity.InputSystem"],
+  "includePlatforms": [],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

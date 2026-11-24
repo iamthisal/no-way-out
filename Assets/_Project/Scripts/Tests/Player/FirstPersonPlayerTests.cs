@@ -102,9 +102,11 @@ namespace Lockdown.Tests
             yield return null;
             yield return null;
             Assert.That(controller.IsCursorCaptured, Is.False, "Escape should release the cursor.");
+            Assert.That(player.GetComponent<Lockdown.UI.PauseMenu>().IsPaused, Is.True, "Escape should open the pause menu.");
             start = player.transform.position;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W));
-            yield return new WaitForSeconds(0.2f);
+            // The pause menu freezes game time, so wait in real time.
+            yield return new WaitForSecondsRealtime(0.2f);
             Assert.That(Vector3.Distance(start, player.transform.position), Is.LessThan(0.1f), "Movement should stop while the cursor is released.");
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             controller.CaptureCursor();
