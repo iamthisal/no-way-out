@@ -48,6 +48,20 @@ namespace Lockdown.AI.Agents
         public bool IsBusy => IsContactState() || State == PursuerState.Dead || State == PursuerState.Caught;
         public bool IsEngaged => IsContactState() || State == PursuerState.Investigate;
 
+        /// <summary>Sets up a guard that was spawned during play instead of placed in the scene.</summary>
+        public void Assign(Transform player, Transform[] route)
+        {
+            playerTarget = player;
+            patrolPoints = route ?? new Transform[0];
+            patrolIndex = 0;
+        }
+
+        /// <summary>Walking distance to a floor point, if a complete route exists now.</summary>
+        public bool TryRouteLength(Vector3 point, out float length) => controller.TryRouteLength(transform.position, point, out length);
+
+        /// <summary>Radio report of a floor point next to broken glass.</summary>
+        public void ReceiveAlarm(Vector3 point) { perception.ReceiveAlarm(point); }
+
         private void Awake()
         {
             controller = GetComponent<PursuerController>();
