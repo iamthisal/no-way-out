@@ -20,7 +20,9 @@ namespace Lockdown.Player
         private float hitEndsAt;
         private GUIStyle labelStyle;
         private GUIStyle deathStyle;
+        private float timeScaleBeforeEscape;
         public bool IsCaptured { get; private set; }
+        public bool HasEscaped { get; private set; }
 
         private void Awake()
         {
@@ -43,6 +45,7 @@ namespace Lockdown.Player
         {
             health.OnDamaged.RemoveListener(ShowHit);
             health.OnDeath.RemoveListener(Die);
+            RestoreTimeAfterEscape();
         }
 
         private void ShowHit()
@@ -53,6 +56,7 @@ namespace Lockdown.Player
 
         private void Die()
         {
+            if (HasEscaped) return;
             hitAudio.Stop();
             if (deathSound != null)
             {
@@ -65,10 +69,25 @@ namespace Lockdown.Player
 
         public bool Capture()
         {
-            if (health.IsDead || IsCaptured) return false;
+            if (health.IsDead || IsCaptured || HasEscaped) return false;
             IsCaptured = true;
             DisableControls();
             return true;
+        }
+
+        internal bool Escape()
+        {
+            if (health.IsDead || IsCaptured || HasEscaped) return false;
+            HasEscaped = true;
+            DisableControls();
+            timeScaleBeforeEscape = Time.timeScale;
+            Time.timeScale = 0f;
+            return true;
+        }
+
+        private void RestoreTimeAfterEscape()
+        {
+            if (HasEscaped && Time.timeScale == 0f) Time.timeScale = timeScaleBeforeEscape;
         }
 
         private void DisableControls()
@@ -82,7 +101,8 @@ namespace Lockdown.Player
 
         public void RestartEncounter()
         {
-            if (!health.IsDead && !IsCaptured) return;
+            if (!health.IsDead && !IsCaptured && !HasEscaped) return;
+            RestoreTimeAfterEscape();
             string path = gameObject.scene.path;
 #if UNITY_EDITOR
             UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(path, new LoadSceneParameters(LoadSceneMode.Single));
@@ -99,6 +119,16 @@ namespace Lockdown.Player
                 deathStyle = new GUIStyle(labelStyle) { fontSize = 30, alignment = TextAnchor.MiddleCenter };
             }
             Color previous = GUI.color;
+            if (HasEscaped)
+            {
+                GUI.color = new Color(0.02f, 0.06f, 0.07f, 0.96f);
+                GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
+                GUI.color = previous;
+                GUI.Label(new Rect(0f, Screen.height * 0.5f - 60f, Screen.width, 48f), "Museum escaped", deathStyle);
+                if (GUI.Button(new Rect(Screen.width * 0.5f - 60f, Screen.height * 0.5f, 120f, 40f), "Restart"))
+                    RestartEncounter();
+                return;
+            }
             if (health.IsDead || IsCaptured || Time.time < hitEndsAt)
             {
                 GUI.color = IsCaptured ? new Color(0.05f, 0.12f, 0.25f, 0.3f) : new Color(0.65f, 0.02f, 0.04f, health.IsDead ? 0.3f : 0.12f);
