@@ -163,6 +163,7 @@ GameObject:
   - component: {fileID: 11257494420004143}
   - component: {fileID: 8532631997645652880}
   - component: {fileID: 3251640292539718512}
+  - component: {fileID: 1122856306513031435}
   m_Layer: 0
   m_Name: SkeletonArcher
   m_TagString: Untagged
@@ -491,6 +492,21 @@ MonoBehaviour:
   onWake:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1122856306513031435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7cab90775c245f08377219b7935616c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Combat.CorpseRemoval
+  delay: 5
+  sinkDuration: 1.5
+  sinkDepth: 0.9
 --- !u!1 &8427342204161880851
 GameObject:
   m_ObjectHideFlags: 0
