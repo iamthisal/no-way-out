@@ -215,7 +215,7 @@ namespace Lockdown.Tests
             var material = probe.GetComponent<Renderer>().sharedMaterial;
             Object.DestroyImmediate(probe);
             var container = crate.AddComponent<LootContainer>();
-            Set(container, "modelKind", LootContainer.ModelKind.StorageCrate);
+            Set(container, "modelKind", LootContainer.ModelKind.ExhibitionCrate);
             Set(container, "woodMaterial", material);
             Set(container, "contents", new[] {
                 new LootContainer.Contents { itemName = "Clay relic", value = 150, mesh = mesh, material = material },

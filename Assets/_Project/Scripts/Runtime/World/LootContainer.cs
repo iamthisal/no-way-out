@@ -26,6 +26,9 @@ namespace Lockdown.World
         [SerializeField] private Material woodMaterial;
         [SerializeField] private Contents[] contents = new Contents[0];
         [SerializeField, Min(1f)] private float degreesPerSecond = 150f;
+        [SerializeField] private Transform existingLoot;
+        [SerializeField] private string existingLootName;
+        [SerializeField, Min(1)] private int existingLootValue = 100;
         private Transform lid;
         private Quaternion closedRotation;
         private Collider closedBlocker;
@@ -35,13 +38,15 @@ namespace Lockdown.World
         private const float OpenAngle = 110f;
 
         public bool IsOpen { get; private set; }
+        public bool IsChest => modelKind == ModelKind.Chest;
         public bool IsMoving => !Mathf.Approximately(currentAngle, IsOpen ? OpenAngle : 0f);
         public bool IsAccessible => isActiveAndEnabled && IsOpen && !IsMoving;
         public bool IsEmpty => Array.TrueForAll(items, item => item == null || item.IsCollected);
         private LootItem NextItem => Array.Find(items, item => item != null && !item.IsCollected);
-        public string InteractionLabel => IsMoving ? (IsOpen ? "Opening crate..." : "Closing crate...") :
+        private string ContainerName => IsChest ? "box" : "crate";
+        public string InteractionLabel => IsMoving ? (IsOpen ? "Opening " : "Closing ") + ContainerName + "..." :
             IsAccessible && NextItem != null ? NextItem.InteractionLabel :
-            (IsOpen ? "Close " : "Open ") + (IsEmpty ? "empty crate" : "crate");
+            (IsOpen ? "Close " : "Open ") + (IsEmpty ? "empty " : "") + ContainerName;
 
         private void Awake()
         {
@@ -91,7 +96,9 @@ namespace Lockdown.World
                 interior = transform;
                 var box = GetComponent<BoxCollider>();
                 bounds = box != null ? new Bounds(box.center, box.size) : new Bounds(Vector3.zero, Vector3.one);
-                foreach (var renderer in GetComponentsInChildren<Renderer>()) renderer.enabled = false;
+                foreach (var renderer in GetComponentsInChildren<Renderer>())
+                    if (existingLoot == null || !renderer.transform.IsChildOf(existingLoot))
+                        renderer.enabled = false;
                 BuildStorageShell(interior, bounds);
                 lid = CreateLid(interior, bounds, woodMaterial);
             }
@@ -104,36 +111,37 @@ namespace Lockdown.World
             }
             closedRotation = lid.localRotation;
             var coin = modelKind == ModelKind.Chest ? FindChild("Gold_Coin") : null;
-            if (coin != null) ConfigureExistingCoin(coin);
+            if (existingLoot != null) ConfigureExistingLoot(existingLoot, existingLootName, existingLootValue);
+            else if (coin != null) ConfigureExistingLoot(coin, "Ancient Gold Coin", 500);
             else CreateContents(interior, bounds);
             SetContentsAccessible(false);
         }
 
-        private void ConfigureExistingCoin(Transform coin)
+        private void ConfigureExistingLoot(Transform visual, string itemName, int value)
         {
             var bounds = new Bounds();
             bool initialized = false;
-            foreach (var renderer in coin.GetComponentsInChildren<Renderer>(true))
+            foreach (var renderer in visual.GetComponentsInChildren<Renderer>(true))
             {
                 var world = renderer.bounds;
                 for (int corner = 0; corner < 8; corner++)
                 {
-                    var point = coin.InverseTransformPoint(world.center + Vector3.Scale(world.extents,
+                    var point = visual.InverseTransformPoint(world.center + Vector3.Scale(world.extents,
                         new Vector3((corner & 1) == 0 ? -1 : 1, (corner & 2) == 0 ? -1 : 1,
                             (corner & 4) == 0 ? -1 : 1)));
                     if (!initialized) { bounds = new Bounds(point, Vector3.zero); initialized = true; }
                     else bounds.Encapsulate(point);
                 }
             }
-            var collider = coin.GetComponent<BoxCollider>();
-            if (collider == null) collider = coin.gameObject.AddComponent<BoxCollider>();
+            var collider = visual.GetComponent<BoxCollider>();
+            if (collider == null) collider = visual.gameObject.AddComponent<BoxCollider>();
             collider.center = bounds.center;
             collider.size = bounds.size;
-            var loot = coin.GetComponent<LootItem>();
-            if (loot == null) loot = coin.gameObject.AddComponent<LootItem>();
-            loot.ConfigureContainerLoot("Ancient Gold Coin", 500, this);
+            var loot = visual.GetComponent<LootItem>();
+            if (loot == null) loot = visual.gameObject.AddComponent<LootItem>();
+            loot.ConfigureContainerLoot(itemName, value, this);
             items = new[] { loot };
-            itemColliders = coin.GetComponentsInChildren<Collider>(true);
+            itemColliders = visual.GetComponentsInChildren<Collider>(true);
         }
 
         private Transform FindChild(string childName)

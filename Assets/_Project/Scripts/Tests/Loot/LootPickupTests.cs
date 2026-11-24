@@ -36,6 +36,70 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
+        public IEnumerator OnlySmallMuseumChestsOpenAndGiveTheirOriginalRelics()
+        {
+            LoadMuseum();
+            yield return null;
+            foreach (var enemy in Object.FindObjectsByType<EnemyShooting>(FindObjectsInactive.Exclude))
+                enemy.enabled = false;
+
+            var player = Object.FindAnyObjectByType<FirstPersonController>();
+            var interaction = player.GetComponent<PlayerInteraction>();
+            var inventory = player.GetComponent<LootInventory>();
+            var chests = Object.FindObjectsByType<LootContainer>(FindObjectsInactive.Exclude);
+            Assert.That(System.Array.ConvertAll(chests, chest => chest.name), Is.EquivalentTo(new[]
+            {
+                "Egyptian_Pendent", "Stoneage Axe", "Asian_Dagger", "FinalLoot", "Rare_Fossil", "CoinBox_GreeceRome"
+            }));
+            var relics = new System.Collections.Generic.List<string>();
+            foreach (var chest in chests)
+            {
+                var item = chest.GetComponentInChildren<LootItem>();
+                Assert.That(item, Is.Not.Null, chest.name);
+                var lid = System.Array.Find(chest.GetComponentsInChildren<Collider>(),
+                    collider => collider.name == "LidVisual");
+                Assert.That(lid, Is.Not.Null, chest.name);
+                Assert.That(Quaternion.Angle(lid.transform.parent.localRotation, Quaternion.identity),
+                    Is.LessThan(0.1f), chest.name);
+                Assert.That(item.IsProtected, Is.True, chest.name);
+
+                bool reached = false;
+                Vector3 approach = default;
+                foreach (Vector3 side in new[] { Vector3.back, Vector3.forward, Vector3.left, Vector3.right })
+                {
+                    approach = lid.bounds.center + side * 1.35f;
+                    AimAt(player, approach, lid.bounds.center);
+                    yield return null;
+                    var camera = player.PlayerCamera.transform;
+                    var hits = Physics.RaycastAll(camera.position, camera.forward, interaction.Reach,
+                        ~0, QueryTriggerInteraction.Ignore);
+                    System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+                    var first = System.Array.Find(hits, hit => !hit.transform.IsChildOf(player.transform));
+                    if (first.collider == null || !first.transform.IsChildOf(chest.transform)) continue;
+                    Assert.That(interaction.CurrentTarget, Is.SameAs(chest));
+                    reached = true;
+                    break;
+                }
+                Assert.That(reached, Is.True, chest.name + " needs a clear approach.");
+                Assert.That(interaction.TryInteract(), Is.True, chest.name);
+                yield return new WaitForSeconds(0.85f);
+                Assert.That(chest.IsAccessible, Is.True, chest.name);
+                Assert.That(Quaternion.Angle(lid.transform.parent.localRotation, Quaternion.identity),
+                    Is.EqualTo(110f).Within(0.1f), chest.name);
+
+                AimAt(player, approach, item.GetComponent<Collider>().bounds.center);
+                Assert.That(interaction.TryInteract(), Is.True, item.ItemName);
+                Assert.That(item.IsCollected, Is.True, item.ItemName);
+                relics.Add(item.ItemName);
+            }
+            Assert.That(inventory.ItemCount, Is.EqualTo(6));
+            Assert.That(relics, Is.EquivalentTo(new[]
+            {
+                "Ancient Eye Pendant", "Stone Age Axe", "Bronze Dagger", "Crystal", "Rare Ammonite Fossil", "Ancient Gold Coin"
+            }));
+        }
+
+        [UnityTest]
         public IEnumerator ReceptionBlocksCollectWithEAndRestartRestoresLoot()
         {
             LoadMuseum();
@@ -150,16 +214,23 @@ namespace Lockdown.Tests
 
         private static void Aim(FirstPersonController player, LootItem loot, float distance)
         {
+            AimAt(player, loot.transform.position - Vector3.forward * distance,
+                loot.GetComponent<Collider>().bounds.center);
+        }
+
+        private static void AimAt(FirstPersonController player, Vector3 approach, Vector3 target)
+        {
             var body = player.GetComponent<CharacterController>();
             body.enabled = false;
-            player.transform.position = new Vector3(loot.transform.position.x, 0.05f, loot.transform.position.z - distance);
-            player.transform.rotation = Quaternion.identity;
+            player.transform.position = new Vector3(approach.x, 0.05f, approach.z);
             body.enabled = true;
-            var direction = loot.GetComponent<Collider>().bounds.center - player.PlayerCamera.transform.position;
-            float pitch = -Mathf.Atan2(direction.y, direction.z) * Mathf.Rad2Deg;
+            var direction = target - player.PlayerCamera.transform.position;
+            player.transform.rotation = Quaternion.Euler(0f, Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg, 0f);
+            float pitch = -Mathf.Atan2(direction.y, new Vector2(direction.x, direction.z).magnitude) * Mathf.Rad2Deg;
             // Keep the controller's next look update aimed at the block during simulated key input.
             typeof(FirstPersonController).GetField("pitch", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(player, pitch);
             player.PlayerCamera.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+            player.CaptureCursor();
             Physics.SyncTransforms();
         }
 
