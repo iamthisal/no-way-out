@@ -33,6 +33,8 @@ namespace Lockdown.Player
             hitAudio.playOnAwake = false;
             hitAudio.loop = false;
             hitAudio.spatialBlend = 0f;
+            // The pause menu travels with the player so the museum scene needs no extra setup.
+            if (GetComponent<PauseMenu>() == null) gameObject.AddComponent<PauseMenu>();
         }
 
         private void OnEnable()

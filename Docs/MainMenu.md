@@ -19,6 +19,30 @@ The screen shows the title **NO WAY OUT**, then three buttons:
 
 Opening the main menu always resets the time scale and audio pause, and unlocks the cursor, so arriving from a paused game never leaves it frozen.
 
+## Pause menu
+
+In the museum, **Esc** (or **Start** on a gamepad) opens the pause menu. Pausing:
+
+- freezes game time (`Time.timeScale = 0`);
+- pauses audio (`AudioListener.pause`);
+- releases the cursor;
+- sets `FirstPersonController.InputBlocked`, so the controller ignores Esc and click-to-capture and the menu owns both.
+
+| Button | What it does |
+|---|---|
+| **Continue** | Resumes. Esc (or B) also resumes. |
+| **Restart** | Reloads the museum. |
+| **Options** | Opens the shared options panel. Esc (or B) goes back. |
+| **Main menu** | Loads the title screen. |
+
+A few rules:
+
+- The menu never opens over the caught, died or escaped screens.
+- If gameplay code re-captures the cursor while paused, the game resumes.
+- Leaving the scene while paused always restores time and audio.
+
+`PlayerVitals` adds `PauseMenu` to the player at runtime, so `Museum_Main.unity` needs no extra setup.
+
 ## Options
 
 `OptionsPanel` is shared by the main menu and the pause menu.
