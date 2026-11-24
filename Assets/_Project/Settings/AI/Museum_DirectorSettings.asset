@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8e84ad02024403aa5a3477dddae7937, type: 3}
+  m_Name: Museum_DirectorSettings
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.DirectorSettings
+  tuning:
+    damageWeight: 0.35
+    injuryWeight: 0.25
+    engagedWeight: 0.25
+    seenWeight: 0.15
+    damageHalfLife: 5
+    noiseHalfLife: 5
+    seenHalfLife: 1
+    engagedForFullStress: 4
+    engagedRange: 25
+    riseRate: 1.5
+    fallRate: 0.08
+    intensityInterval: 0.25
+    baseTarget: 0.35
+    lootTarget: 0.3
+    peakEnter: 0.75
+    peakExit: 0.6
+    peakMaximum: 20
+    relaxMinimum: 25
+    relaxExit: 0.3
+    decisionInterval: 2
+    spawnCooldown: 10
+    openingGrace: 20
+    waitUtility: 0.15
+    threatWeight: 0.4
+    fitWeight: 0.35
+    pointWeight: 0.25
+    alarmBonus: 0.2
+    guardThreat: 0.8
+    archerThreat: 0.7
+    houndThreat: 0.6
+    maximumTotal: 6
+    maximumGuards: 2
+    maximumArchers: 2
+    maximumHounds: 4
+    minimumRoute: 8
+    comfortMinimum: 15
+    comfortMaximum: 25
+    maximumRoute: 40
+    noveltySeconds: 30
+    alarmRelevanceDistance: 12
+    woundedHealth: 0.3
+    exitRouteSlack: 1.15
+    despawnRoute: 45
+    despawnUnseenSeconds: 20
