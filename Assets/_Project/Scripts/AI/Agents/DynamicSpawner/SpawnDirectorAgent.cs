@@ -3,6 +3,7 @@ using Lockdown.AI.Core.Director;
 using Lockdown.Enemies;
 using Lockdown.Player;
 using Lockdown.World;
+using Unity.Profiling;
 using UnityEngine;
 
 namespace Lockdown.AI.Agents
@@ -22,6 +23,7 @@ namespace Lockdown.AI.Agents
         [SerializeField, Min(0.05f)] private float rosterInterval = 0.5f;
         [SerializeField, Min(8)] private int logCapacity = 256;
 
+        private static readonly ProfilerMarker DecisionMarker = new ProfilerMarker(ProfilerCategory.Scripts, "Director.Decision");
         private readonly EnemyRoster roster = new EnemyRoster();
         private PlayerObserver player;
         private AlarmStimulusRelay alarm;
@@ -67,6 +69,11 @@ namespace Lockdown.AI.Agents
         private void Update()
         {
             if (Time.deltaTime <= 0f || !TryBind()) return;
+            using (DecisionMarker.Auto()) Think();
+        }
+
+        private void Think()
+        {
             if (Time.time >= nextRoster)
             {
                 nextRoster = Time.time + rosterInterval;
