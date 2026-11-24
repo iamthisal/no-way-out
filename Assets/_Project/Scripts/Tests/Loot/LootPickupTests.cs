@@ -186,8 +186,13 @@ namespace Lockdown.Tests
 
             var crate = GameObject.Find("P_Temporary_CrateNW").GetComponent<LootContainer>();
             var tag = crate.GetComponentInChildren<LootItem>();
+            var tagRenderer = tag.GetComponentInChildren<Renderer>();
+            var lidRenderer = crate.transform.Find("LP_Temporary_CrateNW/CrateLidHinge/Wooden lid")
+                .GetComponent<Renderer>();
             Assert.That(tag.ItemName, Is.EqualTo("Identity Tag"));
-            Assert.That(tag.GetComponentsInChildren<Renderer>().Length, Is.GreaterThan(0));
+            Assert.That(tagRenderer.enabled, Is.True);
+            Assert.That(tagRenderer.bounds.max.y, Is.LessThan(lidRenderer.bounds.min.y),
+                "The tag should fit beneath the closed lid.");
             Assert.That(tag.IsProtected, Is.True);
             Assert.That(tag.TryInteract(player.gameObject), Is.False);
 
@@ -201,7 +206,9 @@ namespace Lockdown.Tests
             Assert.That(tag.IsProtected, Is.False);
             Assert.That(crate.transform.Find("LP_Temporary_CrateNW/CrateLidHinge/Wooden lid"), Is.Not.Null);
 
-            AimAt(player, approach, crateCenter - Vector3.up * 0.25f);
+            AimAt(player, approach, tagRenderer.bounds.center);
+            Assert.That(interaction.CurrentTarget, Is.SameAs(tag),
+                "The card must be directly visible from in front of the open crate.");
             Assert.That(interaction.TryInteract(), Is.True);
             Assert.That(inventory.Items[0].Name, Is.EqualTo("Identity Tag"));
             Assert.That(inventory.TotalValue, Is.Zero);
