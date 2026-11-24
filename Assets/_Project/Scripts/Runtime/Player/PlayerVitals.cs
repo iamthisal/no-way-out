@@ -19,6 +19,7 @@ namespace Lockdown.Player
         private AudioSource hitAudio;
         private float hitEndsAt;
         private GUIStyle labelStyle;
+        private float endScreenShownAt;
         private float timeScaleBeforeEscape;
         public bool IsCaptured { get; private set; }
         public bool HasEscaped { get; private set; }
@@ -91,6 +92,7 @@ namespace Lockdown.Player
 
         private void DisableControls()
         {
+            endScreenShownAt = Time.unscaledTime;
             controller.ReleaseCursor();
             controller.enabled = false;
             foreach (var weapon in GetComponentsInChildren<FirstPersonWeapon>(true)) weapon.enabled = false;
@@ -119,7 +121,7 @@ namespace Lockdown.Player
             GUI.depth = ended ? -100 : 0;
             if (HasEscaped)
             {
-                if (EndScreen.Draw(EndScreenKind.Escaped)) RestartEncounter();
+                if (EndScreen.Draw(EndScreenKind.Escaped, endScreenShownAt)) RestartEncounter();
                 return;
             }
             Color previous = GUI.color;
@@ -131,7 +133,7 @@ namespace Lockdown.Player
             GUI.color = previous;
             GUI.Label(new Rect(24f, Screen.height - 64f, 180f, 34f), "Health " + Mathf.CeilToInt(health.CurrentHealth), labelStyle);
             if (!ended) return;
-            if (EndScreen.Draw(IsCaptured ? EndScreenKind.Caught : EndScreenKind.Died)) RestartEncounter();
+            if (EndScreen.Draw(IsCaptured ? EndScreenKind.Caught : EndScreenKind.Died, endScreenShownAt)) RestartEncounter();
         }
     }
 }
