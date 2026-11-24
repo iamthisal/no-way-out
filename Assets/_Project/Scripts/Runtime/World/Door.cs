@@ -14,6 +14,8 @@ namespace Lockdown.World
         [SerializeField] private Transform requiredIdentityTag;
         private Quaternion closedRotation;
         private float currentAngle;
+        private InteractionFeedback closingFeedback;
+        internal Transform RequiredIdentityTag => requiredIdentityTag;
 
         // IsOpen is the requested state, so another press can reverse a moving door.
         public bool IsOpen { get; private set; }
@@ -28,6 +30,17 @@ namespace Lockdown.World
             IsOpen = startsOpen;
             currentAngle = TargetAngle;
             transform.localRotation = closedRotation * Quaternion.Euler(0f, currentAngle, 0f);
+            if (!IsMoving && closingFeedback != null)
+            {
+                closingFeedback.PlayLatch();
+                closingFeedback = null;
+            }
+        }
+
+        internal void PlayMovementFeedback(InteractionFeedback feedback)
+        {
+            feedback.PlayHinge();
+            closingFeedback = IsOpen ? null : feedback;
         }
 
         private void Update()

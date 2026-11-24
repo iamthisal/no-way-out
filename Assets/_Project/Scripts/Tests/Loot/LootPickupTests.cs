@@ -150,6 +150,11 @@ namespace Lockdown.Tests
                 (door: "Door_D10_Security", reader: "D10 Identity Tag Reader",
                     approach: Vector3.left, readerOffset: Vector3.left * 1.2f + Vector3.forward * 0.7f)
             };
+            var feedback = player.GetComponent<InteractionFeedback>();
+            Assert.That(feedback, Is.Not.Null);
+            foreach (string cue in new[] { "doorHinge", "doorLatch", "scanAccepted", "scanDenied", "cardTap" })
+                Assert.That(typeof(InteractionFeedback).GetField(cue, BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(feedback), Is.InstanceOf<AudioClip>(), cue);
             Assert.That(player.transform.position.z, Is.GreaterThan(-5f),
                 "The player must start on the side of D01 that leads to the tag.");
             foreach (var entrance in entrances)
@@ -175,12 +180,19 @@ namespace Lockdown.Tests
                 Assert.That(interaction.CurrentTarget, Is.SameAs(reader), entrance.reader);
                 Assert.That(interaction.TryInteract(), Is.False, entrance.reader);
                 Assert.That(door.IsOpen, Is.False, entrance.door);
+                Assert.That(player.transform.Find("Identity Tag Scan"), Is.Null,
+                    "A denied scan without the tag must not display a card.");
             }
 
             var crate = GameObject.Find("P_Temporary_CrateNW").GetComponent<LootContainer>();
             var tag = crate.GetComponentInChildren<LootItem>();
+            var tagRenderer = tag.GetComponentInChildren<Renderer>();
+            var lidRenderer = crate.transform.Find("LP_Temporary_CrateNW/CrateLidHinge/Wooden lid")
+                .GetComponent<Renderer>();
             Assert.That(tag.ItemName, Is.EqualTo("Identity Tag"));
-            Assert.That(tag.GetComponentsInChildren<Renderer>().Length, Is.GreaterThan(0));
+            Assert.That(tagRenderer.enabled, Is.True);
+            Assert.That(tagRenderer.bounds.max.y, Is.LessThan(lidRenderer.bounds.min.y),
+                "The tag should fit beneath the closed lid.");
             Assert.That(tag.IsProtected, Is.True);
             Assert.That(tag.TryInteract(player.gameObject), Is.False);
 
@@ -194,7 +206,9 @@ namespace Lockdown.Tests
             Assert.That(tag.IsProtected, Is.False);
             Assert.That(crate.transform.Find("LP_Temporary_CrateNW/CrateLidHinge/Wooden lid"), Is.Not.Null);
 
-            AimAt(player, approach, crateCenter - Vector3.up * 0.25f);
+            AimAt(player, approach, tagRenderer.bounds.center);
+            Assert.That(interaction.CurrentTarget, Is.SameAs(tag),
+                "The card must be directly visible from in front of the open crate.");
             Assert.That(interaction.TryInteract(), Is.True);
             Assert.That(inventory.Items[0].Name, Is.EqualTo("Identity Tag"));
             Assert.That(inventory.TotalValue, Is.Zero);
@@ -209,7 +223,11 @@ namespace Lockdown.Tests
                 yield return null;
                 Assert.That(interaction.CurrentTarget, Is.SameAs(reader), entrance.reader);
                 Assert.That(interaction.TryInteract(), Is.True, entrance.reader);
+                var scanCard = player.transform.Find("Identity Tag Scan");
+                Assert.That(scanCard, Is.Not.Null, entrance.reader);
+                Assert.That(scanCard.GetComponentInChildren<MeshFilter>().sharedMesh, Is.Not.Null);
                 yield return new WaitForSeconds(0.6f);
+                Assert.That(player.transform.Find("Identity Tag Scan"), Is.Null);
                 Assert.That(door.IsOpen, Is.True, entrance.door);
                 Assert.That(door.IsMoving, Is.False, entrance.door);
                 if (entrance.door == "Door_D01_Lobby")

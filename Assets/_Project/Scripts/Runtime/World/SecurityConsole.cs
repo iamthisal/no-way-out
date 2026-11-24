@@ -8,6 +8,7 @@ namespace Lockdown.World
     public sealed class SecurityConsole : MonoBehaviour, IInteractable
     {
         [SerializeField] private Transform identityTag;
+        internal Transform IdentityTag => identityTag;
 
         public string InteractionLabel => "Authorize Identity Tag";
 
