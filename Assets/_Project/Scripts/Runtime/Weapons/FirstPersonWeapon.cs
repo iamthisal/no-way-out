@@ -48,7 +48,6 @@ namespace Lockdown.Weapons
         private bool canAim;
         private float aimBlend;
         private float recoil;
-        private GUIStyle ammoStyle;
         private bool waitForAttackRelease;
 
         public int CurrentAmmo { get; private set; }
@@ -227,10 +226,7 @@ namespace Lockdown.Weapons
             GUI.color = new Color(1f, 1f, 1f, Mathf.Lerp(1f, 0.45f, aimBlend));
             GUI.DrawTexture(new Rect(x - 7f, y - 1f, 14f, 2f), Texture2D.whiteTexture);
             GUI.DrawTexture(new Rect(x - 1f, y - 7f, 2f, 14f), Texture2D.whiteTexture);
-            GUI.color = Color.white;
-            if (ammoStyle == null)
-                ammoStyle = new GUIStyle(GUI.skin.label) { fontSize = 22, alignment = TextAnchor.MiddleRight, normal = { textColor = Color.white } };
-            GUI.Label(new Rect(Screen.width - 190f, Screen.height - 64f, 160f, 34f), IsReloading ? "Reloading..." : CurrentAmmo + " / " + magazineSize, ammoStyle);
+            // Rounds are shown on the weapon plaque (Lockdown.Player.WeaponHud).
             GUI.color = previousColor;
         }
     }
