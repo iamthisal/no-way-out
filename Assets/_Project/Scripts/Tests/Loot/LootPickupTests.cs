@@ -150,6 +150,11 @@ namespace Lockdown.Tests
                 (door: "Door_D10_Security", reader: "D10 Identity Tag Reader",
                     approach: Vector3.left, readerOffset: Vector3.left * 1.2f + Vector3.forward * 0.7f)
             };
+            var feedback = player.GetComponent<InteractionFeedback>();
+            Assert.That(feedback, Is.Not.Null);
+            foreach (string cue in new[] { "doorHinge", "doorLatch", "scanAccepted", "scanDenied", "cardTap" })
+                Assert.That(typeof(InteractionFeedback).GetField(cue, BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(feedback), Is.InstanceOf<AudioClip>(), cue);
             Assert.That(player.transform.position.z, Is.GreaterThan(-5f),
                 "The player must start on the side of D01 that leads to the tag.");
             foreach (var entrance in entrances)
