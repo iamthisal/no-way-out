@@ -14,9 +14,11 @@ namespace Lockdown.AI.Agents
         private Vector3 clue;
         private float clueAt = float.NegativeInfinity, nextAlert;
         private int cluePriority;
+        private Vector3 alarm;
+        private float alarmAt = float.NegativeInfinity;
         public void Configure(PursuerSettings value) { settings = value; }
         private void OnEnable() { HoundNoiseBus.NoiseEmitted += Hear; Alert += ReceiveAlert; }
-        private void OnDisable() { HoundNoiseBus.NoiseEmitted -= Hear; Alert -= ReceiveAlert; ClearClue(); }
+        private void OnDisable() { HoundNoiseBus.NoiseEmitted -= Hear; Alert -= ReceiveAlert; ClearClue(); ClearAlarm(); }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() { Alert = null; }
 
@@ -50,7 +52,7 @@ namespace Lockdown.AI.Agents
             float radius = Mathf.Min(settings.hearingRange, sound.Radius);
             if (!ClearLine(transform.position + Vector3.up, sound.Position + Vector3.up, source)) radius *= settings.obstructedHearing;
             if ((sound.Position - transform.position).sqrMagnitude > radius * radius) return;
-            int priority = sound.Kind == HoundSoundKind.Gunshot ? 3 : sound.Kind == HoundSoundKind.Distraction ? 2 : 1;
+            int priority = sound.Kind == HoundSoundKind.Gunshot ? 3 : sound.Kind == HoundSoundKind.Distraction || sound.Kind == HoundSoundKind.Alarm ? 2 : 1;
             Remember(sound.Position, priority);
         }
 
@@ -66,6 +68,19 @@ namespace Lockdown.AI.Agents
             ClearClue(); return valid;
         }
         public void ClearClue() { clueAt = float.NegativeInfinity; cluePriority = 0; }
+        /// <summary>A radio report of where glass broke. It outlives heard clues so a distant guard can still arrive.</summary>
+        public void ReceiveAlarm(Vector3 position)
+        {
+            if (!isActiveAndEnabled) return;
+            alarm = position; alarmAt = Time.time;
+        }
+        public bool TryTakeAlarm(out Vector3 position)
+        {
+            position = alarm;
+            bool valid = Time.time - alarmAt <= settings.alarmLifetime;
+            ClearAlarm(); return valid;
+        }
+        public void ClearAlarm() { alarmAt = float.NegativeInfinity; }
         public void RaiseAlert(Vector3 position)
         {
             if (Time.time < nextAlert) return;
