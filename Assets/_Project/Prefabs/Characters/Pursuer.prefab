@@ -372,6 +372,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7609566617747741245, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 407399408966866585}
+    - targetCorrespondingSourceObject: {fileID: 7609566617747741245, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8943565819088755197}
   m_SourcePrefab: {fileID: 100100000, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
 --- !u!95 &2710987325068400294 stripped
 Animator:
@@ -476,6 +479,9 @@ MonoBehaviour:
     obstructedHearing: 0.5
     investigateTimeout: 12
     inspectionDuration: 1.5
+    alarmLifetime: 20
+    alarmTimeout: 40
+    alarmSpeed: 3.2
     searchDuration: 18
     searchRadius: 4
     lostTravelTimeout: 12
@@ -671,6 +677,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd29ddc484f24db1bdd5562e7c97543a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Agents.Pursuer.PursuerController
+--- !u!114 &8943565819088755197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5094787623963269799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7cab90775c245f08377219b7935616c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Combat.CorpseRemoval
+  delay: 5
+  sinkDuration: 1.5
+  sinkDepth: 0.9
 --- !u!4 &6417361383882650462 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8512299114745508804, guid: 8efdefafbf6b9a043ab0d80e2758afdf, type: 3}
