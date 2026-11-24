@@ -205,6 +205,12 @@ namespace Lockdown.Tests
                         if (interaction.CurrentTarget == configured) { found = true; break; }
                     }
                     Assert.That(found, Is.True, configured.transform.parent.name + " cannot be reached from either side.");
+                    if (configured.InteractionLabel == "Use identity tag")
+                    {
+                        Assert.That(interaction.TryInteract(), Is.False, configured.transform.parent.name);
+                        Assert.That(configured.IsOpen, Is.False);
+                        continue;
+                    }
                     if (configured.transform.parent.name == "Door_D09_Security") Capture(configured, "closed");
                     Assert.That(interaction.TryInteract(), Is.True);
                     float deadline = Time.realtimeSinceStartup + 3f;
@@ -237,7 +243,7 @@ namespace Lockdown.Tests
                     }
                 }
             }
-            Assert.That(count, Is.EqualTo(7));
+            Assert.That(count, Is.EqualTo(8));
             yield return SceneManager.UnloadSceneAsync(museum);
         }
 

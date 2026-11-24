@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,6 +15,8 @@ namespace Lockdown.Enemies
         public Vector3 LastNoisePosition => clue;
         public bool HasClue => hasClue;
         public bool HasArrived { get; private set; }
+        // Optional AI brain owns movement when attached; existing callers keep the same API.
+        public event Action<Vector3> InvestigationRequested;
 
         private void Awake() { agent = GetComponent<NavMeshAgent>(); }
 
@@ -23,11 +26,13 @@ namespace Lockdown.Enemies
             hasClue = true;
             HasArrived = false;
             nextAttempt = 0f;
+            if (InvestigationRequested != null) { InvestigationRequested.Invoke(position); return; }
             TryMove();
         }
 
         private void Update()
         {
+            if (InvestigationRequested != null) return;
             if (!hasClue || !agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
             if (!agent.pathPending && agent.hasPath && agent.remainingDistance <= agent.stoppingDistance + 0.12f)
             {

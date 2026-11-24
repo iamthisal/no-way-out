@@ -65,6 +65,21 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7671875130651459696}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 17467124622182633}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 354172613848443119}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6136143614636908886}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1097364023728309019}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2117576783341640310}
   m_SourcePrefab: {fileID: 100100000, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
 --- !u!1 &6210690624148986991 stripped
 GameObject:
@@ -117,3 +132,104 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9de83152f4e27f46b0d08a00f05355d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.HoundLocomotion
+--- !u!114 &17467124622182633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d01cf7039864306a3bcda205778e76b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundHearing
+  settings: {fileID: 11400000, guid: 75d6e89f3e7e4de7b4546f979441005d, type: 2}
+  hearingRange: 12
+  memoryDuration: 12
+  obstructionMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  earHeight: 0.65
+  listeningArea: {fileID: 0}
+  hasClue: 0
+  lastHeardPosition: {x: 0, y: 0, z: 0}
+  memoryRemaining: 0
+  rememberedSounds: 0
+--- !u!114 &354172613848443119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85fb9c4e8a42420b822e797576209779, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNavigation
+  solidMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  sampleRadius: 0.65
+  waypointSpacing: 0.5
+  route: []
+  routeCost: 0
+  waypointIndex: 0
+--- !u!114 &6136143614636908886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 910358e9c233f19478113eec23bf41fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Combat.Health
+  maxHealth: 100
+  onDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1097364023728309019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757a50a54f9b4a539da3c9bac47a6562, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundAgent
+  settings: {fileID: 11400000, guid: 75d6e89f3e7e4de7b4546f979441005d, type: 2}
+  onStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  state: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  targetScore: 0
+--- !u!114 &2117576783341640310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f18ea3ba7d84988a9645e95e778b1d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundCombat
+  playerHealth: {fileID: 0}
+  obstructionMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  onBite:
+    m_PersistentCalls:
+      m_Calls: []

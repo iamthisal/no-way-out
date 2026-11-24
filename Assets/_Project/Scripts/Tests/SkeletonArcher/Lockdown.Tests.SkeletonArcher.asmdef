@@ -1,0 +1,5 @@
+{
+  "name": "Lockdown.Tests.SkeletonArcher",
+  "references": ["Lockdown.Runtime", "Lockdown.Interfaces", "Lockdown.AI.Core", "Lockdown.AI.Agents"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

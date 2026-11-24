@@ -1,0 +1,1971 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5828782925309857540
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4975052058070162295}
+  - component: {fileID: 3137991564439127081}
+  - component: {fileID: 2950540589228906946}
+  m_Layer: 0
+  m_Name: Rattle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4975052058070162295
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5828782925309857540}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2898217779912864535}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &3137991564439127081
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5828782925309857540}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: d55b093c0992341d7b74507ce75b2a73, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1.5
+  MaxDistance: 16
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &2950540589228906946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5828782925309857540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3efd7b17c45ae4ddc8d14faf24f15be3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonRattle
+  body: {fileID: 8873460147034495591}
+  tracked: {fileID: 2898217779912864535}
+  fullVolumeSpeed: 4
+  maxVolume: 0.75
+--- !u!1 &6577288821218304882
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2898217779912864535}
+  - component: {fileID: 5116770317998638623}
+  - component: {fileID: 9010313806977442262}
+  - component: {fileID: 7439354247836919043}
+  - component: {fileID: 4699294501271439378}
+  - component: {fileID: 8873460147034495591}
+  - component: {fileID: 11257494420004143}
+  - component: {fileID: 8532631997645652880}
+  - component: {fileID: 3251640292539718512}
+  m_Layer: 0
+  m_Name: SkeletonArcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2898217779912864535
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5406452044920956959}
+  - {fileID: 4975052058070162295}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &5116770317998638623
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.3
+  m_Speed: 2
+  m_Acceleration: 14
+  avoidancePriority: 50
+  m_AngularSpeed: 600
+  m_StoppingDistance: 0.05
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.85
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 2
+--- !u!54 &9010313806977442262
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &7439354247836919043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 910358e9c233f19478113eec23bf41fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Combat.Health
+  maxHealth: 70
+  onDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!82 &4699294501271439378
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 2
+  MaxDistance: 20
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &8873460147034495591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbfb94e9025364a2aac6283e38c0985e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonBody
+  animator: {fileID: 2154901679387931237}
+  pieces:
+  - {fileID: 7918167654481357025}
+  - {fileID: 7587330254698764754}
+  - {fileID: 3750129463052804221}
+  - {fileID: 8555493944599939782}
+  - {fileID: 5527067619268126299}
+  - {fileID: 8458088214348958592}
+  - {fileID: 7543559561754188999}
+  - {fileID: 5202300185550117640}
+  - {fileID: 5174276491168649743}
+  - {fileID: 5041905212816067087}
+  - {fileID: 2111531178008835932}
+  - {fileID: 7810377735144723432}
+  - {fileID: 4403800505496587025}
+  - {fileID: 3286658272256071414}
+  - {fileID: 35873653066333379}
+  - {fileID: 865310780957041145}
+  - {fileID: 1898848079884289520}
+  - {fileID: 6446010193981882132}
+  - {fileID: 6291796053852609825}
+  - {fileID: 6895980517268524816}
+  - {fileID: 5020848030253498867}
+  - {fileID: 1258756647216014775}
+  - {fileID: 5791236198427570920}
+  - {fileID: 2709550915578146552}
+  - {fileID: 2080040895801405092}
+  bowString: {fileID: 779321888233351464}
+  collapseSound: {fileID: 8300000, guid: cc976d3e41a7a45b1b56c38759055b3d, type: 3}
+  assembleSound: {fileID: 8300000, guid: f02c32f6a739348008f15650e5d65977, type: 3}
+  headMultiplier: 2
+  gearMultiplier: 0.35
+  headshotDelay: 0.22
+  scatterSpeed: 1.4
+  skullLaunchSpeed: 5.5
+  pileRadius: 0.5
+  assembleDuration: 1.6
+--- !u!114 &11257494420004143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18b051ed21a44cb1b395e9de9e7402a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonBow
+  animator: {fileID: 2154901679387931237}
+  arrowTip: {fileID: 2978959755929572554}
+  nockedArrow:
+  - {fileID: 1710428524638467068}
+  arrowPrefab: {fileID: 8993423582417285404, guid: 4e6006ceb419a4e0d9deac4425e928dc, type: 3}
+  voice: {fileID: 4699294501271439378}
+  drawSound: {fileID: 8300000, guid: a125929fc77164ccbaf110017d123172, type: 3}
+  releaseSound: {fileID: 8300000, guid: ae7bb2e2c783649978cf1243f78bb785, type: 3}
+  drawDuration: 0.7
+  minimumHold: 0.1
+  releaseDuration: 0.3
+  nockDuration: 0.6
+  aimLock: 0.12
+  lostSightGrace: 0.6
+  arrowSpeed: 24
+  arrowGravity: 3
+  damage: 18
+  spreadDegrees: 1.2
+  spoiledSpreadDegrees: 7
+  maxLead: 0.4
+--- !u!114 &8532631997645652880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d657bad33f9443bc8e107582c296382, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.SkeletonArcherAgent
+  animator: {fileID: 2154901679387931237}
+  bow: {fileID: 11257494420004143}
+  body: {fileID: 8873460147034495591}
+  sightRange: 18
+  fieldOfView: 140
+  eyeHeight: 1.6
+  playerEyeHeight: 1.55
+  playerChestHeight: 1.2
+  sightLayers:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  walkSpeed: 2
+  retreatSpeed: 4.5
+  huntSpeed: 2.8
+  arrivalDistance: 0.45
+  stallTime: 0.8
+  aimTurnSpeed: 540
+  territoryRadius: 14
+  searchRadius: 11
+  sampleSpacing: 1.5
+  crouchHeight: 1
+  standHeight: 1.5
+  idealRange: 9
+  maxRange: 16
+--- !u!114 &3251640292539718512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577288821218304882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f2f24a5b13774a67b4f23bf5a73aece, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonDormancy
+  body: {fileID: 8873460147034495591}
+  enableOnWake:
+  - {fileID: 8532631997645652880}
+  wakeOnBroken: []
+  wakeRadius: 2.4
+  startDormant: 1
+  pileSeed: 1907
+  onWake:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &8427342204161880851
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2978959755929572554}
+  m_Layer: 0
+  m_Name: ArrowTip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2978959755929572554
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8427342204161880851}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.022894895, y: -0.8188714, z: -0.57337993, w: -0.012690847}
+  m_LocalPosition: {x: -0.000065993685, y: 0.0075857528, z: -0.0013129693}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8102524516462772621}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &5516111302349541364
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2898217779912864535}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.010094762
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.00000004371139
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8511050724357064929, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1422dd5754add4679ab67259cef709e8, type: 2}
+    - target: {fileID: -8511050724357064929, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: -8511050724357064929, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 673e1cf39c7e4487bbe260d178b6e803, type: 2}
+    - target: {fileID: -8511050724357064929, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e7c2e0bf681664efabee46e26851e6af, type: 2}
+    - target: {fileID: -8511050724357064929, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 02a5f8aa4fdca4b2d9020717ce043b00, type: 2}
+    - target: {fileID: -8324986792720478982, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -7326136946150655035, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 65e982edc5d4c4aa3a890ab872b07e75, type: 2}
+    - target: {fileID: -7326136946150655035, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -7090062559334474890, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -7090062559334474890, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 65e982edc5d4c4aa3a890ab872b07e75, type: 2}
+    - target: {fileID: -6396398500788761032, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1422dd5754add4679ab67259cef709e8, type: 2}
+    - target: {fileID: -6396398500788761032, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: -5841489331738625663, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 65e982edc5d4c4aa3a890ab872b07e75, type: 2}
+    - target: {fileID: -5841489331738625663, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -5495080300430528405, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 65e982edc5d4c4aa3a890ab872b07e75, type: 2}
+    - target: {fileID: -5495080300430528405, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -5495080300430528405, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: -5146938271456382871, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -4152988320909351204, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_Quality
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -4152988320909351204, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3261bbc6c338f43d1800c0f925b9b2b4, type: 2}
+    - target: {fileID: -3378502216459140945, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -2652193919264441336, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 673e1cf39c7e4487bbe260d178b6e803, type: 2}
+    - target: {fileID: -2652193919264441336, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e7c2e0bf681664efabee46e26851e6af, type: 2}
+    - target: {fileID: -2652193919264441336, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1422dd5754add4679ab67259cef709e8, type: 2}
+    - target: {fileID: -2652193919264441336, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 02a5f8aa4fdca4b2d9020717ce043b00, type: 2}
+    - target: {fileID: -1534640249728724861, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -1534640249728724861, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: -1340921409581403254, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 55423252ce7b947b5b3d31f2e4f6b8d4, type: 2}
+    - target: {fileID: -1340921409581403254, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1422dd5754add4679ab67259cef709e8, type: 2}
+    - target: {fileID: -1340921409581403254, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: -1163323917345262510, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: -1163323917345262510, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: 919132149155446097, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_Name
+      value: Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268865783678293692, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 1539921896609088286, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 1539921896609088286, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 844022c15d74a4c5ba2b2803c1fe4f9f, type: 2}
+    - target: {fileID: 1539921896609088286, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: 2748399050173353251, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 2777810708886916575, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 3794597516327266841, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 3906593107531909748, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 4189824289325016217, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 4807257693191814550, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 5866666021909216657, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d61a28e119ef1455aa694421e0809960, type: 2}
+    - target: {fileID: 5866666021909216657, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6553947480080166427, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 6553947480080166427, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: 7148995293461533369, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 7148995293461533369, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 571a87196df344219b7a747e73812070, type: 2}
+    - target: {fileID: 7148995293461533369, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 97c782fe2019c4d40a393aa86817fe2a, type: 2}
+    - target: {fileID: 7688584158462811244, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7983335cd9c2346159927d2457428619, type: 2}
+    - target: {fileID: 8277286613559136665, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 55423252ce7b947b5b3d31f2e4f6b8d4, type: 2}
+    - target: {fileID: 8277286613559136665, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f33614631b4884ae7a92aa5cfb0fd52a, type: 2}
+    - target: {fileID: 8277286613559136665, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e7c2e0bf681664efabee46e26851e6af, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4394626061924011641, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2978959755929572554}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1549537286805112428, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2028604636339581024}
+    - targetCorrespondingSourceObject: {fileID: 1549537286805112428, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7918167654481357025}
+    - targetCorrespondingSourceObject: {fileID: 6820114395623926083, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2343437792480228695}
+    - targetCorrespondingSourceObject: {fileID: 6820114395623926083, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7587330254698764754}
+    - targetCorrespondingSourceObject: {fileID: -5536790141773831860, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4293625934675123019}
+    - targetCorrespondingSourceObject: {fileID: -5536790141773831860, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3750129463052804221}
+    - targetCorrespondingSourceObject: {fileID: -1999428232753167929, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2850504351227637169}
+    - targetCorrespondingSourceObject: {fileID: -1999428232753167929, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8555493944599939782}
+    - targetCorrespondingSourceObject: {fileID: -1369438151140463798, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9195810129328103906}
+    - targetCorrespondingSourceObject: {fileID: -1369438151140463798, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5527067619268126299}
+    - targetCorrespondingSourceObject: {fileID: 1583082613976344583, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 914612376063263173}
+    - targetCorrespondingSourceObject: {fileID: 1583082613976344583, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8458088214348958592}
+    - targetCorrespondingSourceObject: {fileID: -3286111513098585589, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6843107318402838935}
+    - targetCorrespondingSourceObject: {fileID: -3286111513098585589, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7543559561754188999}
+    - targetCorrespondingSourceObject: {fileID: -8047204836521752340, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4666457467695539041}
+    - targetCorrespondingSourceObject: {fileID: -8047204836521752340, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5202300185550117640}
+    - targetCorrespondingSourceObject: {fileID: 3984884861385431602, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8906248826443063947}
+    - targetCorrespondingSourceObject: {fileID: 3984884861385431602, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5174276491168649743}
+    - targetCorrespondingSourceObject: {fileID: -1535482962646098041, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2428718528276024203}
+    - targetCorrespondingSourceObject: {fileID: -1535482962646098041, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5041905212816067087}
+    - targetCorrespondingSourceObject: {fileID: 6861420882087254907, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2183013730536407781}
+    - targetCorrespondingSourceObject: {fileID: 6861420882087254907, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2111531178008835932}
+    - targetCorrespondingSourceObject: {fileID: 346653857374392614, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3598793789548007277}
+    - targetCorrespondingSourceObject: {fileID: 346653857374392614, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7810377735144723432}
+    - targetCorrespondingSourceObject: {fileID: -6061699383090576454, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8789904648109215576}
+    - targetCorrespondingSourceObject: {fileID: -6061699383090576454, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4403800505496587025}
+    - targetCorrespondingSourceObject: {fileID: -4118874505928865140, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4630484971219403973}
+    - targetCorrespondingSourceObject: {fileID: -4118874505928865140, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3286658272256071414}
+    - targetCorrespondingSourceObject: {fileID: 4145424918006474541, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 789099928860063004}
+    - targetCorrespondingSourceObject: {fileID: 4145424918006474541, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 35873653066333379}
+    - targetCorrespondingSourceObject: {fileID: -4236502732466934837, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6447219422485848028}
+    - targetCorrespondingSourceObject: {fileID: -4236502732466934837, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 865310780957041145}
+    - targetCorrespondingSourceObject: {fileID: 5626350993494570018, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4148584980763847463}
+    - targetCorrespondingSourceObject: {fileID: 5626350993494570018, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1898848079884289520}
+    - targetCorrespondingSourceObject: {fileID: -7645914563341109822, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6939026013638692036}
+    - targetCorrespondingSourceObject: {fileID: -7645914563341109822, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6446010193981882132}
+    - targetCorrespondingSourceObject: {fileID: 1954567890498944621, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5003560970141987514}
+    - targetCorrespondingSourceObject: {fileID: 1954567890498944621, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6291796053852609825}
+    - targetCorrespondingSourceObject: {fileID: -7770732296300113495, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2940672275983882439}
+    - targetCorrespondingSourceObject: {fileID: -7770732296300113495, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6895980517268524816}
+    - targetCorrespondingSourceObject: {fileID: 3511280637038934905, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2287113013253651567}
+    - targetCorrespondingSourceObject: {fileID: 3511280637038934905, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5020848030253498867}
+    - targetCorrespondingSourceObject: {fileID: 455733850843315311, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8045092356949162558}
+    - targetCorrespondingSourceObject: {fileID: 455733850843315311, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1258756647216014775}
+    - targetCorrespondingSourceObject: {fileID: 4634916140969763000, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3816395538847772255}
+    - targetCorrespondingSourceObject: {fileID: 4634916140969763000, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5791236198427570920}
+    - targetCorrespondingSourceObject: {fileID: 8677586894503325777, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9133720933809341685}
+    - targetCorrespondingSourceObject: {fileID: 8677586894503325777, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2709550915578146552}
+    - targetCorrespondingSourceObject: {fileID: -4438845716279476687, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3882030770011196146}
+    - targetCorrespondingSourceObject: {fileID: -4438845716279476687, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2080040895801405092}
+  m_SourcePrefab: {fileID: 100100000, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+--- !u!1 &187456200250964950 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5626350993494570018, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &4148584980763847463
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187456200250964950}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0029975122, y: 0.0034297176, z: 0.0057159737}
+  m_Center: {x: 1.2445546e-23, y: 6.984919e-10, z: -0.0000000012805687}
+--- !u!114 &1898848079884289520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187456200250964950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 3
+  body: {fileID: 8873460147034495591}
+--- !u!1 &700803650600690751 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -4236502732466934837, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6447219422485848028
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700803650600690751}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00060999993, y: 0.0007400721, z: 0.00090000127}
+  m_Center: {x: 1.6653345e-16, y: 9.313226e-10, z: -0.0000000018626451}
+--- !u!114 &865310780957041145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700803650600690751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &746466644695270776 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -4118874505928865140, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &4630484971219403973
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746466644695270776}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0013587909, y: 0.0011626078, z: 0.0007924735}
+  m_Center: {x: 4.4408926e-16, y: 0.0000000014260877, z: -0.0000000031286618}
+--- !u!114 &3286658272256071414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746466644695270776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 1
+  body: {fileID: 8873460147034495591}
+--- !u!137 &779321888233351464 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -4152988320909351204, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &927651005128372044 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4634916140969763000, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &3816395538847772255
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927651005128372044}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00071665517, y: 0.0005876414, z: 0.0046799993}
+  m_Center: {x: -1.1641532e-10, y: -2.0372681e-10, z: -9.313226e-10}
+--- !u!114 &5791236198427570920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927651005128372044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &1074996187224502725 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -4438845716279476687, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &3882030770011196146
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074996187224502725}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0005749989, y: 0.0008711987, z: 0.0045601707}
+  m_Center: {x: -1.1641532e-10, y: -5.0931703e-10, z: 5.820766e-10}
+--- !u!114 &2080040895801405092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074996187224502725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &1308511094976734903 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6820114395623926083, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2343437792480228695
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308511094976734903}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00062000006, y: 0.00041801503, z: 0.0031273195}
+  m_Center: {x: 1.1641532e-10, y: -2.910383e-11, z: -9.313226e-10}
+--- !u!114 &7587330254698764754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308511094976734903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 3
+  body: {fileID: 8873460147034495591}
+--- !u!1 &1420186327093990543 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6861420882087254907, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2183013730536407781
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420186327093990543}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0005217504, y: 0.00082080916, z: 0.00083469565}
+  m_Center: {x: -5.3842086e-10, y: -0.0000000020954758, z: -0.0000000015570549}
+--- !u!114 &2111531178008835932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420186327093990543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!23 &1710428524638467068 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -2652193919264441336, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2154901679387931237 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2227110270275171839 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3286111513098585589, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6843107318402838935
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2227110270275171839}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00067614217, y: 0.0008247825, z: 0.0027931328}
+  m_Center: {x: -3.2014214e-10, y: 1.1641532e-10, z: -0.0000000027939677}
+--- !u!114 &7543559561754188999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2227110270275171839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 2
+  body: {fileID: 8873460147034495591}
+--- !u!1 &2338473495725892798 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1369438151140463798, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &9195810129328103906
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2338473495725892798}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00046200398, y: 0.01401339, z: 0.002391967}
+  m_Center: {x: -5.3842086e-10, y: -4.656613e-10, z: -0.000000003550667}
+--- !u!114 &5527067619268126299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2338473495725892798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 3
+  body: {fileID: 8873460147034495591}
+--- !u!1 &2755627246665289843 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1535482962646098041, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2428718528276024203
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2755627246665289843}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00031000038, y: 0.008039998, z: 0.00034641105}
+  m_Center: {x: -4.656613e-10, y: -0.0000000018626451, z: -4.656613e-10}
+--- !u!114 &5041905212816067087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2755627246665289843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 3
+  body: {fileID: 8873460147034495591}
+--- !u!1 &2940200321690078771 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1999428232753167929, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2850504351227637169
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2940200321690078771}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0015607115, y: 0.0019354993, z: 0.0015080019}
+  m_Center: {x: -1.4551915e-10, y: 6.9849193e-10, z: -0.0000000018626451}
+--- !u!114 &8555493944599939782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2940200321690078771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &3810556896905756581 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8677586894503325777, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &9133720933809341685
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3810556896905756581}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00067266927, y: 0.0022635844, z: 0.0006919666}
+  m_Center: {x: -2.3283064e-10, y: -9.0221874e-10, z: 0.0000000013533281}
+--- !u!114 &2709550915578146552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3810556896905756581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &5206906467447086802 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 346653857374392614, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &3598793789548007277
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5206906467447086802}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0008402178, y: 0.00082478294, z: 0.0031013729}
+  m_Center: {x: 7.275958e-11, y: -8.149073e-10, z: -0.000000003085006}
+--- !u!114 &7810377735144723432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5206906467447086802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &5394817045842703259 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 455733850843315311, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &8045092356949162558
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5394817045842703259}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.000574999, y: 0.00087119883, z: 0.00456017}
+  m_Center: {x: 1.1641532e-10, y: -4.656613e-10, z: 3.4924597e-10}
+--- !u!114 &1258756647216014775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5394817045842703259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!4 &5406452044920956959 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6317757688174162329 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1954567890498944621, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &5003560970141987514
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6317757688174162329}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0005399999, y: 0.0007899997, z: 0.0015599983}
+  m_Center: {x: 4.440892e-16, y: 3.929017e-10, z: -0.0000000018626451}
+--- !u!114 &6291796053852609825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6317757688174162329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &6387786684195380829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -7770732296300113495, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2940672275983882439
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6387786684195380829}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00071665505, y: 0.0005876412, z: 0.004679999}
+  m_Center: {x: -1.1641532e-10, y: -1.7462298e-10, z: 0}
+--- !u!114 &6895980517268524816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6387786684195380829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &6416545295310653848 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1549537286805112428, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2028604636339581024
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6416545295310653848}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0030367565, y: 0.0024570813, z: 0.0025498637}
+  m_Center: {x: -1.4551915e-11, y: -1.0913895e-11, z: 3.4924583e-10}
+--- !u!114 &7918167654481357025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6416545295310653848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 3
+  body: {fileID: 8873460147034495591}
+--- !u!1 &6442798622057626166 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -7645914563341109822, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6939026013638692036
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6442798622057626166}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0028301238, y: 0.0023635705, z: 0.0030310033}
+  m_Center: {x: -2.728484e-12, y: 8.1490725e-10, z: -0.0000000027939677}
+--- !u!114 &6446010193981882132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6442798622057626166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &6446084001104390131 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1583082613976344583, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &914612376063263173
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6446084001104390131}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0005210017, y: 0.0008208092, z: 0.00083469535}
+  m_Center: {x: 3.0559022e-10, y: -0.0000000013969838, z: -0.000000001557055}
+--- !u!114 &8458088214348958592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6446084001104390131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 2
+  body: {fileID: 8873460147034495591}
+--- !u!1 &6692278500132325144 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8047204836521752340, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &4666457467695539041
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6692278500132325144}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.000906226, y: 0.00045934579, z: 0.0034899998}
+  m_Center: {x: 3.0559022e-10, y: 5.820766e-10, z: -0.0000000027939677}
+--- !u!114 &5202300185550117640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6692278500132325144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 2
+  body: {fileID: 8873460147034495591}
+--- !u!1 &7452804848944237646 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -6061699383090576454, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &8789904648109215576
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7452804848944237646}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0009062262, y: 0.0004593457, z: 0.0034899998}
+  m_Center: {x: -3.0559025e-10, y: 3.4924597e-10, z: -0.0000000037252903}
+--- !u!114 &4403800505496587025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7452804848944237646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!4 &8102524516462772621 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4394626061924011641, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8433742364427413721 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4145424918006474541, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &789099928860063004
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8433742364427413721}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0016167983, y: 0.002314864, z: 0.0019899993}
+  m_Center: {x: 8.881785e-16, y: 9.313227e-10, z: -0.000000003143214}
+--- !u!114 &35873653066333379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8433742364427413721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 1
+  body: {fileID: 8873460147034495591}
+--- !u!1 &8917142293903447494 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3984884861385431602, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &8906248826443063947
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8917142293903447494}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0015607119, y: 0.0019354993, z: 0.0015080023}
+  m_Center: {x: -3.2014214e-10, y: 4.656613e-10, z: -0.0000000018626451}
+--- !u!114 &5174276491168649743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8917142293903447494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &8950826341098747021 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3511280637038934905, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2287113013253651567
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8950826341098747021}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.00066229096, y: 0.0022635849, z: 0.00069196644}
+  m_Center: {x: 1.1641532e-10, y: -6.693881e-10, z: 0.0000000029831426}
+--- !u!114 &5020848030253498867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8950826341098747021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}
+--- !u!1 &9197604653253029560 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5536790141773831860, guid: da5a0fd2af2f04b11a707fb178a1a740, type: 3}
+  m_PrefabInstance: {fileID: 5516111302349541364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &4293625934675123019
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9197604653253029560}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.002912034, y: 0.0017026595, z: 0.0017995203}
+  m_Center: {x: 2.869608e-23, y: 1.455195e-11, z: -6.402844e-10}
+--- !u!114 &3750129463052804221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9197604653253029560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd742b8074d34543b24fd1a92827be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.SkeletonHitbox
+  region: 0
+  body: {fileID: 8873460147034495591}

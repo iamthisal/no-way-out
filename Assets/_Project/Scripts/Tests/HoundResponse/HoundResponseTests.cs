@@ -31,7 +31,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator BreakingGlassCallsThreeDogsFromDistinctEntriesAndTheyApproachTheCase()
+        public IEnumerator BreakingGlassCallsOneDogAndItApproachesTheCase()
         {
             yield return LoadMuseum();
             var response = Object.FindAnyObjectByType<GlassHoundResponse>();
@@ -44,8 +44,8 @@ namespace Lockdown.Tests
             glass.GetComponent<Health>().TakeDamage(1000f);
             Assert.That(response.IsAlerted, Is.True);
             yield return new WaitForSeconds(1.8f);
-            Assert.That(response.Pack.Count, Is.EqualTo(3));
-            Assert.That(response.Pack.Distinct().Count(), Is.EqualTo(3));
+            Assert.That(response.Pack.Count, Is.EqualTo(1));
+            Assert.That(response.Pack.Distinct().Count(), Is.EqualTo(1));
             var positions = response.Pack.Select(d => d.transform.position).ToArray();
             foreach (var dog in response.Pack)
             {
@@ -82,7 +82,7 @@ namespace Lockdown.Tests
             glasses[0].GetComponent<Health>().TakeDamage(1000f);
             yield return new WaitForSeconds(1.8f);
             var pack = response.Pack.ToArray();
-            Assert.That(pack.Length, Is.EqualTo(3));
+            Assert.That(pack.Length, Is.EqualTo(1));
             foreach (var glass in glasses.Skip(1))
             {
                 glass.GetComponent<Health>().TakeDamage(1000f);
@@ -97,7 +97,7 @@ namespace Lockdown.Tests
             }
             yield return new WaitForSeconds(1.5f);
             CollectionAssert.AreEquivalent(pack, response.Pack);
-            Assert.That(Object.FindObjectsByType<HoundInvestigator>(FindObjectsSortMode.None).Length, Is.EqualTo(3));
+            Assert.That(Object.FindObjectsByType<HoundInvestigator>(FindObjectsSortMode.None).Length, Is.EqualTo(1));
             yield return LoadMuseum();
             Assert.That(Object.FindAnyObjectByType<GlassHoundResponse>().IsAlerted, Is.False);
             Assert.That(Object.FindObjectsByType<HoundInvestigator>(FindObjectsSortMode.None), Is.Empty, "Restart must remove the pack.");
@@ -117,7 +117,7 @@ namespace Lockdown.Tests
             response.enabled = true;
             glasses[1].GetComponent<Health>().TakeDamage(1000f);
             yield return new WaitForSeconds(1.8f);
-            Assert.That(response.Pack.Count, Is.EqualTo(3));
+            Assert.That(response.Pack.Count, Is.EqualTo(1));
         }
 
         private static void Capture(Vector3 position, Vector3 target, string name)

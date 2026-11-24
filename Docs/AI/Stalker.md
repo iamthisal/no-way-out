@@ -1,6 +1,6 @@
 # Stalker / Ambusher
 
-Status: selected ground enemy; implemented as `Ambusher` in [enemy-ai.js](../../game_html/src/enemy-ai.js), with cover queries in `main.js`. Unity integration is pending.
+Status: selected ground enemy; implemented as `Ambusher` in [enemy-ai.js](../../game_html/src/enemy-ai.js), with cover queries in `main.js`. In Unity it is the Natural History [skeleton archer](../SkeletonArcher.md): `AmbusherBrain` and `AmbusherCoverScorer` in `Lockdown.AI.Core`, driven by `SkeletonArcherAgent`.
 
 ## Behavior Reference
 

@@ -17,6 +17,7 @@ namespace Lockdown.Enemies
         [SerializeField, Min(1f)] private float shootingRange = 4f;
         [SerializeField, Min(0.1f)] private float shotInterval = 1.2f;
         [SerializeField, Min(0f)] private float firstShotDelay = 0.8f;
+        [SerializeField] private bool controlledByAI;
 
         private Health health;
         private FirstPersonController target;
@@ -35,6 +36,7 @@ namespace Lockdown.Enemies
         {
             if (Time.time >= flashEndsAt) HideFlash();
             if (health.IsDead) { HideFlash(); return; }
+            if (controlledByAI) return;
             if ((target == null || !target.gameObject.activeInHierarchy) && Time.time >= nextTargetSearch)
             {
                 target = FindAnyObjectByType<FirstPersonController>();
@@ -52,6 +54,19 @@ namespace Lockdown.Enemies
         }
 
         private Vector3 AimPoint() => target.transform.position + Vector3.up * 1.2f;
+
+        public bool CanAttackTarget(Transform actor)
+        {
+            if (!controlledByAI || actor == null) return false;
+            target = actor.GetComponent<FirstPersonController>();
+            targetHealth = actor.GetComponent<Health>();
+            return HasVisibleTarget() && HitsPlayer(muzzle.position, AimPoint() - muzzle.position, out _);
+        }
+
+        public bool TryFireControlled(Transform actor)
+        {
+            return CanAttackTarget(actor) && TryFire();
+        }
 
         private bool HasVisibleTarget()
         {
@@ -79,7 +94,7 @@ namespace Lockdown.Enemies
 
         public bool TryFire()
         {
-            if (!isActiveAndEnabled || health.IsDead || Time.time < nextShotTime || !HasVisibleTarget()) return false;
+            if (!isActiveAndEnabled || Time.timeScale <= 0f || health.IsDead || Time.time < nextShotTime || !HasVisibleTarget()) return false;
             if (gunPivot != null) gunPivot.LookAt(AimPoint());
             if (!HitsPlayer(muzzle.position, AimPoint() - muzzle.position, out var hit)) return false;
             nextShotTime = Time.time + shotInterval;

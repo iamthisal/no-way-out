@@ -1,0 +1,6 @@
+{
+  "name": "Lockdown.Tests.Pursuer",
+  "references": ["Lockdown.AI.Agents", "Lockdown.AI.Core", "Lockdown.Runtime"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

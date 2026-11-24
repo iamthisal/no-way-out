@@ -102,9 +102,11 @@ namespace Lockdown.Tests
             yield return null;
             yield return null;
             Assert.That(controller.IsCursorCaptured, Is.False, "Escape should release the cursor.");
+            Assert.That(player.GetComponent<Lockdown.UI.PauseMenu>().IsPaused, Is.True, "Escape should open the pause menu.");
             start = player.transform.position;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W));
-            yield return new WaitForSeconds(0.2f);
+            // The pause menu freezes game time, so wait in real time.
+            yield return new WaitForSecondsRealtime(0.2f);
             Assert.That(Vector3.Distance(start, player.transform.position), Is.LessThan(0.1f), "Movement should stop while the cursor is released.");
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             controller.CaptureCursor();
@@ -119,7 +121,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator MuseumPlayerSpawnsOnFloorAndWalksThroughLobbyDoorway()
+        public IEnumerator MuseumPlayerSpawnsOnFloorAndCanWalkIntoCentralHall()
         {
             UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
                 "Assets/_Project/Scenes/Museum/Museum_Main.unity",
@@ -133,6 +135,8 @@ namespace Lockdown.Tests
             controller.CaptureCursor();
             yield return new WaitForSeconds(0.5f);
             Assert.That(controller.IsGrounded, Is.True, "The museum floor should support the player.");
+            var spawnZ = player.transform.position.z;
+            Assert.That(spawnZ, Is.GreaterThan(-5f), "The locked lobby doorway must not block the route to the tag.");
             int activeCameras = 0;
             int activeListeners = 0;
             foreach (var camera in Object.FindObjectsByType<Camera>(FindObjectsSortMode.None))
@@ -144,10 +148,10 @@ namespace Lockdown.Tests
             controller.CaptureCursor();
             yield return null;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W));
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.5f);
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             yield return null;
-            Assert.That(player.transform.position.z, Is.GreaterThan(-5f), "The player should fit through the lobby doorway into the central hall.");
+            Assert.That(player.transform.position.z, Is.GreaterThan(spawnZ + 0.5f), "The player should be able to walk into the central hall.");
             Assert.That(controller.IsGrounded, Is.True, "The player should remain on the museum floor.");
         }
 
