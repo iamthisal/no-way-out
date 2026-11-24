@@ -19,7 +19,7 @@ namespace Lockdown.Player
         private InteractionFeedback feedback;
         private InputAction interactAction;
         private GUIStyle promptStyle;
-        private GUIStyle lootStyle;
+        private readonly LootCounterHud lootCounter = new LootCounterHud();
         private GUIStyle entryStyle;
         private GUIStyle objectiveStyle;
         private MuseumExit museumExit;
@@ -113,14 +113,12 @@ namespace Lockdown.Player
             {
                 promptStyle = new GUIStyle(GUI.skin.label) { fontSize = 18, alignment = TextAnchor.MiddleCenter,
                     normal = { textColor = Color.white }, wordWrap = true };
-                lootStyle = new GUIStyle(GUI.skin.label) { fontSize = 20, alignment = TextAnchor.MiddleRight,
-                    normal = { textColor = Color.white } };
-                entryStyle = new GUIStyle(lootStyle) { fontSize = 16, wordWrap = true };
+                entryStyle = new GUIStyle(GUI.skin.label) { fontSize = 16, alignment = TextAnchor.MiddleRight,
+                    normal = { textColor = Color.white }, wordWrap = true };
                 objectiveStyle = new GUIStyle(promptStyle) { fontStyle = FontStyle.Bold };
             }
             float width = Mathf.Min(300f, Screen.width - 48f);
-            GUI.Label(new Rect(Screen.width - width - 24f, 20f, width, 32f),
-                "Loot " + inventory.ItemCount + "  |  $" + inventory.TotalValue, lootStyle);
+            lootCounter.Draw(inventory.TotalValue, inventory.ItemCount);
             if (!CanInteract) return;
             if (museumExit != null)
             {
