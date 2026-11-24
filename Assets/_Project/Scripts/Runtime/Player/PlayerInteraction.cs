@@ -17,15 +17,21 @@ namespace Lockdown.Player
         private Health health;
         private LootInventory inventory;
         private InteractionFeedback feedback;
+        private PlayerEquipment equipment;
         private InputAction interactAction;
+        private InputAction propAction;
+        private MovableProp heldProp;
         private GUIStyle promptStyle;
         private GUIStyle lootStyle;
         private GUIStyle entryStyle;
         private GUIStyle objectiveStyle;
         private MuseumExit museumExit;
         private bool showInventory;
+        private bool gamepadInteraction;
 
         public float Reach => reach;
+        public bool IsHoldingProp => heldProp != null;
+        internal Camera PlayerCamera => controller.PlayerCamera;
         public bool CanInteract => isActiveAndEnabled && controller != null && controller.enabled &&
             controller.CanUseWeapon && health != null && !health.IsDead;
         public IInteractable CurrentTarget => CanInteract ? FindTarget() : null;
@@ -36,29 +42,68 @@ namespace Lockdown.Player
             health = GetComponent<Health>();
             inventory = GetComponent<LootInventory>();
             feedback = GetComponent<InteractionFeedback>();
+            equipment = GetComponent<PlayerEquipment>();
             interactAction = new InputAction("Interact", InputActionType.Button, "<Keyboard>/e");
             interactAction.AddBinding("<Gamepad>/buttonWest");
+            propAction = new InputAction("Use held prop", InputActionType.Button, "<Keyboard>/f");
+            propAction.AddBinding("<Gamepad>/leftShoulder");
         }
 
-        private void OnEnable() { interactAction?.Enable(); }
+        private void OnEnable()
+        {
+            interactAction?.Enable();
+            propAction?.Enable();
+        }
         private void Start()
         {
             museumExit = Array.Find(FindObjectsByType<MuseumExit>(FindObjectsInactive.Exclude),
                 exit => exit.gameObject.scene == gameObject.scene);
         }
-        private void OnDisable() { interactAction?.Disable(); showInventory = false; }
-        private void OnDestroy() { interactAction?.Dispose(); }
+        private void OnDisable()
+        {
+            interactAction?.Disable();
+            propAction?.Disable();
+            showInventory = false;
+            ReleaseProp();
+        }
+
+        private void OnDestroy()
+        {
+            interactAction?.Dispose();
+            propAction?.Dispose();
+        }
 
         private void Update()
         {
-            if (!CanInteract) { showInventory = false; return; }
+            if (!CanInteract)
+            {
+                showInventory = false;
+                ReleaseProp();
+                return;
+            }
+            if (WeaponsEquipped) ReleaseProp();
             if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame)
                 showInventory = !showInventory;
-            if (interactAction.WasPressedThisFrame()) TryInteract();
+            if (interactAction.WasPressedThisFrame())
+            {
+                gamepadInteraction = interactAction.activeControl?.device is Gamepad;
+                TryInteract();
+            }
+            else if (heldProp != null && propAction.WasPressedThisFrame())
+            {
+                gamepadInteraction = propAction.activeControl?.device is Gamepad;
+                if (heldProp.UseAlternate(PlayerCamera)) heldProp = null;
+            }
         }
 
         public bool TryInteract()
         {
+            if (heldProp != null)
+            {
+                ReleaseProp();
+                return CanInteract;
+            }
+
             var target = CurrentTarget;
             if (target == null) return false;
             int previousItemCount = inventory.ItemCount;
@@ -66,6 +111,22 @@ namespace Lockdown.Player
             if (feedback != null)
                 feedback.Report(target, succeeded, inventory, previousItemCount, controller.PlayerCamera);
             return succeeded;
+        }
+
+        private bool WeaponsEquipped => equipment != null && (equipment.IsPistolEquipped || equipment.IsHammerEquipped);
+
+        internal bool TryGrabProp(MovableProp prop)
+        {
+            if (heldProp != null || WeaponsEquipped || !ReferenceEquals(CurrentTarget, prop)) return false;
+            heldProp = prop;
+            return true;
+        }
+
+        internal void ReleaseProp()
+        {
+            var prop = heldProp;
+            heldProp = null;
+            if (prop != null) prop.Release();
         }
 
         private IInteractable FindTarget()
@@ -129,16 +190,21 @@ namespace Lockdown.Player
                 GUI.Box(objectiveRect, GUIContent.none);
                 GUI.Label(objectiveRect, museumExit.GetObjective(inventory), objectiveStyle);
             }
-            var equipment = GetComponent<PlayerEquipment>();
             if (equipment == null || !equipment.IsPistolEquipped)
                 GUI.DrawTexture(new Rect(Screen.width * 0.5f - 2f, Screen.height * 0.5f - 2f, 4f, 4f), Texture2D.whiteTexture);
-            var target = CurrentTarget;
+            var target = heldProp != null ? heldProp : CurrentTarget;
             if (target != null)
             {
                 float promptWidth = Mathf.Min(440f, Screen.width - 32f);
-                string binding = interactAction.activeControl != null && interactAction.activeControl.device is Gamepad ? "X" : "E";
+                string binding = gamepadInteraction ? "X" : "E";
+                string alternateBinding = gamepadInteraction ? "LB" : "F";
                 var door = target as Door ?? (target as DoorReader)?.Door;
-                string label = target is MuseumExit exit ? exit.GetPrompt(inventory) :
+                bool needsEmptyHands = heldProp == null && target is MovableProp && WeaponsEquipped;
+                if (needsEmptyHands) binding = gamepadInteraction ? "D-pad Left" : "1";
+                string label = heldProp != null ? (heldProp.CanThrow ? "Drop  |  [" + alternateBinding + "] Throw to distract" :
+                    heldProp.CanRotate ? "Release  |  [" + alternateBinding + "] Rotate" : "Release  |  Walk along the wall to move") :
+                    needsEmptyHands ? "Equip empty hands" :
+                    target is MuseumExit exit ? exit.GetPrompt(inventory) :
                     target is SecurityConsole console ? console.GetPrompt(inventory) :
                     door != null ? door.GetPrompt(inventory) : target.InteractionLabel;
                 GUI.Label(new Rect((Screen.width - promptWidth) * 0.5f, Screen.height * 0.5f + 24f, promptWidth, 64f),

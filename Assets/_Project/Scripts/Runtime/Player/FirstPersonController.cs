@@ -1,3 +1,4 @@
+using Lockdown.World;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -141,6 +142,13 @@ namespace Lockdown.Player
             transform.Rotate(0f, look.x * sensitivity, 0f, Space.Self);
             pitch = Mathf.Clamp(pitch - look.y * sensitivity, -pitchLimit, pitchLimit);
             playerCamera.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+        }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (CanUseWeapon && hit.moveDirection.y > -0.5f && hit.rigidbody != null &&
+                hit.rigidbody.TryGetComponent<MovableProp>(out var prop))
+                prop.PushFromSide(hit.moveDirection, hit.normal);
         }
 
         private void Respawn()
