@@ -49,7 +49,7 @@ Script GUIDs and original enum values are preserved. New states are appended for
 | Search | Travel to ranked escape areas, scan at arrivals, then check nearby positions within 4 m. | Sight interrupts; a separate 12-second travel limit bounds unreachable areas. The 18-second inspection budget starts at first arrival and then ends in Return. |
 | Return | Navigate to the nearest reachable patrol waypoint. | Reaching the route resumes Patrol; evidence can interrupt. |
 | Caught | Stop pursuing the captured thief; player controls are disabled without lethal damage. | Player restarts the encounter. |
-| Dead | Stop navigation/fire, disable colliders, release formation slot and play death animation. | Terminal for this instance. |
+| Dead | Stop navigation/fire, disable colliders, release formation slot and play death animation. | Terminal; the body is removed after about 6.5 s ([details](../EnemyDeaths.md)). |
 
 Death has highest priority. Sight overrides clues. A confirmed player hit interrupts arrest and enables retaliation for this guard's lifetime. Fleeing, merely equipping a gun, shooting elsewhere, and unattributed environmental damage do not authorize shooting. Restart creates a fresh non-hostile guard.
 
