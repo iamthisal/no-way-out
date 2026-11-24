@@ -81,7 +81,46 @@ namespace Lockdown.Tests
                     break;
                 }
                 Assert.That(reached, Is.True, chest.name + " needs a clear approach.");
-                Assert.That(interaction.TryInteract(), Is.True, chest.name);
+                if (chest.name == "Rare_Fossil")
+                {
+                    var side = player.PlayerCamera.transform.right;
+                    var bounds = lid.bounds;
+                    var chestColliders = chest.GetComponentsInChildren<Collider>();
+                    bool reachedBesideChest = false;
+                    foreach (var direction in new[] { side, -side })
+                    {
+                        var edge = bounds.ClosestPoint(bounds.center + direction * 5f) + direction * 0.12f;
+                        AimAt(player, approach, edge);
+                        yield return null;
+                        var camera = player.PlayerCamera.transform;
+                        var ray = new Ray(camera.position, camera.forward);
+                        var hitsChestDirectly = System.Array.Exists(chestColliders,
+                            collider => collider.enabled && collider.Raycast(ray, out _, interaction.Reach));
+                        if (hitsChestDirectly || interaction.CurrentTarget != chest) continue;
+                        reachedBesideChest = true;
+                        break;
+                    }
+                    Assert.That(reachedBesideChest, Is.True, "Aiming just beside the fossil chest should show its prompt.");
+
+                    var view = player.PlayerCamera.transform;
+                    wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    wall.transform.SetPositionAndRotation(Vector3.Lerp(view.position, bounds.center, 0.5f), view.rotation);
+                    wall.transform.localScale = new Vector3(1.6f, 1.6f, 0.04f);
+                    Physics.SyncTransforms();
+                    Assert.That(interaction.CurrentTarget, Is.Null, "Aim tolerance must respect walls.");
+                    Object.DestroyImmediate(wall);
+                    Physics.SyncTransforms();
+
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.E));
+                    yield return null;
+                    yield return null;
+                    Assert.That(chest.IsOpen, Is.True, "E should open the chest when the crosshair is just beside it.");
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                }
+                else
+                {
+                    Assert.That(interaction.TryInteract(), Is.True, chest.name);
+                }
                 yield return new WaitForSeconds(0.85f);
                 Assert.That(chest.IsAccessible, Is.True, chest.name);
                 Assert.That(Quaternion.Angle(lid.transform.parent.localRotation, Quaternion.identity),
