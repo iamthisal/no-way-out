@@ -58,6 +58,87 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
+        public IEnumerator BareHandsAlternatePunchesAndDamageAnEnemyOncePerPress()
+        {
+            var fists = equipment.EmptyHands.GetComponent<FirstPersonFists>();
+            Assert.That(fists, Is.Not.Null);
+            var left = fists.transform.Find("LeftHand");
+            var right = fists.transform.Find("RightHand");
+            var leftRest = left.localPosition;
+            var rightRest = right.localPosition;
+            Assert.That(leftRest.z, Is.GreaterThan(rightRest.z), "The lead hand should sit in front of the rear hand.");
+            Assert.That(leftRest.y, Is.GreaterThan(-0.2f));
+            Assert.That(rightRest.y, Is.GreaterThan(leftRest.y + 0.1f), "The rear fist should sit higher in guard.");
+
+            var target = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            target.transform.SetParent(fixture.transform);
+            var camera = player.PlayerCamera.transform;
+            target.transform.position = camera.position + camera.forward * 1.2f;
+            target.transform.localScale = Vector3.one * 0.35f;
+            var targetHealth = target.AddComponent<Health>();
+            Transform instigator = null;
+            targetHealth.DamagedBy += source => instigator = source;
+            Physics.SyncTransforms();
+
+            InputSystem.QueueStateEvent(mouse, new MouseState { buttons = 1 });
+            yield return null;
+            yield return new WaitForSeconds(0.10f);
+            Assert.That(fists.IsPunching, Is.True);
+            Assert.That(left.localPosition.z, Is.GreaterThan(leftRest.z));
+            Assert.That(right.localPosition, Is.EqualTo(rightRest));
+            yield return new WaitForSeconds(0.55f);
+            Assert.That(targetHealth.CurrentHealth, Is.EqualTo(78f));
+            Assert.That(instigator, Is.SameAs(player.transform));
+            Assert.That(left.localPosition, Is.EqualTo(leftRest));
+
+            InputSystem.QueueStateEvent(mouse, new MouseState());
+            yield return null;
+            InputSystem.QueueStateEvent(mouse, new MouseState { buttons = 1 });
+            yield return null;
+            yield return new WaitForSeconds(0.13f);
+            Assert.That(right.localPosition.z, Is.GreaterThan(rightRest.z));
+            Assert.That(left.localPosition, Is.EqualTo(leftRest));
+            yield return new WaitForSeconds(0.35f);
+            Assert.That(targetHealth.CurrentHealth, Is.EqualTo(56f));
+            Assert.That(right.localPosition, Is.EqualTo(rightRest));
+        }
+
+        [UnityTest]
+        public IEnumerator BareHandsRespectGlassAndCancelPendingHitsOnWeaponSwitch()
+        {
+            var fists = equipment.EmptyHands.GetComponent<FirstPersonFists>();
+            Assert.That(fists, Is.Not.Null);
+            var camera = player.PlayerCamera.transform;
+            var target = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            target.transform.SetParent(fixture.transform);
+            target.transform.position = camera.position + camera.forward * 1.25f;
+            target.transform.localScale = Vector3.one * 0.35f;
+            var targetHealth = target.AddComponent<Health>();
+
+            var pane = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            pane.transform.SetParent(fixture.transform);
+            pane.transform.position = camera.position + camera.forward * 0.75f;
+            pane.transform.localScale = new Vector3(0.5f, 0.5f, 0.05f);
+            var glass = pane.AddComponent<BreakableGlass>();
+            var glassHealth = pane.GetComponent<Health>();
+            Physics.SyncTransforms();
+            Assert.That(fists.TryPunch(), Is.True);
+            yield return new WaitForSeconds(0.42f);
+            Assert.That(targetHealth.CurrentHealth, Is.EqualTo(100f));
+            Assert.That(glassHealth.CurrentHealth, Is.EqualTo(100f));
+            Assert.That(glass.IsBroken, Is.False);
+
+            Object.DestroyImmediate(pane);
+            Physics.SyncTransforms();
+            Assert.That(fists.TryPunch(), Is.True);
+            Assert.That(equipment.TryEquipPistol(), Is.True);
+            Assert.That(fists.IsPunching, Is.False);
+            yield return new WaitForSeconds(0.42f);
+            Assert.That(targetHealth.CurrentHealth, Is.EqualTo(100f));
+            Assert.That(fists.TryPunch(), Is.False);
+        }
+
+        [UnityTest]
         public IEnumerator PickupRequiresSightReachAndActivePlayerAndIsNotValuableLoot()
         {
             var pickup = MakePickup();
