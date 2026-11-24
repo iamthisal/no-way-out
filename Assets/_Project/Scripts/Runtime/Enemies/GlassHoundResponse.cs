@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Lockdown.World;
@@ -21,6 +22,8 @@ namespace Lockdown.Enemies
         public bool IsAlerted { get; private set; }
         public Vector3 LatestNoisePosition { get; private set; }
         public IReadOnlyList<HoundInvestigator> Pack => pack;
+        /// <summary>Optional check before each dog enters. Null means always allowed. A refused dog may enter after a later break.</summary>
+        public Func<bool> DispatchAllowed { get; set; }
 
         private void OnEnable()
         {
@@ -51,6 +54,7 @@ namespace Lockdown.Enemies
             for (int i = 0; i < entryPoints.Length; i++)
             {
                 if (dispatchedEntries.Contains(i)) continue;
+                if (DispatchAllowed != null && !DispatchAllowed()) break;
                 var entry = entryPoints[i];
                 if (houndPrefab != null && entry != null &&
                     NavMesh.SamplePosition(entry.position, out var spawn, 0.8f, NavMesh.AllAreas))
