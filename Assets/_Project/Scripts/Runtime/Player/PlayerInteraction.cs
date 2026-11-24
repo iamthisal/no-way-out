@@ -18,7 +18,7 @@ namespace Lockdown.Player
         private LootInventory inventory;
         private InteractionFeedback feedback;
         private InputAction interactAction;
-        private GUIStyle promptStyle;
+        private readonly InteractionPromptHud promptHud = new InteractionPromptHud();
         private readonly LootCounterHud lootCounter = new LootCounterHud();
         private GUIStyle entryStyle;
         private readonly ObjectiveHud objectiveHud = new ObjectiveHud();
@@ -109,13 +109,9 @@ namespace Lockdown.Player
 
         private void OnGUI()
         {
-            if (promptStyle == null)
-            {
-                promptStyle = new GUIStyle(GUI.skin.label) { fontSize = 18, alignment = TextAnchor.MiddleCenter,
-                    normal = { textColor = Color.white }, wordWrap = true };
+            if (entryStyle == null)
                 entryStyle = new GUIStyle(GUI.skin.label) { fontSize = 16, alignment = TextAnchor.MiddleRight,
                     normal = { textColor = Color.white }, wordWrap = true };
-            }
             float width = Mathf.Min(300f, Screen.width - 48f);
             float lootBottom = lootCounter.Draw(inventory.TotalValue);
             if (!CanInteract) return;
@@ -126,15 +122,14 @@ namespace Lockdown.Player
             var target = CurrentTarget;
             if (target != null)
             {
-                float promptWidth = Mathf.Min(440f, Screen.width - 32f);
                 string binding = interactAction.activeControl != null && interactAction.activeControl.device is Gamepad ? "X" : "E";
                 var door = target as Door ?? (target as DoorReader)?.Door;
                 string label = target is MuseumExit exit ? exit.GetPrompt(inventory) :
                     target is SecurityConsole console ? console.GetPrompt(inventory) :
                     door != null ? door.GetPrompt(inventory) : target.InteractionLabel;
-                GUI.Label(new Rect((Screen.width - promptWidth) * 0.5f, Screen.height * 0.5f + 24f, promptWidth, 64f),
-                    "[" + binding + "] " + label, promptStyle);
+                promptHud.Draw(binding, label);
             }
+            else promptHud.Draw(null, null);
             if (!showInventory) return;
             float y = lootBottom + 12f;
             if (inventory.ItemCount == 0)
