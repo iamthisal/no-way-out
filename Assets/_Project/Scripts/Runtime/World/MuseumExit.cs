@@ -32,17 +32,26 @@ namespace Lockdown.World
         public string GetObjective(LootInventory inventory)
         {
             int collected = CollectedLootCount(inventory);
+            bool hasTag = HasTag(inventory);
             if (RequiredLootCount == 0 || collected < RequiredLootCount)
-                return $"Collect all exhibition loot  {collected}/{RequiredLootCount}";
-            return HasTag(inventory)
+            {
+                var objective = $"Collect all exhibition loot  {collected}/{RequiredLootCount}";
+                if (!hasTag) return objective;
+                return objective + (HasClearance(inventory)
+                    ? "\nIdentity Tag authorized for exit"
+                    : "\nAuthorize the Identity Tag in the guard room");
+            }
+            if (!hasTag) return "All exhibition loot collected. Find the Identity Tag to exit.";
+            return HasClearance(inventory)
                 ? "You can exit now. Scan the Identity Tag at the exit."
-                : "All exhibition loot collected. Find the Identity Tag to exit.";
+                : "Exit locked. Authorize your Identity Tag in the guard room.";
         }
 
         internal string GetPrompt(LootInventory inventory)
         {
             if (!HasAllLoot(inventory)) return "Collect all exhibition loot first";
-            return HasTag(inventory) ? InteractionLabel : "Identity Tag required";
+            if (!HasTag(inventory)) return "Identity Tag required";
+            return HasClearance(inventory) ? InteractionLabel : "Authorize Identity Tag in the guard room";
         }
 
         public bool TryInteract(GameObject interactor)
@@ -51,7 +60,7 @@ namespace Lockdown.World
             var interaction = interactor.GetComponent<PlayerInteraction>();
             if (interaction == null || interaction.CurrentTarget != (IInteractable)this) return false;
             var inventory = interactor.GetComponent<LootInventory>();
-            if (!HasAllLoot(inventory) || !HasTag(inventory)) return false;
+            if (!HasAllLoot(inventory) || !HasClearance(inventory)) return false;
             var vitals = interactor.GetComponent<PlayerVitals>();
             return vitals != null && vitals.Escape();
         }
@@ -61,5 +70,8 @@ namespace Lockdown.World
 
         private bool HasTag(LootInventory inventory) =>
             inventory != null && inventory.HasItem(requiredIdentityTag);
+
+        private bool HasClearance(LootInventory inventory) =>
+            inventory != null && inventory.HasAuthorizedExitTag(requiredIdentityTag);
     }
 }

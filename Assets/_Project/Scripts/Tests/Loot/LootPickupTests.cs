@@ -36,7 +36,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator MuseumExitRequiresEveryRelicAndTheIdentityTag()
+        public IEnumerator MuseumExitRequiresEveryRelicAndAnAuthorizedIdentityTag()
         {
             LoadMuseum();
             yield return null;
@@ -56,6 +56,16 @@ namespace Lockdown.Tests
             Assert.That(exit.RequiredLootCount, Is.EqualTo(16));
             Assert.That(exit.GetObjective(inventory), Does.Contain("Collect all exhibition loot").And.Contain("0/16"));
             Assert.That(interaction.TryInteract(), Is.False);
+
+            var console = GameObject.Find("P_Security_DeskMonitor").GetComponent<SecurityConsole>();
+            var consoleCenter = console.GetComponent<BoxCollider>().bounds.center;
+            var consoleApproach = consoleCenter + new Vector3(0.8f, 0f, 1.2f);
+            AimAt(player, consoleApproach, consoleCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(console));
+            Assert.That(interaction.TryInteract(), Is.False, "Authorization requires possession of the actual tag.");
+            AimAt(player, exitApproach, exitCenter);
+            yield return null;
 
             // Record the actual scene relics to exercise the exit independently of the exhibit-opening tests.
             var collect = typeof(LootItem).GetMethod("Collect", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -82,6 +92,18 @@ namespace Lockdown.Tests
             AimAt(player, crateApproach, crateCenter - Vector3.up * 0.25f);
             Assert.That(interaction.TryInteract(), Is.True);
             Assert.That(exit.CollectedLootCount(inventory), Is.EqualTo(16));
+            Assert.That(exit.GetObjective(inventory), Does.Contain("Authorize your Identity Tag in the guard room"));
+
+            AimAt(player, exitApproach, exitCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(exit));
+            Assert.That(interaction.TryInteract(), Is.False, "An ordinary tag cannot bypass the guard room.");
+
+            AimAt(player, consoleApproach, consoleCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(console));
+            Assert.That(interaction.TryInteract(), Is.True);
+            Assert.That(interaction.TryInteract(), Is.False, "A tag only needs to be authorized once.");
             Assert.That(exit.GetObjective(inventory), Does.Contain("You can exit now"));
 
             AimAt(player, exitApproach, exitCenter);

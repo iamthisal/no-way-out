@@ -18,11 +18,21 @@ namespace Lockdown.Player
 
         private readonly List<Entry> items = new List<Entry>();
         private ReadOnlyCollection<Entry> readOnlyItems;
+        private Transform authorizedExitTag;
         public IReadOnlyList<Entry> Items => readOnlyItems ?? (readOnlyItems = items.AsReadOnly());
         public int ItemCount => items.Count;
         public long TotalValue { get; private set; }
 
         internal bool HasItem(Transform source) => source != null && items.Exists(item => item.Source == source);
+
+        internal bool HasAuthorizedExitTag(Transform source) => source != null && authorizedExitTag == source;
+
+        internal bool AuthorizeExitTag(Transform source)
+        {
+            if (!HasItem(source) || HasAuthorizedExitTag(source)) return false;
+            authorizedExitTag = source;
+            return true;
+        }
 
         internal void Add(string itemName, int value, Transform source)
         {

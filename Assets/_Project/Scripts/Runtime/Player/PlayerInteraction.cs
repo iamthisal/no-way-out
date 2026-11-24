@@ -132,6 +132,7 @@ namespace Lockdown.Player
                 string binding = interactAction.activeControl != null && interactAction.activeControl.device is Gamepad ? "X" : "E";
                 var door = target as Door ?? (target as DoorReader)?.Door;
                 string label = target is MuseumExit exit ? exit.GetPrompt(inventory) :
+                    target is SecurityConsole console ? console.GetPrompt(inventory) :
                     door != null ? door.GetPrompt(inventory) : target.InteractionLabel;
                 GUI.Label(new Rect((Screen.width - promptWidth) * 0.5f, Screen.height * 0.5f + 24f, promptWidth, 64f),
                     "[" + binding + "] " + label, promptStyle);
