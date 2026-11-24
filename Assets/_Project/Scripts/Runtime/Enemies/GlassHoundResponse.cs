@@ -42,7 +42,9 @@ namespace Lockdown.Enemies
             if (!glass.IsBroken) return;
             IsAlerted = true;
             LatestNoisePosition = glass.transform.position;
-            foreach (var hound in pack) if (hound != null) hound.Investigate(LatestNoisePosition);
+            // Dead dogs are destroyed after a while; do not keep references to them.
+            pack.RemoveAll(hound => hound == null);
+            foreach (var hound in pack) hound.Investigate(LatestNoisePosition);
             // One pack per scene. Further broken cases redirect it, without endless spawning.
             if (dispatch == null && pack.Count < entryPoints.Length) dispatch = StartCoroutine(Dispatch());
         }
