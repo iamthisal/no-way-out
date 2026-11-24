@@ -92,17 +92,9 @@ namespace Lockdown.Weapons
         private void Strike()
         {
             var camera = player.PlayerCamera;
-            if (camera == null) return;
-            var hits = Physics.RaycastAll(camera.transform.position, camera.transform.forward, reach,
-                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-            foreach (var hit in hits)
-            {
-                if (hit.transform.IsChildOf(player.transform)) continue;
-                hit.collider.GetComponentInParent<IDamageable>()?.TakeDamage(damage);
-                OnHit?.Invoke(hit);
-                break; // The first solid surface blocks targets behind it.
-            }
+            if (camera == null || !FirstPersonMeleeHit.TryFind(camera.transform, player.transform, reach, out var hit)) return;
+            hit.collider.GetComponentInParent<IDamageable>()?.TakeDamage(damage);
+            OnHit?.Invoke(hit);
         }
 
         private void CancelSwing()
