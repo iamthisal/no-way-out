@@ -7330,7 +7330,7 @@ GameObject:
   m_Component:
   - component: {fileID: 173742685}
   - component: {fileID: 173742686}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: P_Storage_PackingCrate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7345,14 +7345,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 173742684}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 13.35, y: 0.715, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.4, y: 0.7, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 747003930}
   m_Father: {fileID: 945351857}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &173742686
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7372,7 +7372,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.4, y: 1.4, z: 1.06}
+  m_Size: {x: 1.4, y: 1.4, z: 1.1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &177105320
 GameObject:
@@ -91203,7 +91203,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1857015638}
   - component: {fileID: 1857015639}
-  - component: {fileID: 1857015640}
   m_Layer: 0
   m_Name: Museum
   m_TagString: Untagged
@@ -106908,24 +106907,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1176599429299638121, guid: cec743611648e3e45aab93b5c1038080, type: 3}
   m_PrefabInstance: {fileID: 8865376622102239970}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1857015640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1857015637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ebb1f73e2d24b1d9102df44001c364b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  doorCrate: {fileID: 173742686}
-  storageDoor: {fileID: 551652037}
-  cartModel: {fileID: 2006167440}
-  partitionModel: {fileID: 1592152692}
-  boxMaterial: {fileID: 2100000, guid: f20fa3c0a39d3ae45b1e0a00e38a1656, type: 2}
-  boxImpact: {fileID: 8300000, guid: 2881eda6490d43d68c39aa191c3a337e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
