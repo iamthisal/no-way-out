@@ -59074,6 +59074,8 @@ GameObject:
   - component: {fileID: 1233062356}
   - component: {fileID: 1233062355}
   - component: {fileID: 2049009021}
+  - component: {fileID: 1233062358}
+  - component: {fileID: 1233062359}
   m_Layer: 3
   m_Name: Courtyard_LockedGlassDoor
   m_TagString: Untagged
@@ -59174,6 +59176,46 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233062353}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1233062358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233062353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 910358e9c233f19478113eec23bf41fe, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Combat.Health
+  maxHealth: 50
+  onDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1233062359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233062353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86a3277d2bfc9e244aacd8d8a3bc3017, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.BreakableGlass
+  intactRenderers:
+  - {fileID: 1233062356}
+  blockingColliders:
+  - {fileID: 1233062355}
+  breakEffect: {fileID: 0}
+  breakSound: {fileID: 8300000, guid: 6acc75726e6353d4abe4b8fd30b6fad0, type: 3}
+  onBroken:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1235197051
 GameObject:
   m_ObjectHideFlags: 0

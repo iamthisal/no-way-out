@@ -25,6 +25,7 @@ namespace Lockdown.Tests
         private InputSettings.BackgroundBehavior previousInputBackground;
         private InputSettings.EditorInputBehaviorInPlayMode previousEditorInput;
         private static readonly Vector3[] Sides = { Vector3.back, Vector3.forward, Vector3.left, Vector3.right };
+        private const string CourtyardPaneName = "Courtyard_LockedGlassDoor";
 
         [SetUp]
         public void Setup()
@@ -35,6 +36,44 @@ namespace Lockdown.Tests
             Application.runInBackground = true;
             InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
             InputSystem.settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
+        }
+
+        [UnityTest]
+        public IEnumerator BreakingCourtyardPaneLetsPlayerCrossDoorway()
+        {
+            LoadMuseum();
+            yield return null;
+            DisableEnemies();
+
+            var player = Object.FindAnyObjectByType<FirstPersonController>();
+            Assert.That(player.GetComponent<PlayerEquipment>().TryCollectHammer(), Is.True);
+            var hammer = player.GetComponentInChildren<FirstPersonHammer>(true);
+            var pane = GameObject.Find(CourtyardPaneName).GetComponent<BreakableGlass>();
+            var barrier = pane.GetComponent<BoxCollider>();
+            var center = barrier.bounds.center;
+            var crossing = Vector3.forward * 2.4f;
+            var approach = center - Vector3.forward * 1.2f;
+
+            Assert.That(pane.IsBroken, Is.False);
+            Assert.That(barrier.enabled, Is.True);
+            MoveAndAim(player, approach, center);
+            Physics.SyncTransforms();
+            var body = player.GetComponent<CharacterController>();
+            body.Move(crossing);
+            Assert.That(player.transform.position.z, Is.LessThan(center.z));
+
+            MoveAndAim(player, approach, center);
+            yield return null;
+            Physics.SyncTransforms();
+            Assert.That(FirstWorldHit(player), Is.SameAs(barrier));
+            Assert.That(hammer.TrySwing(), Is.True);
+            yield return new WaitForSeconds(0.35f);
+
+            Assert.That(pane.IsBroken, Is.True);
+            Assert.That(pane.GetComponent<Renderer>().enabled, Is.False);
+            Assert.That(barrier.enabled, Is.False);
+            body.Move(crossing);
+            Assert.That(player.transform.position.z, Is.GreaterThan(center.z + 0.5f));
         }
 
         [UnityTest]
@@ -50,7 +89,7 @@ namespace Lockdown.Tests
             var inventory = player.GetComponent<LootInventory>();
             Assert.That(player.GetComponent<PlayerEquipment>().TryCollectHammer(), Is.True);
             var hammer = player.GetComponentInChildren<FirstPersonHammer>(true);
-            var glasses = Object.FindObjectsByType<BreakableGlass>(FindObjectsInactive.Exclude);
+            var glasses = FindExhibitGlass();
             Assert.That(glasses.Length, Is.EqualTo(7));
             int meshPanes = 0;
             foreach (var renderer in Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Exclude))
@@ -62,7 +101,6 @@ namespace Lockdown.Tests
             }
             Assert.That(meshPanes, Is.EqualTo(7));
             Assert.That(Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude).Length, Is.EqualTo(7));
-            Assert.That(GameObject.Find("Courtyard_LockedGlassDoor").GetComponent<BreakableGlass>(), Is.Null);
             int expectedItems = 0;
             long expectedValue = 0;
 
@@ -138,7 +176,7 @@ namespace Lockdown.Tests
             DisableEnemies();
             Assert.That(Object.FindAnyObjectByType<LootInventory>().ItemCount, Is.Zero);
             Assert.That(Object.FindAnyObjectByType<PlayerEquipment>().HasHammer, Is.False);
-            var restored = Object.FindObjectsByType<BreakableGlass>(FindObjectsInactive.Exclude);
+            var restored = FindExhibitGlass();
             Assert.That(restored.Length, Is.EqualTo(7));
             int restoredItems = 0;
             foreach (var glass in restored)
@@ -154,6 +192,10 @@ namespace Lockdown.Tests
             }
             Assert.That(restoredItems, Is.EqualTo(10));
         }
+
+        private static BreakableGlass[] FindExhibitGlass() => System.Array.FindAll(
+            Object.FindObjectsByType<BreakableGlass>(FindObjectsInactive.Exclude),
+            glass => glass.name != CourtyardPaneName);
 
         private static Vector3 Outside(Bounds bounds, Vector3 side)
         {
