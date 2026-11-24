@@ -11,13 +11,21 @@ namespace Lockdown.Player
     /// </summary>
     internal sealed class WeaponHud
     {
+        private const float SwapFlashSeconds = 0.5f;
         // Cinzel's descender scales with size, so a smaller label sharing a bottom edge sits low.
         private const float DescentRatio = 0.24f;
         private GUIStyle nameStyle, countStyle, magazineStyle;
         private float stylesScale = -1f;
+        private WeaponHudSlot? lastSlot;
+        private float flashUntil;
 
         public void Draw(WeaponHudSlot slot, int ammo, int magazine, bool reloading)
         {
+            if (Event.current.type == EventType.Repaint && lastSlot != slot)
+            {
+                if (lastSlot.HasValue) flashUntil = Time.unscaledTime + SwapFlashSeconds;
+                lastSlot = slot;
+            }
             float scale = Scale(0.6f);
             if (StylesStale(nameStyle, stylesScale, scale))
             {
@@ -30,12 +38,13 @@ namespace Lockdown.Player
             Color previous = GUI.color;
             float margin = 24f * scale, width = 210f * scale, height = 192f * scale;
             var panel = new Rect(Screen.width - margin - width, Screen.height - margin - height, width, height);
-            Plaque(panel, scale, 0.84f, Brass);
+            float flash = Mathf.Clamp01((flashUntil - Time.unscaledTime) / SwapFlashSeconds);
+            Plaque(panel, scale, 0.84f, Color.Lerp(Brass, BrightBrass, flash));
 
             Text(new Rect(panel.x, panel.y + 14f * scale, panel.width, 24f * scale), Spaced(Name(slot)), nameStyle, Brass);
             float iconSize = 72f * scale;
             var icon = new Rect(panel.center.x - iconSize * 0.5f, panel.y + 40f * scale, iconSize, iconSize);
-            GUI.color = Shown(Brass);
+            GUI.color = Shown(Color.Lerp(Brass, BrightBrass, flash));
             GUI.DrawTexture(icon, HudIcons.Get(Icon(slot)), ScaleMode.ScaleToFit);
             float rule = 56f * scale;
             Fill(new Rect(panel.center.x - rule * 0.5f, panel.y + 119f * scale, rule, 1f), DimBrass);
