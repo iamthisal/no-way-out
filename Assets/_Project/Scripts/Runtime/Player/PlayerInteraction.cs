@@ -118,7 +118,7 @@ namespace Lockdown.Player
                 objectiveStyle = new GUIStyle(promptStyle) { fontStyle = FontStyle.Bold };
             }
             float width = Mathf.Min(300f, Screen.width - 48f);
-            float lootBottom = lootCounter.Draw(inventory.TotalValue, inventory.ItemCount);
+            float lootBottom = lootCounter.Draw(inventory.TotalValue);
             if (!CanInteract) return;
             if (museumExit != null)
             {
