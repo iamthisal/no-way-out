@@ -9,6 +9,7 @@ namespace Lockdown.World
     public sealed class MuseumExit : MonoBehaviour, IInteractable
     {
         [SerializeField] private Transform requiredIdentityTag;
+        internal Transform IdentityTag => requiredIdentityTag;
         private LootItem[] requiredLoot = Array.Empty<LootItem>();
 
         public int RequiredLootCount => requiredLoot.Length;

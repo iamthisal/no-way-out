@@ -64,7 +64,7 @@ namespace Lockdown.Player
             int previousItemCount = inventory.ItemCount;
             bool succeeded = target.TryInteract(gameObject);
             if (feedback != null)
-                feedback.Report(target, succeeded, inventory, previousItemCount);
+                feedback.Report(target, succeeded, inventory, previousItemCount, controller.PlayerCamera);
             return succeeded;
         }
 

@@ -180,6 +180,8 @@ namespace Lockdown.Tests
                 Assert.That(interaction.CurrentTarget, Is.SameAs(reader), entrance.reader);
                 Assert.That(interaction.TryInteract(), Is.False, entrance.reader);
                 Assert.That(door.IsOpen, Is.False, entrance.door);
+                Assert.That(player.transform.Find("Identity Tag Scan"), Is.Null,
+                    "A denied scan without the tag must not display a card.");
             }
 
             var crate = GameObject.Find("P_Temporary_CrateNW").GetComponent<LootContainer>();
@@ -214,7 +216,11 @@ namespace Lockdown.Tests
                 yield return null;
                 Assert.That(interaction.CurrentTarget, Is.SameAs(reader), entrance.reader);
                 Assert.That(interaction.TryInteract(), Is.True, entrance.reader);
+                var scanCard = player.transform.Find("Identity Tag Scan");
+                Assert.That(scanCard, Is.Not.Null, entrance.reader);
+                Assert.That(scanCard.GetComponentInChildren<MeshFilter>().sharedMesh, Is.Not.Null);
                 yield return new WaitForSeconds(0.6f);
+                Assert.That(player.transform.Find("Identity Tag Scan"), Is.Null);
                 Assert.That(door.IsOpen, Is.True, entrance.door);
                 Assert.That(door.IsMoving, Is.False, entrance.door);
                 if (entrance.door == "Door_D01_Lobby")
