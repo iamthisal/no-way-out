@@ -119,7 +119,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator MuseumPlayerSpawnsOnFloorAndWalksThroughLobbyDoorway()
+        public IEnumerator MuseumPlayerSpawnsOnFloorAndCanWalkIntoCentralHall()
         {
             UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
                 "Assets/_Project/Scenes/Museum/Museum_Main.unity",
@@ -133,6 +133,8 @@ namespace Lockdown.Tests
             controller.CaptureCursor();
             yield return new WaitForSeconds(0.5f);
             Assert.That(controller.IsGrounded, Is.True, "The museum floor should support the player.");
+            var spawnZ = player.transform.position.z;
+            Assert.That(spawnZ, Is.GreaterThan(-5f), "The locked lobby doorway must not block the route to the tag.");
             int activeCameras = 0;
             int activeListeners = 0;
             foreach (var camera in Object.FindObjectsByType<Camera>(FindObjectsSortMode.None))
@@ -144,10 +146,10 @@ namespace Lockdown.Tests
             controller.CaptureCursor();
             yield return null;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W));
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.5f);
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             yield return null;
-            Assert.That(player.transform.position.z, Is.GreaterThan(-5f), "The player should fit through the lobby doorway into the central hall.");
+            Assert.That(player.transform.position.z, Is.GreaterThan(spawnZ + 0.5f), "The player should be able to walk into the central hall.");
             Assert.That(controller.IsGrounded, Is.True, "The player should remain on the museum floor.");
         }
 

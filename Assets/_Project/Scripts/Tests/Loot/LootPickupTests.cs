@@ -36,7 +36,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator TemporaryCrateIdentityTagUnlocksStorageDoor()
+        public IEnumerator TemporaryCrateIdentityTagUnlocksAllThreeAssignedDoors()
         {
             LoadMuseum();
             yield return null;
@@ -46,22 +46,41 @@ namespace Lockdown.Tests
             var player = Object.FindAnyObjectByType<FirstPersonController>();
             var interaction = player.GetComponent<PlayerInteraction>();
             var inventory = player.GetComponent<LootInventory>();
-            var door = GameObject.Find("Door_D07_Storage").GetComponentInChildren<Door>();
-            var reader = GameObject.Find("D07 Identity Tag Reader").GetComponent<DoorReader>();
-            var readerCenter = reader.GetComponent<BoxCollider>().bounds.center;
-            var panelCenter = door.GetComponent<BoxCollider>().bounds.center;
+            var entrances = new[]
+            {
+                (door: "Door_D01_Lobby", reader: "D01 Identity Tag Reader",
+                    approach: Vector3.forward, readerOffset: Vector3.forward * 1.2f),
+                (door: "Door_D07_Storage", reader: "D07 Identity Tag Reader",
+                    approach: Vector3.left, readerOffset: Vector3.left * 1.2f),
+                (door: "Door_D10_Security", reader: "D10 Identity Tag Reader",
+                    approach: Vector3.left, readerOffset: Vector3.left * 1.2f + Vector3.forward * 0.7f)
+            };
+            Assert.That(player.transform.position.z, Is.GreaterThan(-5f),
+                "The player must start on the side of D01 that leads to the tag.");
+            foreach (var entrance in entrances)
+            {
+                var door = GameObject.Find(entrance.door).GetComponentInChildren<Door>();
+                var reader = GameObject.Find(entrance.reader).GetComponent<DoorReader>();
+                var readerCenter = reader.GetComponent<BoxCollider>().bounds.center;
+                var panelCenter = door.GetComponent<BoxCollider>().bounds.center;
 
-            AimAt(player, panelCenter + Vector3.left * 1.4f, panelCenter);
-            yield return null;
-            Assert.That(interaction.CurrentTarget, Is.SameAs(door));
-            Assert.That(interaction.TryInteract(), Is.False);
-            Assert.That(door.IsOpen, Is.False);
+                AimAt(player, panelCenter + entrance.approach * 1.4f, panelCenter);
+                yield return null;
+                Assert.That(interaction.CurrentTarget, Is.SameAs(door), entrance.door);
+                Assert.That(interaction.TryInteract(), Is.False, entrance.door);
+                Assert.That(door.IsOpen, Is.False, entrance.door);
+                if (entrance.door == "Door_D01_Lobby")
+                {
+                    player.GetComponent<CharacterController>().Move(Vector3.back * 2.8f);
+                    Assert.That(player.transform.position.z, Is.GreaterThan(-5f), "D01 must block movement when locked.");
+                }
 
-            AimAt(player, readerCenter + Vector3.left * 1.2f, readerCenter);
-            yield return null;
-            Assert.That(interaction.CurrentTarget, Is.SameAs(reader));
-            Assert.That(interaction.TryInteract(), Is.False);
-            Assert.That(door.IsOpen, Is.False);
+                AimAt(player, readerCenter + entrance.readerOffset, readerCenter);
+                yield return null;
+                Assert.That(interaction.CurrentTarget, Is.SameAs(reader), entrance.reader);
+                Assert.That(interaction.TryInteract(), Is.False, entrance.reader);
+                Assert.That(door.IsOpen, Is.False, entrance.door);
+            }
 
             var crate = GameObject.Find("P_Temporary_CrateNW").GetComponent<LootContainer>();
             var tag = crate.GetComponentInChildren<LootItem>();
@@ -86,13 +105,26 @@ namespace Lockdown.Tests
             Assert.That(inventory.TotalValue, Is.Zero);
             Assert.That(tag.IsCollected, Is.True);
 
-            AimAt(player, readerCenter + Vector3.left * 1.2f, readerCenter);
-            yield return null;
-            Assert.That(interaction.CurrentTarget, Is.SameAs(reader));
-            Assert.That(interaction.TryInteract(), Is.True);
-            yield return new WaitForSeconds(0.6f);
-            Assert.That(door.IsOpen, Is.True);
-            Assert.That(door.IsMoving, Is.False);
+            foreach (var entrance in entrances)
+            {
+                var door = GameObject.Find(entrance.door).GetComponentInChildren<Door>();
+                var reader = GameObject.Find(entrance.reader).GetComponent<DoorReader>();
+                var readerCenter = reader.GetComponent<BoxCollider>().bounds.center;
+                AimAt(player, readerCenter + entrance.readerOffset, readerCenter);
+                yield return null;
+                Assert.That(interaction.CurrentTarget, Is.SameAs(reader), entrance.reader);
+                Assert.That(interaction.TryInteract(), Is.True, entrance.reader);
+                yield return new WaitForSeconds(0.6f);
+                Assert.That(door.IsOpen, Is.True, entrance.door);
+                Assert.That(door.IsMoving, Is.False, entrance.door);
+                if (entrance.door == "Door_D01_Lobby")
+                {
+                    var center = door.transform.parent.position;
+                    AimAt(player, center + Vector3.forward * 1.4f, center);
+                    player.GetComponent<CharacterController>().Move(Vector3.back * 2.8f);
+                    Assert.That(player.transform.position.z, Is.LessThan(-5.5f), "D01 must allow passage once opened.");
+                }
+            }
             Assert.That(inventory.ItemCount, Is.EqualTo(1));
         }
 
