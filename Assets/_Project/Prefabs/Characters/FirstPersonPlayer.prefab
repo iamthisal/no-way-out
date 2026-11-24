@@ -265,6 +265,7 @@ GameObject:
   - component: {fileID: 7083367978448083995}
   - component: {fileID: 1263270997329048805}
   - component: {fileID: 5375737106442867028}
+  - component: {fileID: 920000100}
   m_Layer: 0
   m_Name: FirstPersonPlayer
   m_TagString: Player
@@ -272,6 +273,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &920000100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5330627581561011299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c98035c3ed94ec2b048c2f947f2ab6e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Player.InteractionFeedback
+  doorHinge: {fileID: 8300000, guid: d8916908c2ab4ead95b4eea990402cb7, type: 3}
+  doorLatch: {fileID: 8300000, guid: 365b44c2bb8b4575b34063a7247d36be, type: 3}
+  scanAccepted: {fileID: 8300000, guid: 4e825d4380834104b353e91c310fc687, type: 3}
+  scanDenied: {fileID: 8300000, guid: 545017ae92594f24812637d9ae3e0752, type: 3}
+  cardTap: {fileID: 8300000, guid: cb27527335d44bf39ebdfbe7be5eec44, type: 3}
 --- !u!4 &2864861161754488093
 Transform:
   m_ObjectHideFlags: 0

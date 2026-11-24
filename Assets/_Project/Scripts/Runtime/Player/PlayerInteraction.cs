@@ -16,6 +16,7 @@ namespace Lockdown.Player
         private FirstPersonController controller;
         private Health health;
         private LootInventory inventory;
+        private InteractionFeedback feedback;
         private InputAction interactAction;
         private GUIStyle promptStyle;
         private GUIStyle lootStyle;
@@ -34,6 +35,7 @@ namespace Lockdown.Player
             controller = GetComponent<FirstPersonController>();
             health = GetComponent<Health>();
             inventory = GetComponent<LootInventory>();
+            feedback = GetComponent<InteractionFeedback>();
             interactAction = new InputAction("Interact", InputActionType.Button, "<Keyboard>/e");
             interactAction.AddBinding("<Gamepad>/buttonWest");
         }
@@ -58,7 +60,12 @@ namespace Lockdown.Player
         public bool TryInteract()
         {
             var target = CurrentTarget;
-            return target != null && target.TryInteract(gameObject);
+            if (target == null) return false;
+            int previousItemCount = inventory.ItemCount;
+            bool succeeded = target.TryInteract(gameObject);
+            if (feedback != null)
+                feedback.Report(target, succeeded, inventory, previousItemCount, controller.PlayerCamera);
+            return succeeded;
         }
 
         private IInteractable FindTarget()
