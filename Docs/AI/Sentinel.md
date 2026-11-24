@@ -18,6 +18,7 @@ Decision-making lives in [`Scripts/AI/Agents/Pursuer`](../../Assets/_Project/Scr
 | `PursuerAttackCycle.cs` | Warning, burst and cooldown decisions. |
 | `PursuerFormation.cs` | Selecting distinct reachable approach positions during retaliation. |
 | `PursuerSettings.cs` | Configurable decision parameters. |
+| `AlarmStimulusRelay.cs` | Glass alarm integration: emits the alarm sound and radios the best placed guard. |
 | `PursuerStimulusRelay.cs` | Gameplay integration: weapon, movement and glass events become AI inputs. |
 
 Execution lives in [`Scripts/Runtime/Agents/Pursuer`](../../Assets/_Project/Scripts/Runtime/Agents/Pursuer), namespace `Lockdown.Agents.Pursuer`:
@@ -44,7 +45,7 @@ Script GUIDs and original enum values are preserved. New states are appended for
 | Intercept | Navigate to a predicted ahead position using a complete NavMesh route. After losing sight, close on a frozen likely escape area. | Replan from visible movement; after three seconds of lost contact, continue in Search instead of discarding the area. |
 | Attack | After a player hit, close at 2.8 m/s to a 2.8 m standoff while firing warned three-shot bursts. | Lost sight cancels fire; range or obstacles require pursuit. |
 | AdvanceCover | After a hit, use a reachable forward cover position for at most 1.1 seconds; fire only with a clear shot. | Resume armed pressure; six-second selection cooldown; no retreat positions. |
-| Investigate | Walk to a clue snapshot, then inspect for 1.5 seconds. | Sight interrupts; arrival/timeout or blocked route starts Search. |
+| Investigate | Walk to a clue snapshot, or hurry at 3.2 m/s to a radioed alarm, then inspect for 1.5 seconds. | Sight interrupts; arrival/timeout or blocked route starts Search. |
 | Search | Travel to ranked escape areas, scan at arrivals, then check nearby positions within 4 m. | Sight interrupts; a separate 12-second travel limit bounds unreachable areas. The 18-second inspection budget starts at first arrival and then ends in Return. |
 | Return | Navigate to the nearest reachable patrol waypoint. | Reaching the route resumes Patrol; evidence can interrupt. |
 | Caught | Stop pursuing the captured thief; player controls are disabled without lethal damage. | Player restarts the encounter. |
@@ -62,7 +63,7 @@ Predictions are guesses, not guaranteed exit choices. Live interception requires
 
 The guard closes on the first hypothesis during its three-second contact-memory period, then continues travelling in Search if necessary. Travel time no longer consumes the full inspection budget. After reaching the area, it gets 18 seconds to inspect, including 1.5-second full-turn scans at arrivals and movement to other hypotheses or nearby search points. Later arrivals do not reset that budget indefinitely. Each later route has a five-second movement limit; unreachable/stuck points are skipped. If every route is blocked, the 12-second travel budget permits a bounded return to patrol.
 
-Cover candidates must move at least 0.3 m closer to the threat, have a complete route of at most 4.5 m, and be screened by solid geometry. No suitable candidate means keep advancing. Brief cover and a cooldown prevent persistent hiding. Additional guards may reserve distinct reachable flank slots during retaliation; the museum currently has one guard.
+Cover candidates must move at least 0.3 m closer to the threat, have a complete route of at most 4.5 m, and be screened by solid geometry. No suitable candidate means keep advancing. Brief cover and a cooldown prevent persistent hiding. Additional guards may reserve distinct reachable flank slots during retaliation; the museum starts with one guard; the [spawn director](DynamicSpawner.md) may add a second.
 
 `PursuerNavigation` validates complete baked-NavMesh routes and nearby walkable samples. Physical capsule sweeps stop at solid doors while carving catches up. Routes can fail or time out instead of repeatedly pushing through geometry.
 
@@ -70,7 +71,7 @@ Cover candidates must move at least 0.3 m closer to the threat, have a complete 
 
 Sight acquires a target within 20 m and a 100-degree horizontal cone. Tracking an established contact ignores the acquisition cone; walls still block sight. Trigger colliders and the characters' own colliders are ignored. Inactive/dead targets are not visible. A player hit supplies one impact-time attacker-position snapshot, including a hit from behind; it never grants later access to hidden movement. Confirmed evidence is retained for three seconds before searching.
 
-The existing sound relay and hearing code remain: glass, footsteps and pistol shots publish snapshots; hearing applies range, age and wall attenuation. Active pursuit/search do not redirect to lower-priority noise. **Player-reported unreliable gunshot hearing remains a separate unresolved issue.** Retaliation uses attributed bullet damage and does not depend on that hearing path. Nearby confirmed sightings broadcast snapshots without recursive alert loops.
+The existing sound relay and hearing code remain: glass, footsteps and pistol shots publish snapshots; hearing applies range, age and wall attenuation. Active pursuit/search do not redirect to lower-priority noise. **Player-reported unreliable gunshot hearing remains a separate unresolved issue.** Alarm reports are kept separately from heard clues: they last 20 seconds, allow 40 seconds of travel, may interrupt Patrol, Return, Investigate and Search, and never interrupt contact with the player. They carry the position of the glass only. Retaliation uses attributed bullet damage and does not depend on that hearing path. Nearby confirmed sightings broadcast snapshots without recursive alert loops.
 
 `EnemyShooting` is explicitly controlled by the brain through `PursuerController`. After provocation, a 0.65-second warning precedes up to three 10-damage shots spaced 0.18 seconds apart, with a 1.5-second cooldown. Both body and muzzle sightlines must be clear. Losing sight cancels the burst. The guard has 100 health. The legacy wandering enemy is absent from Museum_Main; its prefab remains for regression fixtures.
 
@@ -88,4 +89,4 @@ Results and mixed-scenario decision timings are recorded in [the encounter repor
 
 ## Scope limits
 
-No punching/melee attack, door opening, adaptive learning, dynamic spawning, bespoke handcuff animation, or reliable player gunshot-hearing fix is claimed. This is an explicit FSM with evidence memory, bounded search, route-based prediction and tactical forward-cover selection. It is not a behavior tree, hierarchical FSM, learned policy or general utility-scoring system. Interception does not guarantee catching a sprinting player and does not know their intended destination.
+No punching/melee attack, door opening, adaptive learning, bespoke handcuff animation, or reliable player gunshot-hearing fix is claimed. This is an explicit FSM with evidence memory, bounded search, route-based prediction and tactical forward-cover selection. It is not a behavior tree, hierarchical FSM, learned policy or general utility-scoring system. Interception does not guarantee catching a sprinting player and does not know their intended destination.
