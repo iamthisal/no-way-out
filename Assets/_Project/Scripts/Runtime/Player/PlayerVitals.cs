@@ -1,7 +1,7 @@
 using Lockdown.Combat;
+using Lockdown.UI;
 using Lockdown.Weapons;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Lockdown.Player
 {
@@ -33,6 +33,8 @@ namespace Lockdown.Player
             hitAudio.playOnAwake = false;
             hitAudio.loop = false;
             hitAudio.spatialBlend = 0f;
+            // The pause menu travels with the player so the museum scene needs no extra setup.
+            if (GetComponent<PauseMenu>() == null) gameObject.AddComponent<PauseMenu>();
         }
 
         private void OnEnable()
@@ -104,12 +106,7 @@ namespace Lockdown.Player
         {
             if (!health.IsDead && !IsCaptured && !HasEscaped) return;
             RestoreTimeAfterEscape();
-            string path = gameObject.scene.path;
-#if UNITY_EDITOR
-            UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(path, new LoadSceneParameters(LoadSceneMode.Single));
-#else
-            SceneManager.LoadScene(path, LoadSceneMode.Single);
-#endif
+            SceneFlow.Load(gameObject.scene.path);
         }
 
         private void OnGUI()

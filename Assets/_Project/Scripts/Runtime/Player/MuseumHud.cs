@@ -18,6 +18,7 @@ namespace Lockdown.Player
         public static readonly Color Ember = new Color(0.8f, 0.2f, 0.17f);
 
         private static Font font;
+        private static Texture2D vignette;
 
         public static Font Font
         {
@@ -85,6 +86,43 @@ namespace Lockdown.Player
             Fill(rect, new Color(Walnut.r, Walnut.g, Walnut.b, opacity), alpha);
             Frame(rect, Mathf.Max(1f, 2f * scale), frame, alpha);
             Frame(Inset(rect, 7f * scale), 1f, DimBrass, alpha * 0.8f);
+        }
+
+        /// <summary>A short brass rule with a diamond at its centre.</summary>
+        public static void Ornament(Vector2 centre, float scale, float alpha = 1f)
+        {
+            float half = 150f * scale, gap = 16f * scale, line = Mathf.Max(1f, 2f * scale);
+            Fill(new Rect(centre.x - half, centre.y - line * 0.5f, half - gap, line), DimBrass, alpha);
+            Fill(new Rect(centre.x + gap, centre.y - line * 0.5f, half - gap, line), DimBrass, alpha);
+            Matrix4x4 matrix = GUI.matrix;
+            GUIUtility.RotateAroundPivot(45f, centre);
+            float size = 10f * scale;
+            Fill(new Rect(centre.x - size * 0.5f, centre.y - size * 0.5f, size, size), Brass, alpha);
+            GUI.matrix = matrix;
+        }
+
+        /// <summary>A black vignette that darkens the screen edges, drawn full-screen.</summary>
+        public static Texture2D Vignette()
+        {
+            if (vignette != null) return vignette;
+            const int size = 128;
+            vignette = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear,
+                hideFlags = HideFlags.HideAndDontSave,
+            };
+            var pixels = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            for (int x = 0; x < size; x++)
+            {
+                float dx = (x + 0.5f) / size * 2f - 1f, dy = (y + 0.5f) / size * 2f - 1f;
+                float edge = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.45f, 1.45f, Mathf.Sqrt(dx * dx + dy * dy)));
+                pixels[y * size + x] = new Color32(0, 0, 0, (byte)(edge * 200f));
+            }
+            vignette.SetPixels32(pixels);
+            vignette.Apply(false, true);
+            return vignette;
         }
 
         public static Rect Inset(Rect rect, float by) =>
