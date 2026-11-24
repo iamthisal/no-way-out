@@ -20,6 +20,8 @@ namespace Lockdown.Player
         private GUIStyle promptStyle;
         private GUIStyle lootStyle;
         private GUIStyle entryStyle;
+        private GUIStyle objectiveStyle;
+        private MuseumExit museumExit;
         private bool showInventory;
 
         public float Reach => reach;
@@ -37,6 +39,11 @@ namespace Lockdown.Player
         }
 
         private void OnEnable() { interactAction?.Enable(); }
+        private void Start()
+        {
+            museumExit = Array.Find(FindObjectsByType<MuseumExit>(FindObjectsInactive.Exclude),
+                exit => exit.gameObject.scene == gameObject.scene);
+        }
         private void OnDisable() { interactAction?.Disable(); showInventory = false; }
         private void OnDestroy() { interactAction?.Dispose(); }
 
@@ -102,11 +109,19 @@ namespace Lockdown.Player
                 lootStyle = new GUIStyle(GUI.skin.label) { fontSize = 20, alignment = TextAnchor.MiddleRight,
                     normal = { textColor = Color.white } };
                 entryStyle = new GUIStyle(lootStyle) { fontSize = 16, wordWrap = true };
+                objectiveStyle = new GUIStyle(promptStyle) { fontStyle = FontStyle.Bold };
             }
             float width = Mathf.Min(300f, Screen.width - 48f);
             GUI.Label(new Rect(Screen.width - width - 24f, 20f, width, 32f),
                 "Loot " + inventory.ItemCount + "  |  $" + inventory.TotalValue, lootStyle);
             if (!CanInteract) return;
+            if (museumExit != null)
+            {
+                float objectiveWidth = Mathf.Min(460f, Screen.width * 0.48f);
+                var objectiveRect = new Rect((Screen.width - objectiveWidth) * 0.5f, 16f, objectiveWidth, 60f);
+                GUI.Box(objectiveRect, GUIContent.none);
+                GUI.Label(objectiveRect, museumExit.GetObjective(inventory), objectiveStyle);
+            }
             var equipment = GetComponent<PlayerEquipment>();
             if (equipment == null || !equipment.IsPistolEquipped)
                 GUI.DrawTexture(new Rect(Screen.width * 0.5f - 2f, Screen.height * 0.5f - 2f, 4f, 4f), Texture2D.whiteTexture);
@@ -116,7 +131,8 @@ namespace Lockdown.Player
                 float promptWidth = Mathf.Min(440f, Screen.width - 32f);
                 string binding = interactAction.activeControl != null && interactAction.activeControl.device is Gamepad ? "X" : "E";
                 var door = target as Door ?? (target as DoorReader)?.Door;
-                string label = door != null ? door.GetPrompt(inventory) : target.InteractionLabel;
+                string label = target is MuseumExit exit ? exit.GetPrompt(inventory) :
+                    door != null ? door.GetPrompt(inventory) : target.InteractionLabel;
                 GUI.Label(new Rect((Screen.width - promptWidth) * 0.5f, Screen.height * 0.5f + 24f, promptWidth, 64f),
                     "[" + binding + "] " + label, promptStyle);
             }

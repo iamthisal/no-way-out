@@ -62099,6 +62099,7 @@ GameObject:
   - component: {fileID: 1304968679}
   - component: {fileID: 1304968678}
   - component: {fileID: 1304968677}
+  - component: {fileID: 920000058}
   m_Layer: 3
   m_Name: Exit_ClosedDoorPlaceholder
   m_TagString: Untagged
@@ -62200,6 +62201,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1304968675}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &920000058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304968675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbaaeedec7eb4ababbcc28d21dc42901, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.MuseumExit
+  requiredIdentityTag: {fileID: 993444856}
 --- !u!1001 &1309312002
 PrefabInstance:
   m_ObjectHideFlags: 0

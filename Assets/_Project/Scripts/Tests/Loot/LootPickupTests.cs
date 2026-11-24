@@ -36,6 +36,79 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
+        public IEnumerator MuseumExitRequiresEveryRelicAndTheIdentityTag()
+        {
+            LoadMuseum();
+            yield return null;
+            foreach (var enemy in Object.FindObjectsByType<EnemyShooting>(FindObjectsInactive.Exclude))
+                enemy.enabled = false;
+
+            var player = Object.FindAnyObjectByType<FirstPersonController>();
+            var vitals = player.GetComponent<PlayerVitals>();
+            var inventory = player.GetComponent<LootInventory>();
+            var interaction = player.GetComponent<PlayerInteraction>();
+            var exit = GameObject.Find("Exit_ClosedDoorPlaceholder").GetComponent<MuseumExit>();
+            var exitCenter = exit.GetComponent<BoxCollider>().bounds.center;
+            var exitApproach = exitCenter + Vector3.back * 1.4f;
+            AimAt(player, exitApproach, exitCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(exit));
+            Assert.That(exit.RequiredLootCount, Is.EqualTo(16));
+            Assert.That(exit.GetObjective(inventory), Does.Contain("Collect all exhibition loot").And.Contain("0/16"));
+            Assert.That(interaction.TryInteract(), Is.False);
+
+            // Record the actual scene relics to exercise the exit independently of the exhibit-opening tests.
+            var collect = typeof(LootItem).GetMethod("Collect", BindingFlags.Instance | BindingFlags.NonPublic);
+            var relics = System.Array.FindAll(Object.FindObjectsByType<LootItem>(FindObjectsInactive.Exclude),
+                item => item.DisplayGlass != null || item.GetComponentInParent<LootContainer>()?.IsChest == true);
+            Assert.That(relics.Length, Is.EqualTo(16));
+            for (int index = 0; index < relics.Length - 1; index++)
+                collect.Invoke(relics[index], new object[] { inventory });
+            Assert.That(exit.GetObjective(inventory), Does.Contain("15/16"));
+            Assert.That(interaction.TryInteract(), Is.False);
+
+            collect.Invoke(relics[relics.Length - 1], new object[] { inventory });
+            Assert.That(exit.CollectedLootCount(inventory), Is.EqualTo(16));
+            Assert.That(exit.GetObjective(inventory), Does.Contain("Find the Identity Tag"));
+            Assert.That(interaction.TryInteract(), Is.False);
+
+            var crate = GameObject.Find("P_Temporary_CrateNW").GetComponent<LootContainer>();
+            var crateCenter = crate.GetComponent<BoxCollider>().bounds.center;
+            var crateApproach = crateCenter + Vector3.back * 1.35f;
+            AimAt(player, crateApproach, crateCenter);
+            yield return null;
+            Assert.That(interaction.TryInteract(), Is.True);
+            yield return new WaitForSeconds(0.85f);
+            AimAt(player, crateApproach, crateCenter - Vector3.up * 0.25f);
+            Assert.That(interaction.TryInteract(), Is.True);
+            Assert.That(exit.CollectedLootCount(inventory), Is.EqualTo(16));
+            Assert.That(exit.GetObjective(inventory), Does.Contain("You can exit now"));
+
+            AimAt(player, exitApproach, exitCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(exit));
+            float initialTimeScale = Time.timeScale;
+            try
+            {
+                Assert.That(interaction.TryInteract(), Is.True);
+                Assert.That(vitals.HasEscaped, Is.True);
+                Assert.That(player.enabled, Is.False);
+                Assert.That(Time.timeScale, Is.Zero);
+                Assert.That(inventory.ItemCount, Is.EqualTo(17));
+                vitals.RestartEncounter();
+                yield return null;
+                yield return null;
+                Assert.That(Time.timeScale, Is.EqualTo(initialTimeScale));
+                Assert.That(Object.FindAnyObjectByType<PlayerVitals>().HasEscaped, Is.False);
+                Assert.That(Object.FindAnyObjectByType<LootInventory>().ItemCount, Is.Zero);
+            }
+            finally
+            {
+                Time.timeScale = initialTimeScale;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator TemporaryCrateIdentityTagUnlocksAllThreeAssignedDoors()
         {
             LoadMuseum();

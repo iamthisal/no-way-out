@@ -15,6 +15,7 @@ namespace Lockdown.World
         public int Value => Mathf.Max(0, value);
         public bool IsCollected { get; private set; }
         public BreakableGlass DisplayGlass => displayGlass;
+        internal bool IsExhibitionLoot => displayGlass != null || (lootContainer != null && lootContainer.IsChest);
         public bool IsProtected => (displayGlass != null && !displayGlass.IsBroken) ||
             (lootContainer != null && !lootContainer.IsAccessible);
         public string InteractionLabel => IsProtected ?
