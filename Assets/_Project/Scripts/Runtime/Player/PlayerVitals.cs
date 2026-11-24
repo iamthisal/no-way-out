@@ -18,7 +18,7 @@ namespace Lockdown.Player
         private FirstPersonController controller;
         private AudioSource hitAudio;
         private float hitEndsAt;
-        private GUIStyle labelStyle;
+        private readonly HealthBarHud healthBar = new HealthBarHud();
         private float endScreenShownAt;
         private float timeScaleBeforeEscape;
         public bool IsCaptured { get; private set; }
@@ -114,8 +114,6 @@ namespace Lockdown.Player
 
         private void OnGUI()
         {
-            if (labelStyle == null)
-                labelStyle = new GUIStyle(GUI.skin.label) { fontSize = 22, normal = { textColor = Color.white } };
             bool ended = HasEscaped || IsCaptured || health.IsDead;
             // Draw the end screen above the rest of the HUD so its button gets the click.
             GUI.depth = ended ? -100 : 0;
@@ -131,7 +129,7 @@ namespace Lockdown.Player
                 GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
             }
             GUI.color = previous;
-            GUI.Label(new Rect(24f, Screen.height - 64f, 180f, 34f), "Health " + Mathf.CeilToInt(health.CurrentHealth), labelStyle);
+            healthBar.Draw(health.CurrentHealth, health.MaxHealth);
             if (!ended) return;
             if (EndScreen.Draw(IsCaptured ? EndScreenKind.Caught : EndScreenKind.Died, endScreenShownAt)) RestartEncounter();
         }
