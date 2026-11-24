@@ -7,11 +7,13 @@ namespace Lockdown.Player
 
     /// <summary>
     /// Bottom-right weapon plaque: the held weapon's name and icon, with ∞ beneath for the
-    /// fists and hammer.
+    /// fists and hammer, or the pistol's rounds as a big count over a small magazine size.
     /// </summary>
     internal sealed class WeaponHud
     {
-        private GUIStyle nameStyle;
+        // Cinzel's descender scales with size, so a smaller label sharing a bottom edge sits low.
+        private const float DescentRatio = 0.24f;
+        private GUIStyle nameStyle, countStyle, magazineStyle;
         private float stylesScale = -1f;
 
         public void Draw(WeaponHudSlot slot, int ammo, int magazine, bool reloading)
@@ -21,6 +23,8 @@ namespace Lockdown.Player
             {
                 stylesScale = scale;
                 nameStyle = Style(17, scale);
+                countStyle = Style(46, scale, TextAnchor.LowerLeft);
+                magazineStyle = Style(22, scale, TextAnchor.LowerLeft);
             }
 
             Color previous = GUI.color;
@@ -43,6 +47,21 @@ namespace Lockdown.Player
                 GUI.color = Shown(Ivory);
                 GUI.DrawTexture(new Rect(panel.center.x - size * 0.5f, row.center.y - size * 0.5f, size, size),
                     HudIcons.Get(HudIcon.Infinity), ScaleMode.ScaleToFit);
+            }
+            else if (reloading)
+            {
+                float pulse = 0.55f + 0.45f * Mathf.Sin(Time.unscaledTime * 7f);
+                Text(row, Spaced("Reloading"), nameStyle, Brass, pulse);
+            }
+            else
+            {
+                string count = ammo.ToString(), size = "/ " + magazine;
+                Vector2 big = countStyle.CalcSize(new GUIContent(count)), small = magazineStyle.CalcSize(new GUIContent(size));
+                float gap = 6f * scale, left = panel.center.x - (big.x + gap + small.x) * 0.5f;
+                Color colour = ammo <= 0 ? Oxblood : ammo * 4 <= magazine ? Brass : Ivory;
+                Text(new Rect(left, row.y, big.x, row.height), count, countStyle, colour);
+                float lift = (countStyle.fontSize - magazineStyle.fontSize) * DescentRatio;
+                Text(new Rect(left + big.x + gap, row.y - lift, small.x, row.height), size, magazineStyle, Brass);
             }
             GUI.color = previous;
         }
