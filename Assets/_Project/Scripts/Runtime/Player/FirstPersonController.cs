@@ -42,6 +42,12 @@ namespace Lockdown.Player
         public Camera PlayerCamera => playerCamera;
         public bool CanUseWeapon { get; private set; }
 
+        /// <summary>
+        /// Set while a menu is open: Escape and click-to-capture belong to the menu, and the body
+        /// ignores move, look and jump input. Gravity and the fall respawn keep running.
+        /// </summary>
+        public bool InputBlocked { get; set; }
+
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
@@ -106,15 +112,18 @@ namespace Lockdown.Player
             if (playerActions == null) return;
 
             bool captureClick = false;
-            if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
-                ReleaseCursor();
-            else if (!cursorCaptured && Application.isFocused && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            if (!InputBlocked)
             {
-                CaptureCursor();
-                captureClick = true;
+                if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+                    ReleaseCursor();
+                else if (!cursorCaptured && Application.isFocused && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    CaptureCursor();
+                    captureClick = true;
+                }
             }
 
-            bool acceptsInput = cursorCaptured;
+            bool acceptsInput = cursorCaptured && !InputBlocked;
             CanUseWeapon = acceptsInput && !captureClick;
             if (acceptsInput && !captureClick) UpdateLook(Time.deltaTime);
 

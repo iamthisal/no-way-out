@@ -1,0 +1,56 @@
+# Mop & Bucket material colors
+# Keep this .mtl beside Mop&Bucket.obj
+
+# Bright safety-yellow plastic bucket
+newmtl YellowPlastic
+Ka 0.2400 0.1800 0.0175
+Kd 0.9600 0.7200 0.0700
+Ks 0.1800 0.1800 0.1500
+Ns 60
+d 1.00
+illum 2
+
+# Brushed steel bucket handle
+newmtl BucketHandle
+Ka 0.1575 0.1700 0.1750
+Kd 0.6300 0.6800 0.7000
+Ks 0.5500 0.5500 0.5500
+Ns 140
+d 1.00
+illum 2
+
+# Soft aqua-blue water
+newmtl Water
+Ka 0.0575 0.1625 0.1975
+Kd 0.2300 0.6500 0.7900
+Ks 0.4000 0.4500 0.4800
+Ns 95
+d 0.78
+illum 2
+
+# Cool gray metallic mop pole
+newmtl Handle
+Ka 0.1125 0.1250 0.1325
+Kd 0.4500 0.5000 0.5300
+Ks 0.4700 0.4700 0.4700
+Ns 145
+d 1.00
+illum 2
+
+# Golden yellow mop attachment
+newmtl Yellow2
+Ka 0.2275 0.1525 0.0138
+Kd 0.9100 0.6100 0.0550
+Ks 0.1200 0.1200 0.1000
+Ns 60
+d 1.00
+illum 2
+
+# Soft ivory mop fibers
+newmtl Bristles
+Ka 0.2150 0.2125 0.1975
+Kd 0.8600 0.8500 0.7900
+Ks 0.0600 0.0600 0.0600
+Ns 12
+d 1.00
+illum 2
