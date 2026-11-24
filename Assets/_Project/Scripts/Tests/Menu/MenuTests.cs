@@ -82,6 +82,20 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
+        public IEnumerator StartGameLoadsTheMuseumWithAPausablePlayer()
+        {
+            EditorSceneManager.LoadSceneInPlayMode(SceneFlow.MainMenuScene, new LoadSceneParameters(LoadSceneMode.Single));
+            yield return null;
+            Object.FindAnyObjectByType<MainMenu>().StartGame();
+            yield return null;
+            yield return null;
+            Assert.That(SceneManager.GetActiveScene().path, Is.EqualTo(SceneFlow.MuseumScene));
+            var player = Object.FindAnyObjectByType<FirstPersonController>();
+            Assert.That(player, Is.Not.Null);
+            Assert.That(player.GetComponent<PauseMenu>(), Is.Not.Null);
+        }
+
+        [UnityTest]
         public IEnumerator EscapePausesTheMuseumAndEscapeAgainContinues()
         {
             yield return LoadMuseum();
