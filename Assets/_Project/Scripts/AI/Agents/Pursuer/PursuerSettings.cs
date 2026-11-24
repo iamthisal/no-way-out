@@ -21,6 +21,8 @@ namespace Lockdown.AI.Agents
         [Min(0.1f)] public float hearingRange = 24f, clueLifetime = 6f;
         [Range(0f, 1f)] public float obstructedHearing = 0.5f;
         [Min(0.1f)] public float investigateTimeout = 12f, inspectionDuration = 1.5f;
+        [Header("Museum alarm")]
+        [Min(0.1f)] public float alarmLifetime = 20f, alarmTimeout = 40f, alarmSpeed = 3.2f;
         [Header("Lost contact and corner search")]
         [Min(0.1f)] public float searchDuration = 18f, searchRadius = 4f;
         [Min(0.1f)] public float lostTravelTimeout = 12f, cornerSearchDistance = 6f;
