@@ -75,7 +75,7 @@ The existing sound relay and hearing code remain: glass, footsteps and pistol sh
 
 `EnemyShooting` is explicitly controlled by the brain through `PursuerController`. After provocation, a 0.65-second warning precedes up to three 10-damage shots spaced 0.18 seconds apart, with a 1.5-second cooldown. Both body and muzzle sightlines must be clear. Losing sight cancels the burst. The guard has 100 health. The legacy wandering enemy is absent from Museum_Main; its prefab remains for regression fixtures.
 
-Capture shows **Caught - handcuffed**, releases the cursor, and disables movement, equipment and weapons. Restart reloads the encounter with restored health, controls and a non-hostile guard. The arrest attempt is represented by a timed HUD; a dedicated handcuff animation/prop has not been authored. Existing imported locomotion, firing, hit and death animations remain.
+Capture shows the **You got caught** end screen (a brass museum plaque drawn by `Runtime/Player/EndScreen.cs`), releases the cursor, and disables movement, equipment and weapons. Its **Retry** button reloads the encounter with restored health, controls and a non-hostile guard. The arrest attempt is represented by a timed HUD; a dedicated handcuff animation/prop has not been authored. Existing imported locomotion, firing, hit and death animations remain.
 
 ## Setup and validation
 
