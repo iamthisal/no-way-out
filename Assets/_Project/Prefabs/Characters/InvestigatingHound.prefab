@@ -80,6 +80,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2117576783341640310}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4646197128588092719}
   m_SourcePrefab: {fileID: 100100000, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
 --- !u!1 &6210690624148986991 stripped
 GameObject:
@@ -236,3 +239,18 @@ MonoBehaviour:
   onBite:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4646197128588092719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7cab90775c245f08377219b7935616c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Combat.CorpseRemoval
+  delay: 5
+  sinkDuration: 1.5
+  sinkDepth: 0.9
