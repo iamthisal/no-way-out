@@ -19,7 +19,6 @@ namespace Lockdown.Player
         private AudioSource hitAudio;
         private float hitEndsAt;
         private GUIStyle labelStyle;
-        private GUIStyle deathStyle;
         private float timeScaleBeforeEscape;
         public bool IsCaptured { get; private set; }
         public bool HasEscaped { get; private set; }
@@ -114,31 +113,25 @@ namespace Lockdown.Player
         private void OnGUI()
         {
             if (labelStyle == null)
-            {
                 labelStyle = new GUIStyle(GUI.skin.label) { fontSize = 22, normal = { textColor = Color.white } };
-                deathStyle = new GUIStyle(labelStyle) { fontSize = 30, alignment = TextAnchor.MiddleCenter };
-            }
-            Color previous = GUI.color;
+            bool ended = HasEscaped || IsCaptured || health.IsDead;
+            // Draw the end screen above the rest of the HUD so its button gets the click.
+            GUI.depth = ended ? -100 : 0;
             if (HasEscaped)
             {
-                GUI.color = new Color(0.02f, 0.06f, 0.07f, 0.96f);
-                GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
-                GUI.color = previous;
-                GUI.Label(new Rect(0f, Screen.height * 0.5f - 60f, Screen.width, 48f), "Museum escaped", deathStyle);
-                if (GUI.Button(new Rect(Screen.width * 0.5f - 60f, Screen.height * 0.5f, 120f, 40f), "Restart"))
-                    RestartEncounter();
+                if (EndScreen.Draw(EndScreenKind.Escaped)) RestartEncounter();
                 return;
             }
-            if (health.IsDead || IsCaptured || Time.time < hitEndsAt)
+            Color previous = GUI.color;
+            if (!ended && Time.time < hitEndsAt)
             {
-                GUI.color = IsCaptured ? new Color(0.05f, 0.12f, 0.25f, 0.3f) : new Color(0.65f, 0.02f, 0.04f, health.IsDead ? 0.3f : 0.12f);
+                GUI.color = new Color(0.65f, 0.02f, 0.04f, 0.12f);
                 GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
             }
             GUI.color = previous;
             GUI.Label(new Rect(24f, Screen.height - 64f, 180f, 34f), "Health " + Mathf.CeilToInt(health.CurrentHealth), labelStyle);
-            if (!health.IsDead && !IsCaptured) return;
-            GUI.Label(new Rect(0f, Screen.height * 0.5f - 60f, Screen.width, 48f), IsCaptured ? "Caught — handcuffed" : "You died", deathStyle);
-            if (GUI.Button(new Rect(Screen.width * 0.5f - 60f, Screen.height * 0.5f, 120f, 40f), "Restart")) RestartEncounter();
+            if (!ended) return;
+            if (EndScreen.Draw(IsCaptured ? EndScreenKind.Caught : EndScreenKind.Died)) RestartEncounter();
         }
     }
 }
