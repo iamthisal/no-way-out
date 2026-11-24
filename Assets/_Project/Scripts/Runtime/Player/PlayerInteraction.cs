@@ -115,8 +115,10 @@ namespace Lockdown.Player
             {
                 float promptWidth = Mathf.Min(440f, Screen.width - 32f);
                 string binding = interactAction.activeControl != null && interactAction.activeControl.device is Gamepad ? "X" : "E";
+                var door = target as Door ?? (target as DoorReader)?.Door;
+                string label = door != null ? door.GetPrompt(inventory) : target.InteractionLabel;
                 GUI.Label(new Rect((Screen.width - promptWidth) * 0.5f, Screen.height * 0.5f + 24f, promptWidth, 64f),
-                    "[" + binding + "] " + target.InteractionLabel, promptStyle);
+                    "[" + binding + "] " + label, promptStyle);
             }
             if (!showInventory) return;
             float y = 60f;
@@ -124,7 +126,7 @@ namespace Lockdown.Player
                 GUI.Label(new Rect(Screen.width - width - 24f, y, width, 32f), "Empty", entryStyle);
             foreach (var item in inventory.Items)
             {
-                string label = item.Name + "  $" + item.Value;
+                string label = item.Name + (item.Value > 0 ? "  $" + item.Value : "");
                 float height = entryStyle.CalcHeight(new GUIContent(label), width);
                 if (y + height > Screen.height - 100f) break;
                 GUI.Label(new Rect(Screen.width - width - 24f, y, width, height), label, entryStyle);

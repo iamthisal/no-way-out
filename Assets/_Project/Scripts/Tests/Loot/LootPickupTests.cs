@@ -36,6 +36,67 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
+        public IEnumerator TemporaryCrateIdentityTagUnlocksStorageDoor()
+        {
+            LoadMuseum();
+            yield return null;
+            foreach (var enemy in Object.FindObjectsByType<EnemyShooting>(FindObjectsInactive.Exclude))
+                enemy.enabled = false;
+
+            var player = Object.FindAnyObjectByType<FirstPersonController>();
+            var interaction = player.GetComponent<PlayerInteraction>();
+            var inventory = player.GetComponent<LootInventory>();
+            var door = GameObject.Find("Door_D07_Storage").GetComponentInChildren<Door>();
+            var reader = GameObject.Find("D07 Identity Tag Reader").GetComponent<DoorReader>();
+            var readerCenter = reader.GetComponent<BoxCollider>().bounds.center;
+            var panelCenter = door.GetComponent<BoxCollider>().bounds.center;
+
+            AimAt(player, panelCenter + Vector3.left * 1.4f, panelCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(door));
+            Assert.That(interaction.TryInteract(), Is.False);
+            Assert.That(door.IsOpen, Is.False);
+
+            AimAt(player, readerCenter + Vector3.left * 1.2f, readerCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(reader));
+            Assert.That(interaction.TryInteract(), Is.False);
+            Assert.That(door.IsOpen, Is.False);
+
+            var crate = GameObject.Find("P_Temporary_CrateNW").GetComponent<LootContainer>();
+            var tag = crate.GetComponentInChildren<LootItem>();
+            Assert.That(tag.ItemName, Is.EqualTo("Identity Tag"));
+            Assert.That(tag.GetComponentsInChildren<Renderer>().Length, Is.GreaterThan(0));
+            Assert.That(tag.IsProtected, Is.True);
+            Assert.That(tag.TryInteract(player.gameObject), Is.False);
+
+            var crateCenter = crate.GetComponent<BoxCollider>().bounds.center;
+            var approach = crateCenter + Vector3.back * 1.35f;
+            AimAt(player, approach, crateCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(crate));
+            Assert.That(interaction.TryInteract(), Is.True);
+            yield return new WaitForSeconds(0.85f);
+            Assert.That(tag.IsProtected, Is.False);
+            Assert.That(crate.transform.Find("LP_Temporary_CrateNW/CrateLidHinge/Wooden lid"), Is.Not.Null);
+
+            AimAt(player, approach, crateCenter - Vector3.up * 0.25f);
+            Assert.That(interaction.TryInteract(), Is.True);
+            Assert.That(inventory.Items[0].Name, Is.EqualTo("Identity Tag"));
+            Assert.That(inventory.TotalValue, Is.Zero);
+            Assert.That(tag.IsCollected, Is.True);
+
+            AimAt(player, readerCenter + Vector3.left * 1.2f, readerCenter);
+            yield return null;
+            Assert.That(interaction.CurrentTarget, Is.SameAs(reader));
+            Assert.That(interaction.TryInteract(), Is.True);
+            yield return new WaitForSeconds(0.6f);
+            Assert.That(door.IsOpen, Is.True);
+            Assert.That(door.IsMoving, Is.False);
+            Assert.That(inventory.ItemCount, Is.EqualTo(1));
+        }
+
+        [UnityTest]
         public IEnumerator OnlySmallMuseumChestsOpenAndGiveTheirOriginalRelics()
         {
             LoadMuseum();
@@ -46,7 +107,8 @@ namespace Lockdown.Tests
             var player = Object.FindAnyObjectByType<FirstPersonController>();
             var interaction = player.GetComponent<PlayerInteraction>();
             var inventory = player.GetComponent<LootInventory>();
-            var chests = Object.FindObjectsByType<LootContainer>(FindObjectsInactive.Exclude);
+            var chests = System.Array.FindAll(Object.FindObjectsByType<LootContainer>(FindObjectsInactive.Exclude),
+                container => container.IsChest);
             Assert.That(System.Array.ConvertAll(chests, chest => chest.name), Is.EquivalentTo(new[]
             {
                 "Egyptian_Pendent", "Stoneage Axe", "Asian_Dagger", "FinalLoot", "Rare_Fossil", "CoinBox_GreeceRome"

@@ -23576,7 +23576,6 @@ Transform:
   - {fileID: 1158544265}
   - {fileID: 478883540}
   - {fileID: 2076526815}
-  - {fileID: 993444856}
   m_Father: {fileID: 863095980}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &459485377
@@ -27264,6 +27263,7 @@ MonoBehaviour:
   openAngle: 95
   degreesPerSecond: 180
   startsOpen: 0
+  requiredIdentityTag: {fileID: 993444856}
 --- !u!208 &551652038
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -42962,6 +42962,7 @@ Transform:
   - {fileID: 1898499995}
   - {fileID: 492530253}
   - {fileID: 146064835}
+  - {fileID: 920000032}
   m_Father: {fileID: 863095980}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &945827232
@@ -45207,7 +45208,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 459145931}
+    m_TransformParent: {fileID: 1158544265}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d30af4974f98b4f4b98fc6604dd24d4b, type: 3}
       propertyPath: m_LocalScale.x
@@ -45223,15 +45224,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d30af4974f98b4f4b98fc6604dd24d4b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.99
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d30af4974f98b4f4b98fc6604dd24d4b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2858938
+      value: -0.42
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d30af4974f98b4f4b98fc6604dd24d4b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.666
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d30af4974f98b4f4b98fc6604dd24d4b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -45267,7 +45268,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2451221800508078174, guid: d30af4974f98b4f4b98fc6604dd24d4b, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 567858090931403072, guid: d30af4974f98b4f4b98fc6604dd24d4b, type: 3}
       propertyPath: m_Mesh
@@ -45275,7 +45276,7 @@ PrefabInstance:
       objectReference: {fileID: -3295010526598612685, guid: 2715e37a61d53c140901e634edcd9fc8, type: 2}
     - target: {fileID: 919132149155446097, guid: d30af4974f98b4f4b98fc6604dd24d4b, type: 3}
       propertyPath: m_Name
-      value: DoorLock_and_Keycard_Combined
+      value: Identity Tag
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -55410,6 +55411,7 @@ GameObject:
   - component: {fileID: 1158544268}
   - component: {fileID: 1158544267}
   - component: {fileID: 1158544266}
+  - component: {fileID: 920000030}
   m_Layer: 3
   m_Name: P_Temporary_CrateNW
   m_TagString: Untagged
@@ -55432,6 +55434,7 @@ Transform:
   m_Children:
   - {fileID: 400980368}
   - {fileID: 1603165958}
+  - {fileID: 993444856}
   m_Father: {fileID: 459145931}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1158544266
@@ -105966,6 +105969,93 @@ MonoBehaviour:
   - {fileID: 424900918}
   - {fileID: 758853594}
   durationSeconds: 15
+--- !u!114 &920000030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158544264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53c461dc409f4423b2662571b451a789, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.LootContainer
+  modelKind: 1
+  woodMaterial: {fileID: 0}
+  contents: []
+  degreesPerSecond: 150
+  existingLid: {fileID: 1603165958}
+  existingLoot: {fileID: 993444856}
+  existingLootName: Identity Tag
+  existingLootValue: 0
+--- !u!1 &920000031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 920000032}
+  - component: {fileID: 920000033}
+  - component: {fileID: 920000034}
+  m_Layer: 0
+  m_Name: D07 Identity Tag Reader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &920000032
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920000031}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.87, y: 1.369, z: 2.24}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 945351857}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &920000033
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920000031}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.12, y: 0.45, z: 0.26}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &920000034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920000031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a84a77dea404f48adf4af67259a411d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.DoorReader
+  door: {fileID: 551652037}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

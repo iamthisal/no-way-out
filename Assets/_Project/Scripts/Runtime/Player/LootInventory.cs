@@ -11,7 +11,9 @@ namespace Lockdown.Player
         {
             public string Name { get; }
             public int Value { get; }
-            public Entry(string name, int value) { Name = name; Value = value; }
+            internal Transform Source { get; }
+            public Entry(string name, int value) : this(name, value, null) { }
+            internal Entry(string name, int value, Transform source) { Name = name; Value = value; Source = source; }
         }
 
         private readonly List<Entry> items = new List<Entry>();
@@ -20,9 +22,11 @@ namespace Lockdown.Player
         public int ItemCount => items.Count;
         public long TotalValue { get; private set; }
 
-        internal void Add(string itemName, int value)
+        internal bool HasItem(Transform source) => source != null && items.Exists(item => item.Source == source);
+
+        internal void Add(string itemName, int value, Transform source)
         {
-            items.Add(new Entry(itemName, value));
+            items.Add(new Entry(itemName, value, source));
             TotalValue += value;
         }
     }

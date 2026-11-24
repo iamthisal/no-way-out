@@ -11,13 +11,15 @@ namespace Lockdown.World
         [SerializeField, Range(-150f, 150f)] private float openAngle = 95f;
         [SerializeField, Min(1f)] private float degreesPerSecond = 180f;
         [SerializeField] private bool startsOpen;
+        [SerializeField] private Transform requiredIdentityTag;
         private Quaternion closedRotation;
         private float currentAngle;
 
         // IsOpen is the requested state, so another press can reverse a moving door.
         public bool IsOpen { get; private set; }
         public bool IsMoving => currentAngle != TargetAngle;
-        public string InteractionLabel => IsOpen ? "Close door" : "Open door";
+        public string InteractionLabel => IsOpen ? "Close door" :
+            requiredIdentityTag != null ? "Use identity tag" : "Open door";
         private float TargetAngle => IsOpen ? openAngle : 0f;
 
         private void Awake()
@@ -39,9 +41,18 @@ namespace Lockdown.World
         {
             if (!isActiveAndEnabled || interactor == null) return false;
             var interaction = interactor.GetComponent<PlayerInteraction>();
-            if (interaction == null || interaction.CurrentTarget != (IInteractable)this) return false;
+            if (interaction == null) return false;
+            var target = interaction.CurrentTarget;
+            if (target != (IInteractable)this && !(target is DoorReader reader && reader.Door == this)) return false;
+            if (!IsOpen && !HasAccess(interactor.GetComponent<LootInventory>())) return false;
             IsOpen = !IsOpen;
             return true;
         }
+
+        internal string GetPrompt(LootInventory inventory) =>
+            !IsOpen && !HasAccess(inventory) ? "Identity tag required" : InteractionLabel;
+
+        private bool HasAccess(LootInventory inventory) =>
+            requiredIdentityTag == null || (inventory != null && inventory.HasItem(requiredIdentityTag));
     }
 }

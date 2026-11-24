@@ -26,9 +26,10 @@ namespace Lockdown.World
         [SerializeField] private Material woodMaterial;
         [SerializeField] private Contents[] contents = new Contents[0];
         [SerializeField, Min(1f)] private float degreesPerSecond = 150f;
+        [SerializeField] private Transform existingLid;
         [SerializeField] private Transform existingLoot;
         [SerializeField] private string existingLootName;
-        [SerializeField, Min(1)] private int existingLootValue = 100;
+        [SerializeField, Min(0)] private int existingLootValue = 100;
         private Transform lid;
         private Quaternion closedRotation;
         private Collider closedBlocker;
@@ -156,8 +157,17 @@ namespace Lockdown.World
             var hinge = new GameObject("CrateLidHinge").transform;
             hinge.SetParent(parent, false);
             hinge.localPosition = new Vector3(bounds.center.x, bounds.max.y, bounds.max.z);
-            CreateBoard(hinge, "Wooden lid", new Vector3(0f, 0.018f, -bounds.extents.z),
-                new Vector3(bounds.size.x, 0.036f, bounds.size.z), material);
+            if (existingLid != null)
+            {
+                existingLid.SetParent(hinge, true);
+                if (existingLid.GetComponent<Collider>() == null)
+                    existingLid.gameObject.AddComponent<BoxCollider>();
+            }
+            else
+            {
+                CreateBoard(hinge, "Wooden lid", new Vector3(0f, 0.018f, -bounds.extents.z),
+                    new Vector3(bounds.size.x, 0.036f, bounds.size.z), material);
+            }
             return hinge;
         }
 
