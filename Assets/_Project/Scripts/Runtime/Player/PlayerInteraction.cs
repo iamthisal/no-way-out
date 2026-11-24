@@ -118,7 +118,7 @@ namespace Lockdown.Player
                 objectiveStyle = new GUIStyle(promptStyle) { fontStyle = FontStyle.Bold };
             }
             float width = Mathf.Min(300f, Screen.width - 48f);
-            lootCounter.Draw(inventory.TotalValue, inventory.ItemCount);
+            float lootBottom = lootCounter.Draw(inventory.TotalValue, inventory.ItemCount);
             if (!CanInteract) return;
             if (museumExit != null)
             {
@@ -143,7 +143,7 @@ namespace Lockdown.Player
                     "[" + binding + "] " + label, promptStyle);
             }
             if (!showInventory) return;
-            float y = 60f;
+            float y = lootBottom + 12f;
             if (inventory.ItemCount == 0)
                 GUI.Label(new Rect(Screen.width - width - 24f, y, width, 32f), "Empty", entryStyle);
             foreach (var item in inventory.Items)
