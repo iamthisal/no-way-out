@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Lockdown.AI.Core.Hound
 {
-    public enum HoundSoundKind { Custom, Walk, Sprint, Crouch, Gunshot, Distraction }
+    public enum HoundSoundKind { Custom, Walk, Sprint, Crouch, Gunshot, Distraction, Alarm }
 
     // A snapshot of where and when a noise happened, never a moving target reference.
     public readonly struct HoundSound
@@ -45,6 +45,7 @@ namespace Lockdown.AI.Core.Hound
                 case HoundSoundKind.Walk: return new HoundSound(position, kind, 0.8f, 10f, now);
                 case HoundSoundKind.Crouch: return new HoundSound(position, kind, 0.08f, 3f, now);
                 case HoundSoundKind.Distraction: return new HoundSound(position, kind, 6f, 24f, now);
+                case HoundSoundKind.Alarm: return new HoundSound(position, kind, 10f, 40f, now);
                 default: return new HoundSound(position, HoundSoundKind.Custom, 6f, 12f, now);
             }
         }
