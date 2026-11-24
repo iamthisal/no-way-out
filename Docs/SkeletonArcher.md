@@ -108,6 +108,8 @@ Asian Heritage and the Exhibition hall.
 - **Hit locations** (`SkeletonHitbox`): head x2, gear (bow, quiver, belt, dagger)
   x0.35. A hit to the bow arm spoils his aim for 4 s (7 degree spread instead of
   1.2). Health is 70: three body shots or two headshots with the pistol.
+- **Removal**: the bones sink into the floor and are destroyed about 6.5 s after
+  death. See [EnemyDeaths.md](EnemyDeaths.md).
 - **Falling apart** (`SkeletonBody`): on death the animator stops, the bowstring
   snaps, and every piece becomes a physics body tumbling away from the player.
   After a killing headshot the skull flies off first and the headless body stands

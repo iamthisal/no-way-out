@@ -127,6 +127,7 @@ namespace Lockdown.Editor
                 presentationData.FindProperty("animator").objectReferenceValue = animator;
                 presentationData.ApplyModifiedPropertiesWithoutUndo();
                 AddWeapon(root);
+                EnemyDeathBuilder.AddRemoval(root);
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             }
             finally { EditorSceneManager.ClosePreviewScene(preview); }

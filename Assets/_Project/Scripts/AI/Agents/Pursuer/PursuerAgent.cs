@@ -25,7 +25,7 @@ namespace Lockdown.AI.Agents
         private readonly PursuerInterception interception = new PursuerInterception();
         private Vector3 spawn, searchPoint, interceptPoint, coverPoint, formationPoint, lostGoal;
         private List<Vector3> lostAreas = new List<Vector3>();
-        private bool searchingPoint, hasMemory, hasIntercept, retaliating, hasFlank, wasFleeing, lostPlanReady;
+        private bool searchingPoint, hasMemory, hasIntercept, retaliating, hasFlank, wasFleeing, lostPlanReady, answeringAlarm;
         private int patrolIndex;
         private float lastSeenAt = float.NegativeInfinity, nextPlan, coverUntil, nextCover, nextFormation;
         private float attackedAt = float.NegativeInfinity;
@@ -43,6 +43,24 @@ namespace Lockdown.AI.Agents
         public Vector3 ObservedVelocity => interception.Velocity;
         public Vector3 SearchDestination => searchingPoint ? searchPoint : lostGoal;
         public bool HasReachedSearchArea => search.HasReachedArea;
+        public bool IsAnsweringAlarm => answeringAlarm;
+        /// <summary>Pursuing, fighting, arresting or out of action: an alarm must not pull this guard away.</summary>
+        public bool IsBusy => IsContactState() || State == PursuerState.Dead || State == PursuerState.Caught;
+        public bool IsEngaged => IsContactState() || State == PursuerState.Investigate;
+
+        /// <summary>Sets up a guard that was spawned during play instead of placed in the scene.</summary>
+        public void Assign(Transform player, Transform[] route)
+        {
+            playerTarget = player;
+            patrolPoints = route ?? new Transform[0];
+            patrolIndex = 0;
+        }
+
+        /// <summary>Walking distance to a floor point, if a complete route exists now.</summary>
+        public bool TryRouteLength(Vector3 point, out float length) => controller.TryRouteLength(transform.position, point, out length);
+
+        /// <summary>Radio report of a floor point next to broken glass.</summary>
+        public void ReceiveAlarm(Vector3 point) { perception.ReceiveAlarm(point); }
 
         private void Awake()
         {
@@ -94,7 +112,7 @@ namespace Lockdown.AI.Agents
                 lastSeenAt = Time.time; hasMemory = true;
                 lostPlanReady = false;
                 interception.Observe(LastKnownPlayerPosition, Time.time);
-                perception.ClearClue();
+                perception.ClearClue(); perception.ClearAlarm();
                 perception.RaiseAlert(LastKnownPlayerPosition);
                 SelectContactAction();
             }
@@ -115,12 +133,21 @@ namespace Lockdown.AI.Agents
                             "Taking a complete route to the likely escape corner or last confirmed position");
                     else BeginPursuitSearch();
                 }
+                // A report of broken glass is fresher evidence than a search, but never interrupts contact.
+                if (!IsContactState() && perception.TryTakeAlarm(out var alarm))
+                {
+                    investigation.Begin(alarm, Time.time, settings.alarmTimeout);
+                    perception.ClearClue();
+                    SetState(PursuerState.Investigate, "Answering the museum alarm");
+                    answeringAlarm = true;
+                }
                 // Active pursuit/search is not overwritten by lower-priority sounds or alerts.
-                if (!IsContactState() && State != PursuerState.Search
+                else if (!IsContactState() && State != PursuerState.Search
                     && perception.TryTakeClue(out var clue))
                 {
                     investigation.Begin(clue, Time.time, settings.investigateTimeout);
                     SetState(PursuerState.Investigate, "Investigating a noise or ally alert");
+                    answeringAlarm = false;
                 }
                 else if (State == PursuerState.Search) perception.ClearClue();
             }
@@ -135,7 +162,7 @@ namespace Lockdown.AI.Agents
                     if (investigation.Finished(GroundDistance(transform.position, investigation.Position) < 0.7f,
                         Time.time, settings.inspectionDuration)) BeginSearch(investigation.Position);
                     else if (GroundDistance(transform.position, investigation.Position) < 0.7f) { controller.Stop(); controller.LookAround(); }
-                    else if (!Move(investigation.Position, settings.patrolSpeed, 0.4f)) BeginSearch(investigation.Position);
+                    else if (!Move(investigation.Position, answeringAlarm ? settings.alarmSpeed : settings.patrolSpeed, 0.4f)) BeginSearch(investigation.Position);
                     break;
                 case PursuerState.Chase:
                     Advance(IsPlayerVisible ? LastKnownPlayerPosition : lostGoal, settings.chaseSpeed,
@@ -309,6 +336,7 @@ namespace Lockdown.AI.Agents
             if (State == state) return;
             controller.Stop(); combat.Cancel(Time.time);
             if (state != PursuerState.Arrest) arrest.Reset();
+            if (state != PursuerState.Investigate) answeringAlarm = false;
             State = state;
         }
         private static float GroundDistance(Vector3 a, Vector3 b) { a.y = b.y = 0f; return Vector3.Distance(a, b); }
@@ -332,6 +360,7 @@ namespace Lockdown.AI.Agents
             arrest.Reset(); interception.Reset(); hasIntercept = wasFleeing = lostPlanReady = false; scanUntil = 0f;
             if (controller != null) controller.SetWarning(false);
             if (controller != null) controller.ShowNotice(null);
+            answeringAlarm = false;
             if (State != PursuerState.Dead) State = PursuerState.Patrol;
         }
     }

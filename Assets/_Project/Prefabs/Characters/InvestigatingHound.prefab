@@ -80,6 +80,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2117576783341640310}
+    - targetCorrespondingSourceObject: {fileID: 2559459890314312053, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4646197128588092719}
   m_SourcePrefab: {fileID: 100100000, guid: 8c438b449372ea143b43ab11b7219d71, type: 3}
 --- !u!1 &6210690624148986991 stripped
 GameObject:
@@ -132,6 +135,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9de83152f4e27f46b0d08a00f05355d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Enemies.HoundLocomotion
+  animator: {fileID: 0}
+  topClipSpeed: 3.7
+  maxPlaybackBoost: 1.5
 --- !u!114 &17467124622182633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +155,7 @@ MonoBehaviour:
   memoryDuration: 12
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 59
   earHeight: 0.65
   listeningArea: {fileID: 0}
   hasClue: 0
@@ -170,7 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Lockdown.AI.Agents::Lockdown.AI.Agents.HoundNavigation
   solidMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 59
   sampleRadius: 0.65
   waypointSpacing: 0.5
   route: []
@@ -229,7 +235,22 @@ MonoBehaviour:
   playerHealth: {fileID: 0}
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 59
   onBite:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4646197128588092719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210690624148986991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7cab90775c245f08377219b7935616c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.Combat.CorpseRemoval
+  delay: 5
+  sinkDuration: 1.5
+  sinkDepth: 0.9

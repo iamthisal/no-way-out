@@ -320,6 +320,7 @@ namespace Lockdown.Editor
                 Set(dormancy, "body", body);
                 SetArray(dormancy, "enableOnWake", new Object[] { agent });
 
+                EnemyDeathBuilder.AddRemoval(root);
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             }
             finally { EditorSceneManager.ClosePreviewScene(preview); }

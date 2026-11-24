@@ -7,7 +7,7 @@ The joint GV/IS project uses **three ground enemy agents and a dynamic spawning 
 | [Sentinel / Pursuer](Sentinel.md) | `enemy-ai.js`, `Pursuer` | State-based patrol, investigation, chase, search and return |
 | [Stalker / Ambusher](Stalker.md) | `enemy-ai.js`, `Ambusher` | Cover/peek/retreat states with scored cover selection in `main.js`; Unity: [skeleton archer](../SkeletonArcher.md) |
 | [Hound](Hound.md) | `hound-ai.js`, `Hound` | Sound utility scoring, decaying memory and wander/track/sniff states |
-| [Dynamic Spawning Agent](DynamicSpawner.md) | `room-controller.js`, `room-config.js`, `spawnWave` in `main.js` | Event-driven configured waves; adaptive policy pending |
+| [Dynamic Spawning Agent](DynamicSpawner.md) | `room-controller.js`, `room-config.js`, `spawnWave` in `main.js` | HTML: event-driven configured waves. Unity: adaptive utility director |
 
 Sentinel and Stalker are retained as prototype names for Pursuer and Ambusher. They do not imply the earlier proposed hierarchical FSM or shadow-weighted pathfinding algorithms. Record the actual implementation used for assessment.
 

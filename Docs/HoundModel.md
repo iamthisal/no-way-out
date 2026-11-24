@@ -72,4 +72,5 @@ not version-controlled.
 This prefab has no custom gameplay scripts. Hearing, investigation, movement,
 attacks, and damage reactions are later integration work. The existing AI/Hound
 source files are unchanged. The rig provides a starting point for future movement
-animation, but this asset currently ships only the idle clip.
+animation. This milestone shipped only the idle clip; walk, run and
+[death](EnemyDeaths.md) were added later.

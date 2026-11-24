@@ -53,6 +53,24 @@ Lockdown.AI.Core   -> (none)
 
 Hound requirement: it must track via sound events (position, kind and age, with decaying memory). Never give it continuous knowledge of the player's position.
 
+## Hound animation pipeline (implemented)
+
+The Hound's movement is keyframed animation driven by NavMesh speed. The earlier procedural leg-swinging code was removed.
+
+- **Source of truth: `Blender/Hound/MuseumHound.blend`** (Blender 5.2). `Hound_Rig` (22 bones, XYZ Euler; on every leg bone **+X rotation swings the leg forward**) holds three hand-keyed actions, each with Fake User enabled:
+  - `Hound_Idle`: frames 0–72 (2.4 s loop; chest, head, ears and tail only).
+  - `Hound_Walk`: frames 0–32, a 4-beat lateral walk keyed every 8 frames, with Spine −2° on frames 8 and 24 so the front paws stay planted. Planted paws travel about 0.28 m per 16 frames, which matches **≈0.53 m/s**.
+  - `Hound_Run`: frames 0–12, a gallop keyed every 2 frames. The body is lowered and bobbed with `Root` **Location Y** (the Root bone's Y axis is world up), −0.037 to −0.056 m. Paws travel about 0.49 m per 4 frames, which matches **≈3.7 m/s**.
+- **`Blender/Hound/build_hound.py` predates these clips.** Running it regenerates the `.blend` and FBX from scratch and deletes the walk and run actions, so don't run it.
+- **Export:** select `Hound_Rig` and `Hound_Mesh` in Object Mode, then File → Export → FBX **directly to `Assets/_Project/Models/Hound/MuseumHound.fbx`**, keeping its `.meta`. Settings: Selected Objects; Armature and Mesh only; scale 1 with Apply Unit Scale; Forward −Z, Up Y; no leaf bones; only deform bones; Bake Animation with **All Actions** on, NLA Strips off, Force Start/End Keying on, Simplify 0. FBX files under `Blender/` are git-ignored.
+- **Import (`MuseumHound.fbx.meta`):** Generic rig with Import Animation on. Clips: `Hound_Rig|Hound_Idle` (0–72), `Hound_Rig|Hound_Walk` (0–32) and `Hound_Run` (0–12), all with Loop Time and Loop Pose. A new action exported later must be added as a clip with **+**, because the clip list is explicit. No root node is set, so Root Transform / Bake Into Pose options don't appear and root motion is unused.
+- **Animator (`Animations/Hound/HoundIdle.controller`):** the default state is `Locomotion`, a 1D blend tree on the `Speed` float with thresholds idle 0, walk 0.53 and run 3.7. The state's speed multiplier is the `AnimSpeed` float. Defaults are Speed 0 and AnimSpeed 1.
+- **`Runtime/Enemies/HoundLocomotion.cs`** sets `Speed` (damped 0.1 s) from `NavMeshAgent.velocity`. Above `topClipSpeed` it sets `AnimSpeed = min(speed / topClipSpeed, maxPlaybackBoost)` to reduce foot sliding, and it forces `applyRootMotion = false`. `InvestigatingHound.prefab` (the dog `GlassHoundResponse` spawns) serializes topClipSpeed 3.7 and maxPlaybackBoost 1.5. The script defaults are still 0.53 and 2.
+- **Gaits vs AI speeds:** `Museum_HoundSettings` uses wanderSpeed 2.4, which blends walk and run, and trackingSpeed 4.8, which plays the run at about 1.3×. No trot clip exists.
+- **Do not run `Tools/Lockdown/Build Museum Hound Model` (`HoundModelBuilder`).** It keeps only the first imported clip, renames it `HoundIdle`, and resets the controller's default state to that clip, which undoes all of the above. Update the builder first if it's needed again.
+- `Docs/HoundModel.md` still describes the earlier idle-only milestone.
+
+
 ## Conventions
 
 - Preserve Unity `.meta` files, script GUIDs and existing enum values; **append** new enum states to keep serialized data compatible. Renamed folders kept their `.meta` files for this reason.

@@ -1,0 +1,5 @@
+{
+  "name": "Lockdown.Tests.Director.PlayMode",
+  "references": ["Lockdown.AI.Agents", "Lockdown.AI.Core", "Lockdown.Runtime", "Lockdown.Interfaces"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

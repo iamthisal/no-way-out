@@ -7,6 +7,9 @@ the broken case. Breaking another case redirects the same pack to that location.
 There is one pack per scene load, rather than three additional dogs per break.
 Restarting restores intact glass and removes the pack.
 
+Killed dogs play a death animation and are removed after about 6.5 seconds. They are
+not replaced. See [EnemyDeaths.md](EnemyDeaths.md).
+
 ## Runtime components
 
 `GlassHoundResponse.cs` subscribes to the existing `BreakableGlass.OnBroken`
@@ -14,6 +17,10 @@ UnityEvent for each configured case. It instantiates the response prefab at the
 entry transforms only after a real break and sends the case position to each dog.
 It removes listeners when disabled and caps spawning at one dog per entry.
 No changes were needed in BreakableGlass or the existing AI/Hound files.
+
+`DispatchAllowed` lets another system refuse a dog. In `Museum_Main` the
+[spawn director](AI/DynamicSpawner.md) uses it to apply its population caps and
+pacing phases. Without a director every dog is allowed.
 
 This is an explicit gameplay response to a glass-break event. It does not depend
 on microphone input, AudioSource volume, or the old HoundHearing range and memory.
