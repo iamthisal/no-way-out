@@ -5,16 +5,24 @@ namespace Lockdown.Player
 {
     /// <summary>
     /// Top-centre objective plaque: an OBJECTIVE label over the current goal. The first line is
-    /// the goal; any further lines are smaller notes.
+    /// the goal; any further lines are smaller notes. The frame flashes when the objective changes.
     /// </summary>
     internal sealed class ObjectiveHud
     {
+        private const float FlashSeconds = 0.9f;
         private GUIStyle labelStyle, goalStyle, noteStyle;
         private float stylesScale = -1f;
+        private string lastObjective;
+        private float flashUntil;
 
         public void Draw(string objective)
         {
             if (string.IsNullOrEmpty(objective)) return;
+            if (Event.current.type == EventType.Repaint && objective != lastObjective)
+            {
+                if (lastObjective != null) flashUntil = Time.unscaledTime + FlashSeconds;
+                lastObjective = objective;
+            }
             float scale = Scale(0.6f);
             if (StylesStale(labelStyle, stylesScale, scale))
             {
@@ -41,12 +49,14 @@ namespace Lockdown.Player
 
             Color previous = GUI.color;
             var panel = new Rect((Screen.width - width) * 0.5f, 20f * scale, width, height);
-            Plaque(panel, scale, 0.84f, Brass);
+            float flash = Mathf.Clamp01((flashUntil - Time.unscaledTime) / FlashSeconds);
+            Plaque(panel, scale, 0.84f, Color.Lerp(Brass, BrightBrass, flash));
+            if (flash > 0f) Fill(panel, Brass, flash * 0.12f);
 
             float y = panel.y + labelTop;
             Text(new Rect(panel.x, y, panel.width, labelHeight), Spaced("Objective"), labelStyle, Brass);
             y += labelHeight + gap;
-            Text(new Rect(panel.x + pad, y, textWidth, goalHeight), goal, goalStyle, Ivory);
+            Text(new Rect(panel.x + pad, y, textWidth, goalHeight), goal, goalStyle, Color.Lerp(Ivory, BrightBrass, flash));
             if (notes.Length > 0)
                 Text(new Rect(panel.x + pad, y + goalHeight + 4f * scale, textWidth, noteHeight), notes, noteStyle,
                     new Color(Ivory.r, Ivory.g, Ivory.b, 0.72f));
