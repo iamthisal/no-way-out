@@ -12,6 +12,10 @@ namespace Lockdown.Agents.Pursuer
         public static string Kicker(GuardAlert alert) =>
             alert == GuardAlert.None ? null : alert == GuardAlert.Handcuffing ? "Arrest" : "Guard";
 
+        /// <summary>True when the first alert is more urgent. Between two handcuffings, the one closer to done wins.</summary>
+        public static bool Outranks(GuardAlert alert, float progress, GuardAlert other, float otherProgress) =>
+            alert != other ? alert > other : progress > otherProgress;
+
         public static string Message(GuardAlert alert)
         {
             switch (alert)
