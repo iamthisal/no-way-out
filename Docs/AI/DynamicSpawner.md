@@ -61,6 +61,7 @@ EditMode tests (`Lockdown.Tests.Director.EditMode`, 43) cover the decision logic
 ### Limits
 
 - Spawn points in closed rooms are unused until the player opens the doors.
+- The player starts in the closed courtyard garden ([intro](../IntroCutscene.md)), so nothing spawns until the glass door breaks.
 - Weights and thresholds are hand-tuned. One 227 ms frame was measured in the Editor scenario runs; its cause was not profiled.
 - Slow steady damage does not reach the Peak phase: in the attack scenario intensity stayed at 0.30.
 - The alarm siren lasts 15 s. Flashing lights from the original design are not implemented.
