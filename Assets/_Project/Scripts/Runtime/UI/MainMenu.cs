@@ -1,3 +1,4 @@
+using Lockdown.Intro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static Lockdown.Player.MuseumHud;
@@ -35,7 +36,12 @@ namespace Lockdown.UI
             if (back && IsShowingOptions) CloseOptions();
         }
 
-        public void StartGame() => SceneFlow.Load(SceneFlow.MuseumScene);
+        /// <summary>Starts a new run with the break-in cutscene.</summary>
+        public void StartGame()
+        {
+            IntroCutscene.Requested = true;
+            SceneFlow.Load(SceneFlow.MuseumScene);
+        }
 
         public void OpenOptions() => IsShowingOptions = true;
 

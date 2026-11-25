@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections;
 using Lockdown.Enemies;
+using Lockdown.Intro;
 using Lockdown.Player;
 using Lockdown.UI;
 using NUnit.Framework;
@@ -90,6 +91,11 @@ namespace Lockdown.Tests
             yield return null;
             yield return null;
             Assert.That(SceneManager.GetActiveScene().path, Is.EqualTo(SceneFlow.MuseumScene));
+            var intro = Object.FindAnyObjectByType<IntroCutscene>();
+            Assert.That(intro.IsPlaying, Is.True);
+            intro.Skip();
+            for (float waited = 0f; intro.IsPlaying && waited < 3f; waited += Time.unscaledDeltaTime) yield return null;
+            yield return null;
             var player = Object.FindAnyObjectByType<FirstPersonController>();
             Assert.That(player, Is.Not.Null);
             Assert.That(player.GetComponent<PauseMenu>(), Is.Not.Null);
