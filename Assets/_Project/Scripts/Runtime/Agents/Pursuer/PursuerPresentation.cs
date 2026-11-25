@@ -1,5 +1,6 @@
 using Lockdown.Combat;
 using Lockdown.Enemies;
+using Lockdown.Player;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 namespace Lockdown.Agents.Pursuer
@@ -17,7 +18,7 @@ namespace Lockdown.Agents.Pursuer
         private bool warning;
         private GuardAlert alert;
         private float arrestProgress = -1f;
-        private GUIStyle noticeStyle;
+        private readonly GuardAlertHud alertHud = new GuardAlertHud();
         public void ShowNotice(GuardAlert value, float progress) { alert = value; arrestProgress = progress; }
         private void Awake()
         {
@@ -54,14 +55,7 @@ namespace Lockdown.Agents.Pursuer
         private void OnGUI()
         {
             if (alert == GuardAlert.None || health == null || health.IsDead) return;
-            if (noticeStyle == null) noticeStyle = new GUIStyle(GUI.skin.box) { fontSize = 20, alignment = TextAnchor.MiddleCenter, wordWrap = true };
-            float width = Mathf.Min(540f, Screen.width - 32f);
-            GUI.Box(new Rect((Screen.width - width) * 0.5f, Screen.height * 0.72f, width, 68f), GuardAlerts.Message(alert), noticeStyle);
-            if (arrestProgress < 0f) return;
-            Color previous = GUI.color; GUI.color = new Color(1f, 0.65f, 0.15f);
-            GUI.DrawTexture(new Rect((Screen.width - width) * 0.5f + 8f, Screen.height * 0.72f + 56f,
-                (width - 16f) * Mathf.Clamp01(arrestProgress), 5f), Texture2D.whiteTexture);
-            GUI.color = previous;
+            alertHud.Draw(alert, arrestProgress);
         }
     }
 }

@@ -8,15 +8,19 @@ namespace Lockdown.Agents.Pursuer
 
     public static class GuardAlerts
     {
+        /// <summary>The short tab at the start of the bar: who is acting.</summary>
+        public static string Kicker(GuardAlert alert) =>
+            alert == GuardAlert.None ? null : alert == GuardAlert.Handcuffing ? "Arrest" : "Guard";
+
         public static string Message(GuardAlert alert)
         {
             switch (alert)
             {
-                case GuardAlert.Approaching: return "Museum guard approaching — run to avoid arrest";
-                case GuardAlert.BlockingEscape: return "Guard is cutting off your escape";
-                case GuardAlert.AdvancingThroughCover: return "Guard advancing through cover";
-                case GuardAlert.ReturningFire: return "Guard returning fire — break line of sight!";
-                case GuardAlert.Handcuffing: return "Handcuffing — move away to escape!";
+                case GuardAlert.Approaching: return "Approaching — run to avoid arrest";
+                case GuardAlert.BlockingEscape: return "Cutting off your escape";
+                case GuardAlert.AdvancingThroughCover: return "Advancing through cover";
+                case GuardAlert.ReturningFire: return "Returning fire — break line of sight";
+                case GuardAlert.Handcuffing: return "Handcuffing — move away to escape";
                 default: return null;
             }
         }
