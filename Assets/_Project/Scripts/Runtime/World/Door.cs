@@ -12,6 +12,9 @@ namespace Lockdown.World
         [SerializeField, Min(1f)] private float degreesPerSecond = 180f;
         [SerializeField] private bool startsOpen;
         [SerializeField] private Transform requiredIdentityTag;
+        [Header("Route block")]
+        [SerializeField] private Transform blockingCrate;
+        [SerializeField, Min(0.1f)] private float crateClearanceDistance = 1.5f;
         private Quaternion closedRotation;
         private float currentAngle;
         private InteractionFeedback closingFeedback;
@@ -20,7 +23,10 @@ namespace Lockdown.World
         // IsOpen is the requested state, so another press can reverse a moving door.
         public bool IsOpen { get; private set; }
         public bool IsMoving => currentAngle != TargetAngle;
-        public string InteractionLabel => IsOpen ? "Close door" :
+        public bool IsBlocked => !IsOpen && blockingCrate != null &&
+            Vector3.ProjectOnPlane(blockingCrate.position - transform.position, Vector3.up).sqrMagnitude <
+            crateClearanceDistance * crateClearanceDistance;
+        public string InteractionLabel => IsBlocked ? "Push crate clear of doorway" : IsOpen ? "Close door" :
             requiredIdentityTag != null ? "Use identity tag" : "Open door";
         private float TargetAngle => IsOpen ? openAngle : 0f;
 
@@ -57,12 +63,14 @@ namespace Lockdown.World
             if (interaction == null) return false;
             var target = interaction.CurrentTarget;
             if (target != (IInteractable)this && !(target is DoorReader reader && reader.Door == this)) return false;
+            if (IsBlocked) return false;
             if (!IsOpen && !HasAccess(interactor.GetComponent<LootInventory>())) return false;
             IsOpen = !IsOpen;
             return true;
         }
 
         internal string GetPrompt(LootInventory inventory) =>
+            IsBlocked ? "Push crate clear of doorway" :
             !IsOpen && !HasAccess(inventory) ? "Identity tag required" : InteractionLabel;
 
         private bool HasAccess(LootInventory inventory) =>

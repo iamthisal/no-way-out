@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86a3277d2bfc9e244aacd8d8a3bc3017, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.BreakableGlass
   intactRenderers:
   - {fileID: 2121646}
@@ -52609,6 +52609,8 @@ MonoBehaviour:
   degreesPerSecond: 180
   startsOpen: 0
   requiredIdentityTag: {fileID: 0}
+  blockingCrate: {fileID: 1356780394}
+  crateClearanceDistance: 1.5
 --- !u!208 &1062717505
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -65276,6 +65278,8 @@ GameObject:
   - component: {fileID: 1356780394}
   - component: {fileID: 1356780395}
   - component: {fileID: 1356780396}
+  - component: {fileID: 1356780397}
+  - component: {fileID: 1356780398}
   m_Layer: 3
   m_Name: P_Storage_PackingCrate (1)
   m_TagString: Untagged
@@ -65336,6 +65340,48 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!54 &1356780397
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356780393}
+  serializedVersion: 5
+  m_Mass: 35
+  m_LinearDamping: 5
+  m_AngularDamping: 8
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 122
+  m_CollisionDetection: 2
+--- !u!114 &1356780398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356780393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a27bd2cab1234770bb1e8dfaa2e76409, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Lockdown.Runtime::Lockdown.World.PushableCrate
+  pushAcceleration: 18
+  maximumSpeed: 1.8
+  mass: 35
 --- !u!1001 &1357396621
 PrefabInstance:
   m_ObjectHideFlags: 0
