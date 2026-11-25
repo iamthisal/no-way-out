@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Lockdown.World;
 
 namespace Lockdown.Player
 {
@@ -150,6 +151,13 @@ namespace Lockdown.Player
             transform.Rotate(0f, look.x * sensitivity, 0f, Space.Self);
             pitch = Mathf.Clamp(pitch - look.y * sensitivity, -pitchLimit, pitchLimit);
             playerCamera.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+        }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (InputBlocked || hit.rigidbody == null) return;
+            var crate = hit.rigidbody.GetComponent<PushableCrate>();
+            if (crate != null) crate.Push(hit.moveDirection);
         }
 
         private void Respawn()
