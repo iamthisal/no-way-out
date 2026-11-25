@@ -28,7 +28,7 @@ Execution lives in [`Scripts/Runtime/Agents/Pursuer`](../../Assets/_Project/Scri
 | `PursuerController.cs` | Move, stop, turn, fire, arrest reach/capture, feedback, attributed-hit events and body shutdown. |
 | `PursuerNavigation.cs` | NavMesh path queries, movement, physical obstacle checks and progress. |
 | `PursuerLocomotion.cs` | Animation from actual velocity. |
-| `PursuerPresentation.cs` | Warning sound, arrest/status HUD, shot/hit/death animation feedback. |
+| `PursuerPresentation.cs` | Warning sound, the guard alert bar (`GuardAlert`, drawn by `Runtime/Player/GuardAlertHud.cs`), shot/hit/death animation feedback. |
 
 Dependencies point from AI to Runtime. Runtime never references the AI assembly or chooses FSM states. Shared `Runtime/Enemies/EnemyShooting.cs` and `Runtime/Combat/Health.cs` execute shooting and damage. `Runtime/Player/PlayerVitals.cs` owns capture, control lock and restart. `FirstPersonWeapon.cs` supplies the actual player as damage instigator; other `IDamageable` implementations keep their existing damage API. Builders and verification remain under `Scripts/Editor`.
 
@@ -75,7 +75,21 @@ The existing sound relay and hearing code remain: glass, footsteps and pistol sh
 
 `EnemyShooting` is explicitly controlled by the brain through `PursuerController`. After provocation, a 0.65-second warning precedes up to three 10-damage shots spaced 0.18 seconds apart, with a 1.5-second cooldown. Both body and muzzle sightlines must be clear. Losing sight cancels the burst. The guard has 100 health. The legacy wandering enemy is absent from Museum_Main; its prefab remains for regression fixtures.
 
-Capture shows the **You got caught** end screen (a brass museum plaque drawn by `Runtime/Player/EndScreen.cs`), releases the cursor, and disables movement, equipment and weapons. Its **Retry** button reloads the encounter with restored health, controls and a non-hostile guard. The arrest attempt is represented by a timed HUD; a dedicated handcuff animation/prop has not been authored. Existing imported locomotion, firing, hit and death animations remain.
+Capture shows the **You got caught** end screen (a brass museum plaque drawn by `Runtime/Player/EndScreen.cs`), releases the cursor, and disables movement, equipment and weapons. Its **Retry** button reloads the encounter with restored health, controls and a non-hostile guard. The arrest attempt is represented by a timed HUD; a dedicated handcuff animation/prop has not been authored.
+
+### Guard alert bar
+
+The brain tells the thief what the guard is doing by passing a `GuardAlert` to `PursuerController.ShowNotice`. The presentation owns the wording. Each alert is a thin walnut bar (40 px at 1080p) in the lower middle of the screen. A tab on the left names who is acting, and the message follows in ivory Cinzel.
+
+| Alert | Tab | Message | Colour |
+|---|---|---|---|
+| Approaching | GUARD | Approaching — run to avoid arrest | Brass |
+| Blocking escape (intercepting, player in view) | GUARD | Cutting off your escape | Oxblood |
+| Advancing through cover | GUARD | Advancing through cover | Brass |
+| Returning fire | GUARD | Returning fire — break line of sight | Ember, pulsing |
+| Handcuffing | ARREST | Handcuffing — move away to escape | Ember, pulsing faster as the cuffs close |
+
+While handcuffing, a 3 px line along the bottom edge fills with the arrest progress, shifting from brass to ember. A new alert fades in over 0.18 s. When several guards alert at once, only the most urgent alert is drawn (the table runs from least to most urgent), and between two arrests the one closer to done wins. Existing imported locomotion, firing, hit and death animations remain.
 
 ## Setup and validation
 
