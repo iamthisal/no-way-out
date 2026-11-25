@@ -121,7 +121,7 @@ namespace Lockdown.Tests
         }
 
         [UnityTest]
-        public IEnumerator MuseumPlayerSpawnsOnFloorAndCanWalkIntoCentralHall()
+        public IEnumerator MuseumPlayerSpawnsBehindTheFlowerPotAndCanWalk()
         {
             UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
                 "Assets/_Project/Scenes/Museum/Museum_Main.unity",
@@ -135,8 +135,9 @@ namespace Lockdown.Tests
             controller.CaptureCursor();
             yield return new WaitForSeconds(0.5f);
             Assert.That(controller.IsGrounded, Is.True, "The museum floor should support the player.");
-            var spawnZ = player.transform.position.z;
-            Assert.That(spawnZ, Is.GreaterThan(-5f), "The locked lobby doorway must not block the route to the tag.");
+            var spawn = player.transform.position;
+            Assert.That(spawn.x, Is.InRange(0.4f, 2.7f), "The flower pot hides the player from the courtyard door.");
+            Assert.That(spawn.z, Is.InRange(17.9f, 21.5f), "The player starts in the courtyard, behind the pot.");
             int activeCameras = 0;
             int activeListeners = 0;
             foreach (var camera in Object.FindObjectsByType<Camera>(FindObjectsSortMode.None))
@@ -147,11 +148,11 @@ namespace Lockdown.Tests
             Assert.That(activeListeners, Is.EqualTo(1));
             controller.CaptureCursor();
             yield return null;
-            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W));
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.S));
             yield return new WaitForSeconds(0.5f);
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             yield return null;
-            Assert.That(player.transform.position.z, Is.GreaterThan(spawnZ + 0.5f), "The player should be able to walk into the central hall.");
+            Assert.That(player.transform.position.z, Is.GreaterThan(spawn.z + 0.5f), "The player should be able to walk away from the pot.");
             Assert.That(controller.IsGrounded, Is.True, "The player should remain on the museum floor.");
         }
 
