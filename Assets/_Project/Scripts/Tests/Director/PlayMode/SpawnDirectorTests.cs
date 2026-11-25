@@ -46,6 +46,8 @@ namespace Lockdown.Tests.Director
         public IEnumerator EverySpawnIsHiddenReachableOutsideTheSafeRoomAndUnderTheCaps()
         {
             yield return LoadFast();
+            // Nothing can reach the closed garden where the player starts, so test from the Central Hall.
+            MuseumFixture.MovePlayer(new Vector3(0f, 0.05f, -3.5f), Quaternion.identity);
             var director = MuseumFixture.Director;
             var player = MuseumFixture.Player;
             var problems = new List<string>();

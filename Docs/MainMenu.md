@@ -13,7 +13,7 @@ The screen shows the title **NO WAY OUT**, then three buttons:
 
 | Button | What it does |
 |---|---|
-| **Start game** | Loads `Museum_Main`. |
+| **Start game** | Loads `Museum_Main` with the [intro cutscene](IntroCutscene.md). |
 | **Options** | Opens the options panel. Esc (or B on a gamepad) closes it. |
 | **Exit** | Quits the game. In the editor it stops Play mode. It's hidden in the Web build, because browsers ignore quitting. |
 
@@ -31,7 +31,7 @@ In the museum, **Esc** (or **Start** on a gamepad) opens the pause menu. Pausing
 | Button | What it does |
 |---|---|
 | **Continue** | Resumes. Esc (or B) also resumes. |
-| **Restart** | Reloads the museum. |
+| **Restart** | Reloads the museum, without the intro. |
 | **Options** | Opens the shared options panel. Esc (or B) goes back. |
 | **Main menu** | Loads the title screen. |
 
