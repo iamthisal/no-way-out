@@ -38,21 +38,31 @@ namespace Lockdown.Player
             float width = pad + tabWidth + gap + messageWidth + messagePad;
             var bar = new Rect((Screen.width - width) * 0.5f, Screen.height * 0.72f, width, height);
 
+            Color accent = Accent(alert);
+            bool urgent = alert >= GuardAlert.ReturningFire;
+            float done = Mathf.Clamp01(progress);
+            // Urgent alerts pulse; the handcuff pulse quickens as the cuffs close.
+            float pulse = urgent ? 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * (6f + 8f * done)) : 0f;
+
             Color previous = GUI.color;
             Fill(bar, new Color(Walnut.r, Walnut.g, Walnut.b, 0.82f));
-            Frame(bar, 1f, Brass);
+            Frame(bar, 1f, Color.Lerp(accent, BrightBrass, pulse * 0.55f));
             var tab = new Rect(bar.x + pad, bar.y + pad, tabWidth, bar.height - pad * 2f);
-            Fill(tab, Brass);
-            Text(tab, kicker, kickerStyle, Walnut);
+            Fill(tab, accent);
+            Text(tab, kicker, kickerStyle, accent == Brass ? Walnut : Ivory);
             Text(new Rect(tab.xMax + gap, bar.y, messageWidth, bar.height), message, messageStyle, Ivory);
             if (progress >= 0f)
             {
                 float line = Mathf.Max(2f, 3f * scale);
                 var track = new Rect(bar.x + 1f, bar.yMax - 1f - line, bar.width - 2f, line);
                 Fill(track, DimBrass, 0.6f);
-                Fill(new Rect(track.x, track.y, track.width * Mathf.Clamp01(progress), line), Brass);
+                Fill(new Rect(track.x, track.y, track.width * done, line), Color.Lerp(BrightBrass, Ember, done));
             }
             GUI.color = previous;
         }
+
+        // Brass is a heads-up, oxblood means the way out is closing, ember means act now.
+        private static Color Accent(GuardAlert alert) =>
+            alert >= GuardAlert.ReturningFire ? Ember : alert == GuardAlert.BlockingEscape ? Oxblood : Brass;
     }
 }
