@@ -39,7 +39,7 @@ namespace Lockdown.Agents.Pursuer
         private void OnDisable()
         {
             if (health != null) { health.OnDeath.RemoveListener(NotifyDeath); health.DamagedBy -= NotifyAttack; }
-            Stop(); SetWarning(false); ShowNotice(null);
+            Stop(); SetWarning(false); ShowNotice(GuardAlert.None);
         }
         private void NotifyAttack(Transform source) { if (!IsDead) Attacked?.Invoke(source); }
         private void NotifyDeath() { Died?.Invoke(); }
@@ -57,7 +57,7 @@ namespace Lockdown.Agents.Pursuer
         }
         public bool TryCapture(Transform target, float range) => InArrestReach(target, range)
             && target.TryGetComponent<PlayerVitals>(out var vitals) && vitals.Capture();
-        public void ShowNotice(string text, float progress = -1f) { if (presentation != null) presentation.ShowNotice(text, progress); }
+        public void ShowNotice(GuardAlert alert, float progress = -1f) { if (presentation != null) presentation.ShowNotice(alert, progress); }
         public PursuerRouteStatus RouteStatus() => navigation.Status();
         public bool MoveTo(Vector3 point, float speed, float stoppingDistance)
         {
@@ -80,7 +80,7 @@ namespace Lockdown.Agents.Pursuer
         public void LookAround(float degreesPerSecond = 65f) { transform.Rotate(0f, degreesPerSecond * Time.deltaTime, 0f); }
         public void DisableBody()
         {
-            Stop(); SetWarning(false); ShowNotice(null);
+            Stop(); SetWarning(false); ShowNotice(GuardAlert.None);
             if (weapon != null) weapon.enabled = false;
             foreach (var body in GetComponentsInChildren<Collider>()) body.enabled = false;
             agent.enabled = false;

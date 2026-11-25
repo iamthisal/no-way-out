@@ -98,7 +98,7 @@ namespace Lockdown.AI.Agents
             if (!TargetAvailable())
             {
                 IsPlayerVisible = false; hasMemory = hasIntercept = false; arrest.Reset(); interception.Reset();
-                combat.Cancel(Time.time); controller.SetWarning(false); controller.ShowNotice(null);
+                combat.Cancel(Time.time); controller.SetWarning(false); controller.ShowNotice(GuardAlert.None);
                 if (controller.TargetCaptured(playerTarget))
                 { SetState(PursuerState.Caught, "Thief handcuffed; encounter ended"); controller.Stop(); return; }
                 if (IsContactState()) SetState(PursuerState.Return, "Target no longer available");
@@ -118,7 +118,7 @@ namespace Lockdown.AI.Agents
             }
             else
             {
-                interception.LoseSight(); arrest.Reset(); controller.ShowNotice(null);
+                interception.LoseSight(); arrest.Reset(); controller.ShowNotice(GuardAlert.None);
                 if (tracking)
                 {
                     if (!lostPlanReady && hasMemory)
@@ -169,27 +169,27 @@ namespace Lockdown.AI.Agents
                         !IsPlayerVisible ? 0.4f : retaliating ? settings.combatStopDistance : settings.arrestRange * 0.75f);
                     break;
                 case PursuerState.Approach:
-                    controller.ShowNotice("Museum guard approaching — run to avoid arrest");
+                    controller.ShowNotice(GuardAlert.Approaching);
                     Advance(LastKnownPlayerPosition, settings.approachSpeed, settings.arrestRange * 0.75f);
                     break;
                 case PursuerState.Intercept:
-                    if (IsPlayerVisible) controller.ShowNotice("Guard is cutting off your escape");
+                    if (IsPlayerVisible) controller.ShowNotice(GuardAlert.BlockingEscape);
                     Advance(IsPlayerVisible ? interceptPoint : lostGoal, settings.chaseSpeed, 0.35f);
                     break;
                 case PursuerState.Arrest:
                     controller.Stop(); controller.Face(LastKnownPlayerPosition);
                     bool complete = arrest.Tick(IsPlayerVisible && controller.InArrestReach(playerTarget, settings.arrestRange), Time.deltaTime, settings.arrestDuration);
-                    controller.ShowNotice("Handcuffing — move away to escape!", arrest.Progress);
+                    controller.ShowNotice(GuardAlert.Handcuffing, arrest.Progress);
                     if (complete && controller.TryCapture(playerTarget, settings.arrestRange))
-                    { SetState(PursuerState.Caught, "Thief handcuffed; encounter ended"); controller.ShowNotice(null); }
+                    { SetState(PursuerState.Caught, "Thief handcuffed; encounter ended"); controller.ShowNotice(GuardAlert.None); }
                     break;
                 case PursuerState.Attack:
-                    controller.ShowNotice("Guard returning fire — break line of sight!");
+                    controller.ShowNotice(GuardAlert.ReturningFire);
                     Advance(hasFlank ? formationPoint : LastKnownPlayerPosition, settings.approachSpeed, hasFlank ? 0.35f : settings.combatStopDistance);
                     ShootIfClear();
                     break;
                 case PursuerState.AdvanceCover:
-                    controller.ShowNotice("Guard advancing through cover");
+                    controller.ShowNotice(GuardAlert.AdvancingThroughCover);
                     Advance(coverPoint, settings.chaseSpeed, 0.3f); ShootIfClear();
                     break;
                 case PursuerState.Search: Search(); break;
@@ -359,7 +359,7 @@ namespace Lockdown.AI.Agents
             combat?.Cancel(Time.time);
             arrest.Reset(); interception.Reset(); hasIntercept = wasFleeing = lostPlanReady = false; scanUntil = 0f;
             if (controller != null) controller.SetWarning(false);
-            if (controller != null) controller.ShowNotice(null);
+            if (controller != null) controller.ShowNotice(GuardAlert.None);
             answeringAlarm = false;
             if (State != PursuerState.Dead) State = PursuerState.Patrol;
         }

@@ -15,10 +15,10 @@ namespace Lockdown.Agents.Pursuer
         private AudioSource audioSource;
         private int shots;
         private bool warning;
-        private string notice;
+        private GuardAlert alert;
         private float arrestProgress = -1f;
         private GUIStyle noticeStyle;
-        public void ShowNotice(string text, float progress) { notice = text; arrestProgress = progress; }
+        public void ShowNotice(GuardAlert value, float progress) { alert = value; arrestProgress = progress; }
         private void Awake()
         {
             if (animator == null) animator = GetComponentInChildren<Animator>();
@@ -53,10 +53,10 @@ namespace Lockdown.Agents.Pursuer
         }
         private void OnGUI()
         {
-            if (string.IsNullOrEmpty(notice) || health == null || health.IsDead) return;
+            if (alert == GuardAlert.None || health == null || health.IsDead) return;
             if (noticeStyle == null) noticeStyle = new GUIStyle(GUI.skin.box) { fontSize = 20, alignment = TextAnchor.MiddleCenter, wordWrap = true };
             float width = Mathf.Min(540f, Screen.width - 32f);
-            GUI.Box(new Rect((Screen.width - width) * 0.5f, Screen.height * 0.72f, width, 68f), notice, noticeStyle);
+            GUI.Box(new Rect((Screen.width - width) * 0.5f, Screen.height * 0.72f, width, 68f), GuardAlerts.Message(alert), noticeStyle);
             if (arrestProgress < 0f) return;
             Color previous = GUI.color; GUI.color = new Color(1f, 0.65f, 0.15f);
             GUI.DrawTexture(new Rect((Screen.width - width) * 0.5f + 8f, Screen.height * 0.72f + 56f,
